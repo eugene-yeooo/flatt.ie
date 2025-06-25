@@ -8,7 +8,7 @@ export async function getExpenses(): Promise<Expense> {
   return res.body
 }
 
-export async function getBridgeById(id: number | string): Promise<Expense> {
+export async function getExpensesById(id: number | string): Promise<Expense> {
   const res = await request.get(`${expensesURL}/${id}`)
   return res.body
 }
