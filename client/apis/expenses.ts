@@ -1,0 +1,14 @@
+import request from 'superagent'
+import { Expense } from '../../models/models'
+
+const expensesURL = '/api/v1/expenses'
+
+export async function getExpenses(): Promise<Expense> {
+  const res = await request.get(expensesURL)
+  return res.body
+}
+
+export async function getBridgeById(id: number | string): Promise<Expense> {
+  const res = await request.get(`${expensesURL}/${id}`)
+  return res.body
+}
