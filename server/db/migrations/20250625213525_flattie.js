@@ -9,7 +9,6 @@ export async function up(knex) {
     table.string('name').notNullable()
     table.decimal('credit').defaultTo(0)
     table.decimal('debt').defaultTo(0)
-    table.decimal('balance').defaultTo(0)
     table.string('profile_photo')
     table.string('bio')
   })

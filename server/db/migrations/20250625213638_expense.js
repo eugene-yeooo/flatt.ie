@@ -6,7 +6,7 @@ export async function up(knex) {
   return knex.schema.createTable('expense', (table) => {
     table.increments('id')
     table.string('category').notNullable()
-    table.string('frequency').defaultTo(null)
+    table.enu('frequency', ['monthly', 'weekly', 'one_off']).notNullable()
     table.decimal('default_amount')
     table.string('calc_method')
     table.text('notes')
