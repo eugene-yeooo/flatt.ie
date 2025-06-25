@@ -3,13 +3,15 @@
  * @returns { Promise<void> }
  */
 export async function up(knex) {
-  return knex.schema.createTable('fruit', (table) => {
+  return knex.schema.createTable('bill', (table) => {
     table.increments('id')
-    table.string('name')
-    table.string('owner').defaultTo(null)
+    table.string('title')
+    table.string('expense_id')
+    table.date('due_date')
+    table.decimal('total_amount')
   })
 }
 
 export async function down(knex) {
-  return knex.schema.dropTable('fruit')
+  return knex.schema.dropTable('bill')
 }
