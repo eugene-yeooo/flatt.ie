@@ -14,4 +14,15 @@ router.get('/', async (req,res) => {
   }
 })
 
+router.post('/', async (req, res) => {
+  try {
+    const { name, credit, debt } = req.body
+    const newFlatmate = await db.addFlatmate({ name, credit, debt })
+    res.status(201).json(newFlatmate[0])
+  } catch (error) {
+    console.error('Error adding flatmate:', error)
+    res.status(500).json({ error: 'Failed to add flatmate' })
+  }
+})
+
 export default router
