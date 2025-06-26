@@ -6,7 +6,6 @@ const router = express.Router()
 router.get('/', async (req,res) => {
   try {
   const flatmates = await db.getAllFlatmates()
-  console.log('flatmates from DB:', flatmates)
   res.json(flatmates)
   } catch (error) {
     console.error('Error getting flatmates:', error)
@@ -33,6 +32,16 @@ router.delete('/:id', async (req, res) => {
   } catch (error) {
     console.error('Error deleting flatmate:', error)
     res.status(500).json({ error: 'Failed to delete flatmate' })
+  }
+})
+
+router.get('/balance', async (req, res) => {
+  try {
+    const flatmatesWithBalance = await db.getFlatmatesWithBalance()
+    res.json(flatmatesWithBalance)
+  } catch (error) {
+    console.error('Error getting flatmates with balance:', error)
+    res.status(500).json({ error: 'Failed to get flatmates with balance' })
   }
 })
 

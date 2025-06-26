@@ -5,6 +5,9 @@ interface Flatmate {
   name: string
   credit: number
   debt: number
+  profilePhoto?: string
+  balance: number
+  unpaid: number
 }
 
 export default function Flatties() {
@@ -13,18 +16,17 @@ export default function Flatties() {
   const [credit, setCredit] = useState('')
   const [debt, setDebt] = useState('')
 
-  // Fetch flatmates on mount
   useEffect(() => {
-    async function fetchData() {
+    async function fetchBalances() {
       try {
-      const res = await fetch('/api/v1/flatties')
-      const data = await res.json()
-      setFlatmates(data)
+        const res = await fetch('/api/v1/flatties/balance')
+        const data = await res.json()
+        setFlatmates(data)
       } catch (error) {
-        console.error('Failed to fetch flatmates:', error)
+        console.error('Failed to fetch balances:', error)
       }
     }
-    fetchData()
+    fetchBalances()
   }, [])
 
   // Add flatmate
@@ -37,9 +39,7 @@ export default function Flatties() {
       body: JSON.stringify({ name: newName, credit: Number(credit), debt: Number(debt) }),
     })
     const newFlatmate = await res.json()
-
     setFlatmates([...flatmates, newFlatmate]) 
-
     setNewName('')
     setCredit('')
     setDebt('')
@@ -88,7 +88,8 @@ export default function Flatties() {
             <p className="font-semibold">{mate.name}</p>
             <p>Credit: ${mate.credit}</p>
             <p>Debt: ${mate.debt}</p>
-            <p className="font-medium">Balance: ${mate.credit - mate.debt}</p>
+            <p className="font-medium text-blue-700">Balance: ${mate.balance}</p>
+            <p className='text-red-500'>Unpaid: ${mate.unpaid}</p>
             </div>
             <button onClick={() => handleDelete(mate.id)} className="text-red-500 hover:underline text-sm">
               Delete
