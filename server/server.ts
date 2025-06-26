@@ -1,15 +1,19 @@
 import express from 'express'
 import * as Path from 'node:path'
 
-import flattieRoutes from './routes/flattie.ts'
+
+import flattiesRoutes from './routes/flatties.ts'
+
 import expenseRoutes from './routes/expense.ts'
 
 const server = express()
 
 server.use(express.json())
 
-server.use('/api/v1/flattie', flattieRoutes)
+
+server.use('/api/v1/flatties', flattiesRoutes)
 server.use('/api/v1/expense', expenseRoutes)
+
 
 if (process.env.NODE_ENV === 'production') {
   server.use(express.static(Path.resolve('public')))
