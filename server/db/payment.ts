@@ -14,3 +14,7 @@ export async function getAllPayments() {
       'flattie.profile_photo as profilePhoto',
     )
 }
+
+export async function updatePaymentStatus(id: number, paid: boolean) {
+  return connection('payment').where({ id }).update({ paid })
+}
