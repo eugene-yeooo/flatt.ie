@@ -1,4 +1,5 @@
 import { useAllPayment } from '../../hooks/usePayment'
+import PaymentCard from './PaymentCard'
 
 export default function Dashboard() {
   const { data: payments = [], isLoading, isError } = useAllPayment()
@@ -28,18 +29,7 @@ export default function Dashboard() {
             <h2 className="mb-2 text-xl font-semibold">{billTitle}</h2>
             <ul>
               {billPayments.map((payment) => (
-                <li
-                  key={payment.id}
-                  className={`mb-1 rounded p-2 ${
-                    payment.paid
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
-                  }`}
-                >
-                  <strong>{payment.flattieName}</strong>{' '}
-                  {payment.paid ? 'has ' : "hasn't "}
-                  paid ${payment.amount.toFixed(2)}
-                </li>
+                <PaymentCard />
               ))}
             </ul>
           </section>
