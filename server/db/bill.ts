@@ -3,7 +3,7 @@ import connection from './connection.ts'
 
 export async function getAllBills() {
   return connection('bill')
-    .leftJoin('expense', 'bill.expense_category', 'expense.id')
+    .leftJoin('expense', 'bill.expense_category', 'expense.category')
     .leftJoin('payment', 'bill.id', 'payment.bill_id')
     .select(
       'bill.id',
@@ -34,12 +34,12 @@ export function getExpenseId(name: string): number | null {
 }
 
 export async function addBill(data: NewBill) {
-  const expenseId = getExpenseId(data.expense_category)
+  const expenseCategory = getExpenseId(data.expense_category)
   const [id] = await connection('bill').insert({
     title: data.title,
     due_date: data.due_date,
     total_amount: data.total_amount,
-    expense_id: expenseId,
+    expense_category: expenseCategory,
   })
   return id
 }
