@@ -1,19 +1,12 @@
 import { useState } from 'react'
+import { useAllPayment } from '../../hooks/usePayment'
 
-type Payment = {
-  id: number
-  flatmateName: string
-  billTitle: string
-  amount: number
-  paid: boolean
-  dueDate: Date
-}
-
-type DashboardProps = {
-  payments: Payment[]
-}
-export default function Dashboard({ payments }: DashboardProps) {
+export default function Dashboard() {
   const [activeTab, setActiveTab] = useState<'unpaid' | 'paid'>('unpaid')
+  const { data: payments = [], isLoading, isError } = useAllPayment()
+
+  if (isLoading) return <p>Loading payments...</p>
+  if (isError) return <p>Error loading payments.</p>
 
   const paidPayments = payments.filter((p) => p.paid)
   const unpaidPayments = payments.filter((p) => !p.paid)
@@ -22,39 +15,40 @@ export default function Dashboard({ payments }: DashboardProps) {
     <div>
       <h1 className="mb-6 text-2xl font-bold">Dashboard</h1>
 
-      {/* Navbar toggle */}
+      {/* Toggle Tabs */}
       <nav className="mb-6 flex space-x-4 pb-2">
         <button
+          className="btn"
           style={{
             color:
               activeTab === 'unpaid'
                 ? 'var(--primary)'
                 : 'var(--muted-foreground)',
           }}
-          className="btn"
           onClick={() => setActiveTab('unpaid')}
         >
           Unpaid
         </button>
         <button
+          className="btn"
           style={{
             color:
               activeTab === 'paid'
                 ? 'var(--primary)'
                 : 'var(--muted-foreground)',
           }}
-          className="btn"
           onClick={() => setActiveTab('paid')}
         >
           Paid
         </button>
       </nav>
 
-      {/* Payments list */}
+      {/* Payment List */}
       <section>
         <h2 className="mb-4 text-xl font-semibold">
           {activeTab === 'unpaid' ? 'Unpaid Payments' : 'Paid Payments'}
         </h2>
+
         {activeTab === 'unpaid' ? (
           unpaidPayments.length === 0 ? (
             <p>All payments are paid up!</p>
@@ -69,9 +63,9 @@ export default function Dashboard({ payments }: DashboardProps) {
                     color: 'var(--destructive-foreground, white)',
                   }}
                 >
-                  <strong>{payment.flatmateName}</strong> owes $
-                  {payment.amount.toFixed(2)} for <em>{payment.billTitle}</em>{' '}
-                  due on {payment.dueDate.toLocaleDateString()}
+                  <strong>{payment.bill_id}</strong> paid $
+                  {payment.amount.toFixed(2)} for <em>{payment.bill_id}</em>{' '}
+                  (due {new Date(payment.bill_id).toLocaleDateString()})
                 </li>
               ))}
             </ul>
@@ -89,9 +83,9 @@ export default function Dashboard({ payments }: DashboardProps) {
                   color: 'var(--primary-foreground)',
                 }}
               >
-                <strong>{payment.flatmateName}</strong> paid $
-                {payment.amount.toFixed(2)} for <em>{payment.billTitle}</em>{' '}
-                (due {payment.dueDate.toLocaleDateString()})
+                <strong>{payment.bill_id}</strong> paid $
+                {payment.amount.toFixed(2)} for <em>{payment.bill_id}</em> (due{' '}
+                {new Date(payment.bill_id).toLocaleDateString()})
               </li>
             ))}
           </ul>
