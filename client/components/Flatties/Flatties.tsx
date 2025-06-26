@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
+import FlattieCard from './FlattiesCard'
 
 interface Flatmate {
   id: number
@@ -90,8 +91,9 @@ export default function Flatties() {
             </div>
           </li>
           ) : null
+
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
