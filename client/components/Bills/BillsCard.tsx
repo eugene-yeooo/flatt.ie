@@ -1,5 +1,5 @@
 import { Badge } from '@/components/components/ui/badge'
-import { Pencil } from 'lucide-react'
+import BillsCardDropdown from './BillsCardDropdown'
 interface BillCardProps {
   title: string
   dueDate: Date
@@ -23,9 +23,7 @@ export default function BillCard({
           {expenseCategory}
         </Badge>
       )}
-      <button className="absolute right-4 top-4 text-gray-300 hover:text-black">
-        <Pencil size={18} />
-      </button>
+      <BillsCardDropdown />
       <div>
         <h2 className="text-lg font-semibold">{title}</h2>
         <p className="text-sm text-gray-500">Due: {dueDate.toLocaleString()}</p>
