@@ -5,6 +5,7 @@ export async function getAllPayments() {
     .join('bill', 'payment.bill_id', 'bill.id')
     .join('flattie', 'payment.flatmate_id', 'flattie.id')
     .select(
+      'payment.id',
       'payment.amount',
       'payment.split',
       'payment.paid',

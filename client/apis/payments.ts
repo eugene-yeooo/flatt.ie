@@ -21,6 +21,7 @@ export async function updatePaymentStatus(
       .set('Content-Type', 'application/json')
       .send({ paid })
     return res.body as Payment[]
+    console.log('PATCH response:', res.body)
   } catch (error: any) {
     if (error.response && error.response.body && error.reponse.body.error) {
       throw new Error(error.response.body.error)

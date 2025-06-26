@@ -26,7 +26,11 @@ router.patch('/:id', async (req, res) => {
   }
 
   try {
-    await db.updatePaymentStatus(id, paid)
+    const updated = await db.updatePaymentStatus(id, paid)
+    if (updated === 0) {
+      return res.status(404).json({ error: 'Payment not found' })
+    }
+
     res.status(200).json({ message: 'Payment status updated successfully' })
   } catch (err) {
     console.error('Error updating Payments', err)
