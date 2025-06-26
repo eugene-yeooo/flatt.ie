@@ -1,9 +1,9 @@
 import request from 'superagent'
 import { Expense } from '../../models/models'
 
-const expensesURL = '/api/v1/expenses'
+const expensesURL = '/api/v1/expense'
 
-export async function getExpenses(): Promise<Expense> {
+export async function getAllExpenses(): Promise<Expense[]> {
   const res = await request.get(expensesURL)
   return res.body
 }

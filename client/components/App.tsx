@@ -59,6 +59,7 @@ export default function App() {
       {/* Navigation Tabs */}
       <Navigation />
 
+
       <main className="mx-auto max-w-5xl p-4">
         <Routes>
           <Route path="/" element={<Dashboard payments={[]} />} />
