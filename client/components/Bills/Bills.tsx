@@ -37,7 +37,7 @@ export default function Bills() {
     <div className="mx-auto max-w-4xl space-y-4 p-4">
       <div className="flex justify-end bg-primary">
         <Button onClick={toggleAddBill} className="btn">
-          {showAddBill ? 'Cancel' : 'Add Bill'}
+          Add Bill
         </Button>
       </div>
 
