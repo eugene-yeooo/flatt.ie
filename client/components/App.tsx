@@ -17,7 +17,7 @@ function App() {
               Dashboard
             </Link>
             <Link to="/bills" className="px-4 py-2 hover:text-blue-500">
-              Bills
+              Billss
             </Link>
           </div>
         </div>
