@@ -12,9 +12,9 @@ type Payment = {
 type DashboardProps = {
   payments: Payment[]
 }
+
 export default function Dashboard({ payments }: DashboardProps) {
   const [activeTab, setActiveTab] = useState<'unpaid' | 'paid'>('unpaid')
-
   const paidPayments = payments.filter((p) => p.paid)
   const unpaidPayments = payments.filter((p) => !p.paid)
 
