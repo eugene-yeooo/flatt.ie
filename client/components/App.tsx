@@ -3,11 +3,8 @@ import Dashboard from './Dashboard/Dashboard'
 import Bills from './Bills/Bills'
 import Navigation from './Navigation'
 import Report from './Reports/Reports'
-<<<<<<< HEAD
-import Flatties from './Flatties'
-=======
+
 import Flatties from './Flatties/Flatties'
->>>>>>> 4107d1c0e82b5123d259e8a5c00716d3edcaf8e8
 
 export default function App() {
   //REPORTS SAMPLE DATA
@@ -34,7 +31,7 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen text-foreground"
+      className="text-foreground min-h-screen"
       style={{
         backgroundColor: 'var(--background)',
         color: 'var(--foreground)',
@@ -70,7 +67,7 @@ export default function App() {
           <Route path="/flatmates" element={<Flatties />} />
           <Route path="/bills" element={<Bills />} />
           <Route path="/report" element={<Report data={sampleData} />} />
-          <Route path='/flatmates' element={<Flatties />} />
+          <Route path="/flatmates" element={<Flatties />} />
         </Routes>
       </main>
     </div>
