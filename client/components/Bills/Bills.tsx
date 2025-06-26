@@ -1,6 +1,4 @@
-import { useState } from 'react'
 import BillCard from './BillsCard'
-import { Bill } from 'models/models'
 import { useGetAllBills } from '../../hooks/useGetAllBills'
 
 export default function Bills() {
