@@ -2,6 +2,7 @@ import express from 'express'
 // import checkJwt, { JwtRequest } from '../auth0.ts'
 
 import * as db from '../db/bill.ts'
+import { json } from 'node:stream/consumers'
 
 const router = express.Router()
 
@@ -25,6 +26,21 @@ router.post('/add-bill', async (req, res) => {
   } catch (err) {
     console.error(err)
     res.status(500).json({ message: 'Error adding new bill' })
+  }
+})
+
+// DELETE /api/v1/bill/delete-bill
+router.delete('/delete-bill/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    const deletedCount = await db.deleteBill(id)
+    if (deletedCount === 0) {
+      return res.status(404).json({ message: 'Bill not found' })
+    }
+    res.status(200).json({ message: 'Bill deleted successfully' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error: failed to delete bill' })
   }
 })
 
