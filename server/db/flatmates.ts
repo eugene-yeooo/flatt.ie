@@ -8,15 +8,15 @@ interface Flatmate {
 
 // Get all flatmates
 export async function getAllFlatmates() {
-  return connection('flatmate').select('id', 'name', 'credit', 'debt')
+  return connection('flattie').select('*')
 }
 
 // Add a new flatmate
 export async function addFlatmate(flatmate: Flatmate) {
-  return connection('flatmate').insert(flatmate).returning('*')
+  return connection('flattie').insert(flatmate).returning('*')
 }
 
 // Delete a flatmate
 export function deleteFlatmate(id: number, db = connection) {
-  return db('flatmate').where({ id }).del()
+  return db('flattie').where({ id }).del()
 }
