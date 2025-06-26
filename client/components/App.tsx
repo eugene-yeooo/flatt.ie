@@ -5,7 +5,7 @@ import Navigation from './Navigation'
 import Report from './Reports/Reports'
 
 import Flatties from './Flatties/Flatties'
->>>>>>> 4107d1c0e82b5123d259e8a5c00716d3edcaf8e8
+
 
 export default function App() {
   //REPORTS SAMPLE DATA
