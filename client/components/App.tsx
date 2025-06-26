@@ -3,6 +3,7 @@ import Dashboard from './Dashboard/Dashboard'
 import Bills from './Bills/Bills'
 import Navigation from './Navigation'
 import Report from './Reports/Reports'
+import Flatties from './Flatties/Flatties'
 
 export default function App() {
   //REPORTS SAMPLE DATA
@@ -29,7 +30,7 @@ export default function App() {
 
   return (
     <div
-      className="text-foreground min-h-screen"
+      className="min-h-screen text-foreground"
       style={{
         backgroundColor: 'var(--background)',
         color: 'var(--foreground)',
@@ -59,10 +60,10 @@ export default function App() {
       {/* Navigation Tabs */}
       <Navigation />
 
-
       <main className="mx-auto max-w-5xl p-4">
         <Routes>
           <Route path="/" element={<Dashboard payments={[]} />} />
+          <Route path="/flatmates" element={<Flatties />} />
           <Route path="/bills" element={<Bills />} />
           <Route path="/report" element={<Report data={sampleData} />} />
         </Routes>
