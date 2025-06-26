@@ -1,4 +1,3 @@
-import knex from './connection'
 import connection from './connection'
 
 interface Flatmate {
@@ -7,14 +6,17 @@ interface Flatmate {
   debt: number
 }
 
+// Get all flatmates
 export async function getAllFlatmates() {
-  return knex('flattie').select('id', 'name', 'credit', 'debt')
+  return connection('flattie').select('*')
 }
 
+// Add a new flatmate
 export async function addFlatmate(flatmate: Flatmate) {
-  return knex('flattie').insert(flatmate).returning('*')
+  return connection('flattie').insert(flatmate).returning('*')
 }
 
+// Delete a flatmate
 export function deleteFlatmate(id: number, db = connection) {
   return db('flattie').where({ id }).del()
 }

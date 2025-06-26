@@ -17,18 +17,28 @@ export interface Expense {
 }
 
 export interface Bill {
-  id: number
+  billId: number
   title: string
-  expense_category: string
-  due_date: Date
+  due_date: string | Date
   total_amount: number
+  expenseCategory: string
+  expenseFrequency: 'weekly' | 'monthly' | 'one_off'
+  paymentId: number
+  paymentAmount: number
+  split: number
+  paid: boolean
+  flatmate_id: number
 }
 
 export interface Payment {
   id: number
-  flatmate_id: number
   bill_id: number
+  flatmate_id: number
   amount: number
   split: number
   paid: boolean
+  billTitle: string
+  due_date: string | Date
+  flattieName: string
+  profile_photo?: string
 }
