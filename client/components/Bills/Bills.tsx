@@ -44,6 +44,7 @@ export default function Bills() {
           />
         ))
       )}
+      <p>HARD CODED DATA</p>
     </div>
   )
 }

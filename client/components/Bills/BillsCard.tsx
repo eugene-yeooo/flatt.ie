@@ -13,7 +13,7 @@ export default function BillCard({
   expense_category,
 }: BillCardProps) {
   return (
-    <div className="flex items-center justify-between rounded-md border bg-white p-4 shadow">
+    <div className="flex items-center justify-between rounded-md bg-white p-4 shadow">
       <div>
         <h2 className="text-lg font-semibold">{title}</h2>
         <p className="text-sm text-gray-500">
