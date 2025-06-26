@@ -5,10 +5,12 @@ export async function getAllPayments() {
     .join('bill', 'payment.bill_id', 'bill.id')
     .join('flattie', 'payment.flatmate_id', 'flattie.id')
     .select(
-      'payment.*',
+      'payment.amount',
+      'payment.split',
+      'payment.paid',
       'bill.title as billTitle',
-      'bill.due_date',
+      'bill.due_date as dueDate',
       'flattie.name as flattieName',
-      'flattie.profile_photo',
+      'flattie.profile_photo as profilePhoto',
     )
 }
