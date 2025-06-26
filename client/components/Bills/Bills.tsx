@@ -1,32 +1,16 @@
 import { useState } from 'react'
 import BillCard from './BillsCard'
 import { Bill } from 'models/models'
+import { useGetAllBills } from '../../hooks/useGetAllBills'
 
 export default function Bills() {
-  // Example hardcoded bills - replace with fetch later
-  const [bills] = useState<Bill[]>([
-    {
-      id: 1,
-      title: 'Rent June 2025',
-      due_date: new Date('2025-06-30'),
-      total_amount: 620,
-      expense_category: 'rent',
-    },
-    {
-      id: 2,
-      title: 'Power May 2025',
-      due_date: new Date('2025-05-31'),
-      total_amount: 163.24,
-      expense_category: 'power',
-    },
-    {
-      id: 3,
-      title: 'Internet June 2025',
-      due_date: new Date('2025-06-01'),
-      total_amount: 85,
-      expense_category: 'internet',
-    },
-  ])
+  const { data: bills, isPending, error } = useGetAllBills()
+
+  if (isPending) return <p className="p-4">Loading...</p>
+  if (error) return <p className="p-4 text-red-500">Error loading bills.</p>
+  if (!bills || bills.length === 0)
+    return <p className="p-4">No bills found.</p>
+  console.log(bills)
 
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-4">
@@ -39,12 +23,11 @@ export default function Bills() {
             key={bill.id}
             id={bill.id}
             title={bill.title}
-            due_date={bill.due_date}
+            due_date={new Date(bill.due_date)}
             total_amount={bill.total_amount}
           />
         ))
       )}
-      <p>HARD CODED DATA</p>
     </div>
   )
 }
