@@ -12,3 +12,13 @@ export async function getExpensesById(id: number | string): Promise<Expense> {
   const res = await request.get(`${expensesURL}/${id}`)
   return res.body
 }
+
+export async function addExpense(data: Expense) {
+  try {
+    const res = await request.post(`${expensesURL}/`).send(data)
+    return res.body.id
+  } catch (err) {
+    console.error('Failed to add Expense type', err)
+    throw err
+  }
+}
