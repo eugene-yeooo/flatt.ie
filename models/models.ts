@@ -19,7 +19,7 @@ export interface Expense {
 export interface Bill {
   id: number
   title: string
-  expense_id: number
+  expense_category: string
   due_date: Date
   total_amount: number
 }

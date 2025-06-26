@@ -40,7 +40,6 @@ export async function seed(knex) {
       paid: true,
     },
 
-    // Payments for June 2025 Internet (bill_id: 10)
     { id: 9, flatmate_id: 1, bill_id: 10, amount: 21.25, split: 1, paid: true },
     {
       id: 10,
