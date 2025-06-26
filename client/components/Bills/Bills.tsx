@@ -23,11 +23,15 @@ export default function Bills() {
           </Button>
         </div>
 
-        {showAddBill && <AddBill />}
+        {showAddBill && <AddBill onAddBill={handleAddBill} />}
         <p>No bills found.</p>
       </div>
     )
   console.log(bills)
+
+  function handleAddBill() {
+    setShowAddBill(false)
+  }
 
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-4">
@@ -37,7 +41,7 @@ export default function Bills() {
         </Button>
       </div>
 
-      {showAddBill && <AddBill />}
+      {showAddBill && <AddBill onAddBill={handleAddBill} />}
 
       <div
         className="grid gap-6"

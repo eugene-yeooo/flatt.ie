@@ -1,7 +1,7 @@
 import { useAddNewBill } from '../../hooks/useBills'
 import { useState } from 'react'
 
-export default function AddBill() {
+export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
   const [title, setTitle] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [totalAmount, setTotalAmount] = useState('')
@@ -22,7 +22,7 @@ export default function AddBill() {
       total_amount: Number(totalAmount),
       expense_category: expenseCategory,
     })
-
+    onAddBill()
     setTitle('')
     setDueDate('')
     setTotalAmount('')
