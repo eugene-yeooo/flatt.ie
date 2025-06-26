@@ -53,10 +53,9 @@ export default function Bills() {
           bills.map((bill) => (
             <BillCard
               key={bill.id}
-              id={bill.id}
               title={bill.title}
-              due_date={new Date(bill.due_date)}
-              total_amount={bill.total_amount}
+              dueDate={new Date(bill.dueDate)}
+              totalAmount={bill.totalAmount}
             />
           ))
         )}

@@ -1,14 +1,15 @@
 import connection from './connection'
-
-interface Flatmate {
-  name: string
-  credit: number
-  debt: number
-}
+import { Flatmate } from 'models/models'
 
 // Get all flatmates
 export async function getAllFlatmates() {
-  return connection('flattie').select('*')
+  return connection('flattie').select(
+    'id',
+    'name',
+    'credit',
+    'debt',
+    'profile_photo as profilePhoto',
+  )
 }
 
 // Add a new flatmate

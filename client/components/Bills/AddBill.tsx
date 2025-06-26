@@ -76,6 +76,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
         <select
           value={expenseCategory}
           onChange={(e) => setExpenseCategory(e.target.value)}
+          placeholder="e.g. Rent, Power, Internet"
           required
           className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
         >

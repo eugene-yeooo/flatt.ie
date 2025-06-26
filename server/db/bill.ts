@@ -3,20 +3,20 @@ import connection from './connection.ts'
 
 export async function getAllBills() {
   return connection('bill')
-    .join('expense', 'bill.expense_category', 'expense.id')
-    .join('payment', 'bill.id', 'payment.bill_id')
+    .leftJoin('expense', 'bill.expense_category', 'expense.id')
+    .leftJoin('payment', 'bill.id', 'payment.bill_id')
     .select(
-      'bill.id as billId',
+      'bill.id',
       'bill.title',
-      'bill.due_date',
-      'bill.total_amount',
+      'bill.due_date as dueDate',
+      'bill.total_amount as totalAmount',
       'expense.category as expenseCategory',
       'expense.frequency',
       'payment.id as paymentId',
       'payment.amount as paymentAmount',
       'payment.split',
       'payment.paid',
-      'payment.flatmate_id',
+      'payment.flatmate_id as flattieId',
     )
 }
 

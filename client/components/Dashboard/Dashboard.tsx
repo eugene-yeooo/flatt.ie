@@ -8,11 +8,15 @@ export default function Dashboard() {
 
   const paymentsByBill = payments.reduce(
     (acc, payment) => {
+      // Get bill title from current payment;
       const key = payment.billTitle || 'Unknown Bill'
+      //if bill title hasnt been seen yet, create empty array for it
       if (!acc[key]) acc[key] = []
+      // Add the current payment to the array for this bill title
       acc[key].push(payment)
       return acc
     },
+    // Start with an empty object to group payments by bill title
     {} as Record<string, typeof payments>,
   )
 
@@ -32,9 +36,9 @@ export default function Dashboard() {
                       : 'bg-red-100 text-red-800'
                   }`}
                 >
-                  <strong>{payment.flattieName}</strong> paid $
-                  {payment.amount.toFixed(2)} —{' '}
-                  {payment.paid ? 'Paid' : 'Unpaid'}
+                  <strong>{payment.flattieName}</strong>{' '}
+                  {payment.paid ? 'has ' : "hasn't "}
+                  paid ${payment.amount.toFixed(2)}
                 </li>
               ))}
             </ul>
