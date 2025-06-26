@@ -1,6 +1,9 @@
 import { NewBill } from 'models/models.ts'
 import connection from './connection.ts'
 
+
+// ----------- GET BILLS ------------- //
+
 export async function getAllBills() {
   return connection('bill')
     .leftJoin('expense', 'bill.expense_category', 'expense.id')
@@ -26,8 +29,8 @@ export async function getAllBills() {
 export function getExpenseId(name: string): number | null {
   const expenseCategoryMap: Record<string, number> = {
     Rent: 1,
-    Internet: 2,
-    Power: 3,
+    Power: 2,
+    Internet: 3,
     Rubbish: 4,
   }
   return expenseCategoryMap[name] ?? null
@@ -35,6 +38,11 @@ export function getExpenseId(name: string): number | null {
 
 export async function addBill(data: NewBill) {
   const expenseId = getExpenseId(data.expense_category)
+
+  if (!expenseId) {
+    throw new Error(`Invalid expense category: ${data.expense_category}`)
+  }
+
   const [id] = await connection('bill').insert({
     title: data.title,
     due_date: data.due_date,
@@ -42,4 +50,11 @@ export async function addBill(data: NewBill) {
     expense_id: expenseId,
   })
   return id
+}
+
+
+// ----------- DELETE BILL ------------- //
+
+export function deleteBill(id: number) {
+  return connection('bill').where({id}).
 }
