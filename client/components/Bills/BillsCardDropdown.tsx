@@ -1,8 +1,13 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
+import { useDeleteBill } from '../../hooks/useBills'
 import { Pencil, Edit3, Trash2 } from 'lucide-react'
 
-export default function HeaderDropdown() {
-  function handleDelete() {}
+export default function HeaderDropdown({ id }: { id: number }) {
+  const deleteBill = useDeleteBill()
+
+  function handleDelete() {
+    deleteBill.mutate(id)
+  }
 
   return (
     <DropdownMenu.Root>

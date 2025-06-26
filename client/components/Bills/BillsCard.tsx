@@ -1,12 +1,14 @@
 import { Badge } from '@/components/components/ui/badge'
 import BillsCardDropdown from './BillsCardDropdown'
 interface BillCardProps {
+  id: number
   title: string
   dueDate: Date
   totalAmount: number
   expenseCategory?: string
 }
 export default function BillCard({
+  id,
   title,
   dueDate,
   totalAmount,
@@ -23,7 +25,7 @@ export default function BillCard({
           {expenseCategory}
         </Badge>
       )}
-      <BillsCardDropdown />
+      <BillsCardDropdown id={id} />
       <div>
         <h2 className="text-lg font-semibold">{title}</h2>
         <p className="text-sm text-gray-500">Due: {dueDate.toLocaleString()}</p>
