@@ -25,4 +25,15 @@ router.post('/', async (req, res) => {
   }
 })
 
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id)
+    await db.deleteFlatmate(id)
+    res.sendStatus(204)
+  } catch (error) {
+    console.error('Error deleting flatmate:', error)
+    res.status(500).json({ error: 'Failed to delete flatmate' })
+  }
+})
+
 export default router
