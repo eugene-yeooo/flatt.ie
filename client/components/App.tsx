@@ -3,6 +3,7 @@ import Dashboard from './Dashboard/Dashboard'
 import Bills from './Bills/Bills'
 import Navigation from './Navigation'
 import Report from './Reports/Reports'
+import Flatties from './Flatties'
 
 export default function App() {
   //REPORTS SAMPLE DATA
@@ -65,6 +66,7 @@ export default function App() {
           <Route path="/" element={<Dashboard payments={[]} />} />
           <Route path="/bills" element={<Bills />} />
           <Route path="/report" element={<Report data={sampleData} />} />
+          <Route path='/flatmates' element={<Flatties />} />
         </Routes>
       </main>
     </div>
