@@ -1,5 +1,5 @@
 import BillCard from './BillsCard'
-import { useGetAllBills } from '../../hooks/useGetAllBills'
+import { useGetAllBills } from '../../hooks/useBills'
 import AddBill from './AddBill'
 import { useState } from 'react'
 import { Button } from '@/components/components/ui/button'
@@ -10,10 +10,6 @@ export default function Bills() {
 
   function toggleAddBill() {
     setShowAddBill((prev) => !prev)
-  }
-
-  function handleAddBill() {
-    setShowAddBill(false)
   }
 
   if (isPending) return <p className="p-4">Loading...</p>
@@ -32,6 +28,10 @@ export default function Bills() {
       </div>
     )
   console.log(bills)
+
+  function handleAddBill() {
+    setShowAddBill(false)
+  }
 
   return (
     <div className="mx-auto max-w-4xl space-y-4 p-4">
