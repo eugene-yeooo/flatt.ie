@@ -18,7 +18,7 @@ export default function AddBill({ onAddBill }: AddBillProps) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!title || !dueDate || !totalAmount) {
-      alert('Please fill in all required fields')
+      alert('Please fill in required fields')
       return
     }
 
@@ -38,7 +38,7 @@ export default function AddBill({ onAddBill }: AddBillProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-md rounded-md bg-white p-6 shadow-md"
+      className="max-w rounded-md bg-white p-6 shadow-md"
     >
       <h2 className="mb-4 text-xl font-semibold">Add New Bill</h2>
 
