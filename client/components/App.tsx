@@ -3,9 +3,7 @@ import Dashboard from './Dashboard/Dashboard'
 import Bills from './Bills/Bills'
 import Navigation from './Navigation'
 import Report from './Reports/Reports'
-<<<<<<< HEAD
-import Flatties from './Flatties'
-=======
+
 import Flatties from './Flatties/Flatties'
 >>>>>>> 4107d1c0e82b5123d259e8a5c00716d3edcaf8e8
 
