@@ -34,7 +34,7 @@ export default function Flatties() {
       body: JSON.stringify({ name: newName, credit, debt }),
     })
     const newFlatmate = await res.json()
-    setFlatmates([...flatmates, newFlatmate[0]]) // assuming array is returned?
+    setFlatmates([...flatmates, newFlatmate[0]])
     setNewName('')
     setCredit(0)
     setDebt(0)
