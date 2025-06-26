@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
 
 interface Flatmate {
   id: number
@@ -94,7 +94,7 @@ export default function Flatties() {
             </div>
           </li>
         ))}
-      </ul>
-    </div>
+        </ul>
+      </div>
   )
 }
