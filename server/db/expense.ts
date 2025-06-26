@@ -14,10 +14,10 @@ export async function getAllExpenses() {
 
 export async function addExpense(data: Expense) {
   const [id] = await connection('expense').insert({
-    category: data.type,
+    category: data.category,
     frequency: data.frequency,
-    defaultAmount: data.defaultAmount,
-    calcMethod: data.calcMethod,
+    default_amount: data.default_amount,
+    calc_method: data.calc_method,
     notes: data.notes,
   })
   return id

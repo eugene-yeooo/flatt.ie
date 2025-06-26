@@ -9,10 +9,10 @@ export interface Flatmate {
 
 export interface Expense {
   id: number
-  type: string
+  category: string
   frequency: 'weekly' | 'monthly' | 'one_off'
-  defaultAmount: number | null
-  calcMethod: 'fixed_split' | 'manual' | 'percentage_split'
+  default_amount: number | null
+  calc_method: 'fixed_split' | 'manual' | 'percentage_split'
   notes?: string
 }
 
