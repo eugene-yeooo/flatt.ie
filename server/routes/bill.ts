@@ -20,8 +20,8 @@ router.get('/', async (req, res) => {
 // POST /api/v1/bill/add-bill
 router.post('/add-bill', async (req, res) => {
   try {
-    const billId = await db.addBill(req.body)
-    res.status(201).json({ billId })
+    const id = await db.addBill(req.body)
+    res.status(201).json({ id })
   } catch (err) {
     console.error(err)
     res.status(500).json({ message: 'Error adding new bill' })

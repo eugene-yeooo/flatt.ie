@@ -1,5 +1,5 @@
 import BillCard from './BillsCard'
-import { useGetAllBills } from '../../hooks/useGetAllBills'
+import { useGetAllBills } from '../../hooks/useBills'
 import AddBill from './AddBill'
 import { useState } from 'react'
 import { Button } from '@/components/components/ui/button'
@@ -10,10 +10,6 @@ export default function Bills() {
 
   function toggleAddBill() {
     setShowAddBill((prev) => !prev)
-  }
-
-  function handleAddBill() {
-    setShowAddBill(false)
   }
 
   if (isPending) return <p className="p-4">Loading...</p>
@@ -27,7 +23,7 @@ export default function Bills() {
           </Button>
         </div>
 
-        {showAddBill && <AddBill onAddBill={handleAddBill} />}
+        {showAddBill && <AddBill />}
         <p>No bills found.</p>
       </div>
     )
@@ -41,7 +37,7 @@ export default function Bills() {
         </Button>
       </div>
 
-      {showAddBill && <AddBill onAddBill={handleAddBill} />}
+      {showAddBill && <AddBill />}
 
       <div
         className="grid gap-6"
