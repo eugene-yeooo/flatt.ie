@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { addNewBill, getAllBills } from '../apis/bills'
 import { NewBill } from 'models/models'
 
+// ---------- GET BILLS ---------- //
+
 export function useGetAllBills() {
   const query = useQuery({
     queryKey: ['bills'],
@@ -11,6 +13,8 @@ export function useGetAllBills() {
     ...query,
   }
 }
+
+// ---------- ADD BILL ---------- //
 
 export function useAddNewBill() {
   const qc = useQueryClient()
@@ -24,3 +28,7 @@ export function useAddNewBill() {
     },
   })
 }
+
+// ---------- DELETE BILL ---------- //
+
+// export function
