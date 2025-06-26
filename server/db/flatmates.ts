@@ -1,4 +1,5 @@
 import knex from './connection'
+import connection from './connection'
 
 interface Flatmate {
   name: string
@@ -12,4 +13,8 @@ export async function getAllFlatmates() {
 
 export async function addFlatmate(flatmate: Flatmate) {
   return knex('flattie').insert(flatmate).returning('*')
+}
+
+export function deleteFlatmate(id: number, db = connection) {
+  return db('flattie').where({ id }).del()
 }

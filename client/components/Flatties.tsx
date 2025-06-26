@@ -39,6 +39,18 @@ export default function Flatties() {
     setDebt('')
   }
 
+  // Delete flatmate
+  async function handleDelete(id: number) {
+    try {
+      await fetch('/api/v1/flatties/${id}', {
+        method: 'DELETE',
+      })
+      setFlatmates(flatmates.filter((mate) => mate.id !== id))
+    } catch (err) {
+      console.error('Failed to delete flatmate:', err)
+    }
+  }
+
   return (
     <div>
       <h1>Flatmates</h1>
@@ -61,14 +73,21 @@ export default function Flatties() {
         <button type="submit" className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600">Add Flatmate</button>
       </form>
 
-      <ul>
+      <ul className="mt-8 space-y-4">
         {flatmates.map((mate) => (
           mate ? (
-          <li key={mate.id}>
-            <strong>{mate.name}</strong> <br />
+          <li key={mate.id} className="border-b pb-4">
+            <div className="flex justify-between items-center">
+              <div>
+            <strong className="text-lg">{mate.name}</strong> <br />
             Credit: ${mate.credit} <br />
             Debt: ${mate.debt} <br />
             Balance: ${mate.credit - mate.debt}
+            </div>
+            <button onClick={() => handleDelete(mate.id)} className="text-red-500 hover:underline text-sm">
+              Delete
+            </button>
+            </div>
           </li>
           ) : null
         ))}
