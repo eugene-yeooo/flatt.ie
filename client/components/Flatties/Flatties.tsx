@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react'
+import FlattieCard from './FlattiesCard'
 
 interface Flatmate {
   id: number
@@ -43,22 +44,37 @@ export default function Flatties() {
     <div>
       <h1>Flatmates</h1>
       <form onSubmit={handleAddFlatmate}>
-        <input type="text" placeholder="Name" value={newName} onChange={(e) => setNewName(e.target.value)} />
-        <input type="number" placeholder="Credit" value={credit} onChange={(e) => setCredit(Number(e.target.value))} />
-        <input type="number" placeholder="Debt" value={debt} onChange={(e) => setDebt(Number(e.target.value))} />
+        <input
+          type="text"
+          placeholder="Name"
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+        />
+        <input
+          type="number"
+          placeholder="Credit"
+          value={credit}
+          onChange={(e) => setCredit(Number(e.target.value))}
+        />
+        <input
+          type="number"
+          placeholder="Debt"
+          value={debt}
+          onChange={(e) => setDebt(Number(e.target.value))}
+        />
         <button type="submit">Add Flatmate</button>
       </form>
 
-      <ul>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {flatmates.map((mate) => (
-          <li key={mate.id}>
-            <strong>{mate.name}</strong> <br />
-            Credit: ${mate.credit} <br />
-            Debt: ${mate.debt} <br />
-            Balance: ${mate.credit - mate.debt}
-          </li>
+          <FlattieCard
+            key={mate.id}
+            name={mate.name}
+            credit={mate.credit}
+            debt={mate.debt}
+          />
         ))}
-      </ul>
+      </div>
     </div>
   )
 }
