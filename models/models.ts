@@ -30,6 +30,13 @@ export interface Bill {
   flatmate_id: number
 }
 
+export interface NewBill {
+  title: string
+  due_date: string
+  total_amount: number
+  expense_category: string
+}
+
 export interface Payment {
   id: number
   bill_id: number
