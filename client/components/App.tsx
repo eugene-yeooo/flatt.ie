@@ -2,8 +2,31 @@ import { Routes, Route, Link } from 'react-router-dom'
 import Dashboard from './Dashboard/Dashboard'
 import Bills from './Bills/Bills'
 import Navigation from './Navigation'
+import Report from './Reports/Reports'
 
 export default function App() {
+  //REPORTS SAMPLE DATA
+  const sampleData = [
+    {
+      category: 'Rent',
+      monthlyAmounts: [
+        1200, 1200, 1200, 1200, 1200, 1200, 1200, 1200, 1200, 1200, 1200, 1200,
+      ],
+    },
+    {
+      category: 'Utilities',
+      monthlyAmounts: [
+        150, 140, 160, 145, 155, 150, 148, 152, 149, 147, 150, 153,
+      ],
+    },
+    {
+      category: 'Groceries',
+      monthlyAmounts: [
+        300, 320, 310, 305, 315, 325, 330, 335, 320, 310, 300, 295,
+      ],
+    },
+  ]
+
   return (
     <div
       className="text-foreground min-h-screen"
@@ -40,6 +63,7 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Dashboard payments={[]} />} />
           <Route path="/bills" element={<Bills />} />
+          <Route path="/report" element={<Report data={sampleData} />} />
         </Routes>
       </main>
     </div>
