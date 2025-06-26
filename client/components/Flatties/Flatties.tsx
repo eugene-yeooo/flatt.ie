@@ -37,7 +37,9 @@ export default function Flatties() {
       body: JSON.stringify({ name: newName, credit: Number(credit), debt: Number(debt) }),
     })
     const newFlatmate = await res.json()
+
     setFlatmates([...flatmates, newFlatmate]) 
+
     setNewName('')
     setCredit('')
     setDebt('')

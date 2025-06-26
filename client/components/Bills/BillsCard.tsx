@@ -1,3 +1,4 @@
+import { Badge } from '@/components/components/ui/badge'
 type BillCardProps = {
   id: number
   title: string
@@ -13,7 +14,17 @@ export default function BillCard({
   expense_category,
 }: BillCardProps) {
   return (
-    <div className="flex items-center justify-between rounded-md bg-white p-4 shadow">
+    <div className="relative rounded-md bg-white p-4 shadow">
+      {/* Badge positioned top-right */}
+      {expense_category && (
+        <Badge
+          variant="secondary"
+          className="absolute right-2 top-2 rounded-full px-3 py-1 text-xs font-semibold uppercase"
+        >
+          {expense_category}
+        </Badge>
+      )}
+
       <div>
         <h2 className="text-lg font-semibold">{title}</h2>
         <p className="text-sm text-gray-500">
@@ -22,9 +33,6 @@ export default function BillCard({
         <p className="text-sm text-gray-700">
           Amount: ${total_amount.toFixed(2)}
         </p>
-        {expense_category && (
-          <p className="text-xs uppercase text-gray-400">{expense_category}</p>
-        )}
       </div>
     </div>
   )
