@@ -1,24 +1,29 @@
 import { useAllPayment } from '../../hooks/usePayment'
+import { useUpdatePaymentStatus } from '../../hooks/usePayment'
 
 export default function Dashboard() {
   const { data: payments = [], isLoading, isError } = useAllPayment()
+  const {
+    mutate: updateStatus,
+    isPending: isUpdating,
+    error: updateError,
+  } = useUpdatePaymentStatus()
 
   if (isLoading) return <p>Loading payments...</p>
   if (isError) return <p>Error loading payments.</p>
 
   const paymentsByBill = payments.reduce(
     (acc, payment) => {
-      // Get bill title from current payment;
       const key = payment.billTitle || 'Unknown Bill'
-      //if bill title hasnt been seen yet, create empty array for it
       if (!acc[key]) acc[key] = []
-      // Add the current payment to the array for this bill title
       acc[key].push(payment)
       return acc
     },
-    // Start with an empty object to group payments by bill title
     {} as Record<string, typeof payments>,
   )
+  const handlePaymentStatus = async (id: number, paidStatus: boolean) => {
+    updateStatus({ id, paid: paidStatus })
+  }
 
   return (
     <div>
@@ -36,8 +41,20 @@ export default function Dashboard() {
                       : 'bg-red-100 text-red-800'
                   }`}
                 >
-                  <strong>{payment.flattieName}</strong>{' '}
-                  {payment.paid ? 'has ' : "hasn't "}
+                  <strong>{payment.flattieName}</strong>
+                  <button
+                    disabled={isUpdating}
+                    onClick={() =>
+                      handlePaymentStatus(payment.id, !payment.paid)
+                    }
+                    className={`ml-4 rounded px-2 py-1 text-sm font-medium ${
+                      payment.paid
+                        ? 'bg-green-500 text-white hover:bg-green-600'
+                        : 'bg-red-500 text-white hover:bg-red-600'
+                    }`}
+                  >
+                    {payment.paid ? 'has' : "hasn't"}
+                  </button>
                   paid ${payment.amount.toFixed(2)}
                 </li>
               ))}
@@ -45,6 +62,11 @@ export default function Dashboard() {
           </section>
         )
       })}
+      {updateError && (
+        <p className="mt-4 text-red-600">
+          Error: {(updateError as Error).message}
+        </p>
+      )}
     </div>
   )
 }
