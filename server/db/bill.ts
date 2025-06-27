@@ -22,6 +22,8 @@ export async function getAllBills() {
     )
 }
 
+console.log(getAllBills())
+
 // ----------- ADD NEW BILL ------------- //
 
 export async function addBill(data: NewBill) {

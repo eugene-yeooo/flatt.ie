@@ -53,7 +53,7 @@ export interface Payment {
 export interface UpdateBillData {
   id: number
   title: string
-  due_date: string
+  due_date: string | Date
   total_amount: number
   expense_category?: string
 }

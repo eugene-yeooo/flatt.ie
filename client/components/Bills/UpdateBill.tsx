@@ -1,18 +1,23 @@
-import { useAddNewBill } from '../../hooks/useBills'
+import { useUpdateBill } from '../../hooks/useBills'
 import { useState } from 'react'
 import { X } from 'lucide-react'
+import { UpdateBillData } from 'models/models'
 
-export default function AddBill({
-  onUpdateBill,
+export default function UpdateBill({
+  bill,
+  setShowUpdateBill,
 }: {
-  onUpdateBill: () => void
+  bill: UpdateBillData
+  setShowUpdateBill: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-  const [title, setTitle] = useState('')
-  const [dueDate, setDueDate] = useState('')
-  const [totalAmount, setTotalAmount] = useState('')
-  const [expenseCategory, setExpenseCategory] = useState('Power')
-  const mutation = useAddNewBill()
+  const [title, setTitle] = useState(bill.title)
+  const [dueDate, setDueDate] = useState(bill.due_date)
+  const [totalAmount, setTotalAmount] = useState(bill.total_amount)
+  const [expenseCategory, setExpenseCategory] = useState(bill.expense_category)
+  const mutation = useUpdateBill()
   const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
+
+  console.log(bill)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -22,16 +27,13 @@ export default function AddBill({
     }
 
     mutation.mutate({
+      id: bill.id,
       title,
       due_date: dueDate,
       total_amount: Number(totalAmount),
       expense_category: expenseCategory,
     })
-    onUpdateBill()
-    setTitle('')
-    setDueDate('')
-    setTotalAmount('')
-    setExpenseCategory('')
+    setShowUpdateBill(false)
   }
 
   return (
@@ -41,10 +43,10 @@ export default function AddBill({
         className="flex flex-col justify-center rounded-md bg-white p-6 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Add New Bill</h2>
+          <h2 className="text-xl font-semibold">Update Bill</h2>
           <button
             type="button"
-            onClick={onUpdateBill}
+            onClick={() => setShowUpdateBill(false)}
             className="text-gray-400 hover:text-black"
             aria-label="Close form"
           >
@@ -110,7 +112,7 @@ export default function AddBill({
           type="submit"
           className="mt-2 rounded-lg bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-500 hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
-          Add Bill
+          Update Bill
         </button>
       </form>
     </div>

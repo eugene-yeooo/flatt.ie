@@ -3,12 +3,14 @@ import { useGetAllBills } from '../../hooks/useBills'
 import AddBill from './AddBill'
 import { useState } from 'react'
 import { Button } from '@/components/components/ui/button'
+import { UpdateBillData } from 'models/models'
 import UpdateBill from './UpdateBill'
 
 export default function Bills() {
   const { data: bills, isPending, error } = useGetAllBills()
   const [showAddBill, setShowAddBill] = useState(false)
-  const { showUpdateBill, setShowUpdateBill } = useState(true)
+  const [showUpdateBill, setShowUpdateBill] = useState(false)
+  const [selectedBill, setSelectedBill] = useState<UpdateBillData | null>(null)
 
   function toggleAddBill() {
     setShowAddBill((prev) => !prev)
@@ -29,13 +31,10 @@ export default function Bills() {
         <p>No bills found.</p>
       </div>
     )
-  // console.log(bills)
 
   function handleAddBill() {
     setShowAddBill(false)
   }
-
-  function handleUpdate() {}
 
   return (
     <div className="mx-auto max-w-4xl p-4">
@@ -47,7 +46,9 @@ export default function Bills() {
 
       {showAddBill && <AddBill onAddBill={handleAddBill} />}
 
-      {showUpdateBill && <UpdateBill onUpdateBill={handleUpdate} />}
+      {showUpdateBill && selectedBill && (
+        <UpdateBill setShowUpdateBill={setShowUpdateBill} bill={selectedBill} />
+      )}
 
       <div
         className="mt-4 grid gap-6"
@@ -63,6 +64,9 @@ export default function Bills() {
               title={bill.title}
               dueDate={new Date(bill.dueDate)}
               totalAmount={bill.totalAmount}
+              expenseCategory={bill.expenseCategory}
+              setShowUpdateBill={setShowUpdateBill}
+              setSelectedBill={setSelectedBill}
             />
           ))
         )}
