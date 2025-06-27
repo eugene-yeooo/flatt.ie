@@ -36,6 +36,8 @@ export default function Bills() {
     setShowAddBill(false)
   }
 
+  console.log('bills', bills)
+
   return (
     <div className="mx-auto max-w-4xl p-4">
       <div className="flex justify-end bg-primary">
@@ -59,7 +61,7 @@ export default function Bills() {
         ) : (
           bills.map((bill) => (
             <BillCard
-              key={bill.id}
+              key={`${bill.id}-${bill.flattieId ?? 'all'}`}
               id={bill.id}
               title={bill.title}
               dueDate={new Date(bill.dueDate)}
