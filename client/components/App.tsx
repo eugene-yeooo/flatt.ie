@@ -6,8 +6,16 @@ import Navigation from './Navigation'
 import Report from './Reports/Reports'
 import Flatties from './Flatties/Flatties'
 import Authenticate from './Authenticate'
+import Front from './Front'
+import { useAuth0 } from '@auth0/auth0-react'
 
 export default function App() {
+  const { isAuthenticated } = useAuth0()
+
+  if (!isAuthenticated) {
+    return <Front />
+  }
+
   //REPORTS SAMPLE DATA
   const sampleData = [
     {
@@ -60,13 +68,12 @@ export default function App() {
         </div>
       </header>
 
-      {/* Navigation Tabs */}
       <Navigation />
 
       <main className="mx-auto max-w-5xl p-4">
         <Routes>
-          {/* <Route path="/" element={<Front />} /> */}
-          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/" element={<Front />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/flatmates" element={<Flatties />} />
           <Route path="/bills" element={<Bills />} />
           <Route path="/expense" element={<Expenses />} />

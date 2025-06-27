@@ -1,0 +1,87 @@
+import { useAuth0 } from '@auth0/auth0-react'
+import { useEffect, useState } from 'react'
+
+const buttonStyle = {
+  borderRadius: '0.5rem',
+  backgroundColor: 'var(--primary)',
+  color: 'var(--primary-foreground)',
+  padding: '0.75rem 1.5rem',
+  fontWeight: 'bold',
+  cursor: 'pointer',
+  border: 'none',
+}
+
+export default function Front() {
+  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0()
+  const [logoAnimated, setLogoAnimated] = useState(false)
+
+  useEffect(() => {
+    setLogoAnimated(true)
+  }, [])
+
+  if (isLoading) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'var(--background)',
+          color: 'var(--foreground)',
+          fontSize: '1.5rem',
+          fontWeight: 'bold',
+        }}
+      >
+        ...
+      </div>
+    )
+  }
+  if (!isAuthenticated) {
+    return (
+      <div
+        className="front-page"
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'var(--background)',
+          color: 'var(--foreground)',
+          padding: '2rem',
+        }}
+      >
+        <div
+          className={`logo ${logoAnimated ? 'animate' : ''}`}
+          style={{
+            fontSize: '4rem',
+            fontWeight: 'bold',
+            color: 'var(--primary)',
+            marginBottom: '3rem',
+            userSelect: 'none',
+          }}
+        >
+          flatte
+        </div>
+
+        <div style={{ display: 'flex', gap: '1.5rem' }}>
+          <button onClick={() => loginWithRedirect()} style={buttonStyle}>
+            Login
+          </button>
+          <button
+            onClick={() => loginWithRedirect({ screen_hint: 'signup' })}
+            style={{
+              ...buttonStyle,
+              backgroundColor: 'var(--secondary)',
+              color: 'var(--secondary-foreground)',
+            }}
+          >
+            Register
+          </button>
+        </div>
+      </div>
+    )
+  }
+  return null
+}
