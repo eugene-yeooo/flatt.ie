@@ -8,7 +8,7 @@ export async function seed(knex) {
   await knex('expense').insert([
     {
       id: 1,
-      category: 'rent',
+      category: 'Rent',
       frequency: 'weekly',
       default_amount: 620,
       calc_method: 'fixed_split',
@@ -16,7 +16,7 @@ export async function seed(knex) {
     },
     {
       id: 2,
-      category: 'power',
+      category: 'Power',
       frequency: 'monthly',
       default_amount: null,
       calc_method: 'manual',
@@ -24,7 +24,7 @@ export async function seed(knex) {
     },
     {
       id: 3,
-      category: 'internet',
+      category: 'Internet',
       frequency: 'monthly',
       default_amount: 85,
       calc_method: 'fixed_split',
@@ -32,7 +32,7 @@ export async function seed(knex) {
     },
     {
       id: 4,
-      category: 'rubbish',
+      category: 'Rubbish',
       frequency: 'monthly',
       default_amount: 65.6,
       calc_method: 'fixed_split',

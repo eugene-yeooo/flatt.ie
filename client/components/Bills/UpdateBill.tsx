@@ -1,14 +1,23 @@
-import { useAddNewBill } from '../../hooks/useBills'
+import { useUpdateBill } from '../../hooks/useBills'
 import { useState } from 'react'
 import { X } from 'lucide-react'
+import { UpdateBillData } from 'models/models'
 
-export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
-  const [title, setTitle] = useState('')
-  const [dueDate, setDueDate] = useState('')
-  const [totalAmount, setTotalAmount] = useState('')
-  const [expenseCategory, setExpenseCategory] = useState('Power')
-  const mutation = useAddNewBill()
+export default function UpdateBill({
+  bill,
+  setShowUpdateBill,
+}: {
+  bill: UpdateBillData
+  setShowUpdateBill: React.Dispatch<React.SetStateAction<boolean>>
+}) {
+  const [title, setTitle] = useState(bill.title)
+  const [dueDate, setDueDate] = useState(bill.due_date)
+  const [totalAmount, setTotalAmount] = useState(bill.total_amount)
+  const [expenseCategory, setExpenseCategory] = useState(bill.expense_category)
+  const mutation = useUpdateBill()
   const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
+
+  // console.log(bill)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -18,29 +27,26 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
     }
 
     mutation.mutate({
+      id: bill.id,
       title,
       due_date: dueDate,
       total_amount: Number(totalAmount),
       expense_category: expenseCategory,
     })
-    onAddBill()
-    setTitle('')
-    setDueDate('')
-    setTotalAmount('')
-    setExpenseCategory('')
+    setShowUpdateBill(false)
   }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit}
-        className="flex w-[600px] flex-col justify-center rounded-md bg-white p-8 shadow-md"
+        className="flex w-[600px] flex-col justify-center rounded-md bg-white p-6 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Add New Bill</h2>
+          <h2 className="text-xl font-semibold">Update Bill</h2>
           <button
             type="button"
-            onClick={onAddBill}
+            onClick={() => setShowUpdateBill(false)}
             className="text-gray-400 hover:text-black"
             aria-label="Close form"
           >
@@ -106,7 +112,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
           type="submit"
           className="mx-auto mt-2 w-40 rounded-lg border border-gray-300 bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
-          Add Bill
+          Update Bill
         </button>
       </form>
     </div>

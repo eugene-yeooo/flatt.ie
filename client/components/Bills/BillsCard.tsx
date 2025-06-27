@@ -2,13 +2,15 @@ import { useState } from 'react'
 import AddPayment from './AddPaymentForm'
 import BillsCardDropdown from './BillsCardDropdown'
 import { Badge } from '@/components/components/ui/badge'
-
+import { UpdateBillData } from 'models/models'
 interface BillCardProps {
   id: number
   title: string
   dueDate: Date
   totalAmount: number
   expenseCategory?: string
+  setShowUpdateBill: React.Dispatch<React.SetStateAction<boolean>>
+  setSelectedBill: React.Dispatch<React.SetStateAction<UpdateBillData | null>>
 }
 
 export default function BillCard({
@@ -17,6 +19,8 @@ export default function BillCard({
   dueDate,
   totalAmount,
   expenseCategory,
+  setShowUpdateBill,
+  setSelectedBill,
 }: BillCardProps) {
   const [showAddPaymentForm, setShowAddPaymentForm] = useState(false)
 
@@ -25,13 +29,20 @@ export default function BillCard({
       {expenseCategory && (
         <Badge
           variant="secondary"
-          className="absolute right-6 top-2 rounded-full px-3 py-1 text-xs font-semibold uppercase"
+          className="absolute right-10 top-3 rounded-full px-3 py-1 text-xs font-semibold uppercase"
         >
           {expenseCategory}
         </Badge>
       )}
-      <BillsCardDropdown id={id} />
-
+      <BillsCardDropdown
+        id={id}
+        title={title}
+        dueDate={dueDate}
+        totalAmount={totalAmount}
+        expenseCategory={expenseCategory}
+        setShowUpdateBill={setShowUpdateBill}
+        setSelectedBill={setSelectedBill}
+      />
       <div>
         <h2 className="text-lg font-semibold">{title}</h2>
         <p className="text-sm text-gray-500">Due: {dueDate.toLocaleString()}</p>
