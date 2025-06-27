@@ -4,13 +4,10 @@ import Bills from './Bills/Bills'
 import Expenses from './Expenses/Expenses'
 import Navigation from './Navigation'
 import Report from './Reports/Reports'
-import { LogOut } from 'lucide-react'
 import Flatties from './Flatties/Flatties'
-import { useAuth0 } from '@auth0/auth0-react'
+import Authenticate from './Authenticate'
 
 export default function App() {
-  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0()
-
   //REPORTS SAMPLE DATA
   const sampleData = [
     {
@@ -59,50 +56,7 @@ export default function App() {
           >
             Flatte
           </Link>
-          <div className="flex w-full items-center justify-end px-2 py-2">
-            {' '}
-            <div className="ml-auto flex items-center gap-4 text-sm">
-              {' '}
-              {isAuthenticated ? (
-                <>
-                  <span style={{ color: 'var(--primary)' }}>
-                    Hey, {user?.name}!
-                  </span>
-                  <button
-                    onClick={() =>
-                      logout({
-                        logoutParams: { returnTo: window.location.origin },
-                      })
-                    }
-                    style={{
-                      borderRadius: '0.375rem',
-                      backgroundColor: 'var(--primary)',
-                      padding: '0.5rem 1rem',
-                      fontWeight: 600,
-                      color: 'var(--primary-foreground)',
-                      transition: 'background-color 0.3s ease',
-                    }}
-                  >
-                    <LogOut />
-                  </button>
-                </>
-              ) : (
-                <button
-                  onClick={() => loginWithRedirect()}
-                  style={{
-                    borderRadius: '0.375rem',
-                    backgroundColor: 'var(--primary)',
-                    padding: '0.5rem 1rem',
-                    fontWeight: 600,
-                    color: 'var(--primary-foreground)',
-                    transition: 'background-color 0.3s ease',
-                  }}
-                >
-                  Login
-                </button>
-              )}
-            </div>
-          </div>
+          <Authenticate />
         </div>
       </header>
 
@@ -111,7 +65,8 @@ export default function App() {
 
       <main className="mx-auto max-w-5xl p-4">
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          {/* <Route path="/" element={<Front />} /> */}
+          <Route path="/Dashboard" element={<Dashboard />} />
           <Route path="/flatmates" element={<Flatties />} />
           <Route path="/bills" element={<Bills />} />
           <Route path="/expense" element={<Expenses />} />
