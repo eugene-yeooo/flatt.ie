@@ -48,3 +48,7 @@ export async function generatePayments(
   console.log(paymentsToInsert)
   return payments
 }
+
+export async function deletePaymentById(id: number) {
+  return connection('payment').where({ id }).del()
+}

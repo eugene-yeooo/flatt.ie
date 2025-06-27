@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addPayments, getAllPayments } from '../apis/payments.ts'
+import { addPayments, deletePayment, getAllPayments } from '../apis/payments.ts'
 import { updatePaymentStatus } from '../apis/payments.ts'
 import { Payment } from 'models/models.ts'
 
@@ -41,6 +41,17 @@ export function useAddPayments() {
     },
     onError: (error) => {
       console.error('Failed to add payments:', error.message)
+    },
+  })
+}
+
+export function useDeletePayment() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: number) => deletePayment(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['payments'] })
     },
   })
 }
