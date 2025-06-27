@@ -2,7 +2,11 @@ import { useAddNewBill } from '../../hooks/useBills'
 import { useState } from 'react'
 import { X } from 'lucide-react'
 
-export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
+export default function AddBill({
+  onUpdateBill,
+}: {
+  onUpdateBill: () => void
+}) {
   const [title, setTitle] = useState('')
   const [dueDate, setDueDate] = useState('')
   const [totalAmount, setTotalAmount] = useState('')
@@ -23,7 +27,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
       total_amount: Number(totalAmount),
       expense_category: expenseCategory,
     })
-    onAddBill()
+    onUpdateBill()
     setTitle('')
     setDueDate('')
     setTotalAmount('')
@@ -40,7 +44,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
           <h2 className="text-xl font-semibold">Add New Bill</h2>
           <button
             type="button"
-            onClick={onAddBill}
+            onClick={onUpdateBill}
             className="text-gray-400 hover:text-black"
             aria-label="Close form"
           >
