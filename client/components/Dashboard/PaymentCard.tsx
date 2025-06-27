@@ -29,7 +29,9 @@ export default function PaymentCard({
             <div>
               <strong>{payment.flattieName}</strong>{' '}
               {payment.paid ? 'has' : "hasn't"} paid $
-              {payment.amount.toFixed(2)}
+              {typeof payment.amount === 'number'
+                ? payment.amount.toFixed(2)
+                : '0.00'}
             </div>
             <button
               disabled={isUpdating}
