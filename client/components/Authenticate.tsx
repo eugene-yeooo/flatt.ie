@@ -19,7 +19,7 @@ export default function Authenticate() {
             borderColor: 'var(--border)',
           }}
         >
-          {user?.name}'s Flat Account
+          {user?.name}&apos;s Flat Account
         </span>
         <button
           onClick={() =>

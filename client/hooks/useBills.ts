@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addNewBill, deleteBill, getAllBills } from '../apis/bills'
-import { NewBill } from 'models/models'
+import { addNewBill, deleteBill, getAllBills, updateBill } from '../apis/bills'
+import { NewBill, UpdateBillData } from 'models/models'
 
 // ---------- GET BILLS ---------- //
 
@@ -40,6 +40,21 @@ export function useDeleteBill() {
     },
     onError: (err) => {
       console.error('Failed to delete bill', err)
+    },
+  })
+}
+
+// ---------- UPDATE BILL ---------- //
+
+export function useUpdateBill() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: UpdateBillData) => updateBill(data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['bills'] })
+    },
+    onError: (err) => {
+      console.error('Failed to update bill', err)
     },
   })
 }

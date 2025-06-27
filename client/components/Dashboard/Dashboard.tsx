@@ -23,7 +23,7 @@ export default function Dashboard() {
     updateStatus({ id, paid: paidStatus })
   }
   return (
-    <div className="grid grid-cols-3 gap-6 ">
+    <div className="grid grid-cols-2 gap-6 ">
       {Object.entries(paymentsByBill).map(([billTitle, billPayments]) => (
         <PaymentCard
           key={billTitle}
@@ -31,7 +31,7 @@ export default function Dashboard() {
           billPayments={billPayments}
           isUpdating={isUpdating}
           onTogglePaid={handlePaymentStatus}
-          billAmount={0}
+          billAmount={billPayments[0]?.billTotal ?? 0}
         />
       ))}
     </div>

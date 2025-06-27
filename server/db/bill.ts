@@ -1,4 +1,4 @@
-import { NewBill } from 'models/models.ts'
+import { NewBill, UpdateBillData } from 'models/models.ts'
 import connection from './connection.ts'
 
 // ----------- GET BILLS ------------- //
@@ -33,4 +33,16 @@ export async function addBill(data: NewBill) {
 
 export function deleteBill(id: number) {
   return connection('bill').where({ id }).delete()
+}
+
+// ----------- UPDATE BILL ------------- //
+
+export function updateBill(data: UpdateBillData) {
+  const { id, ...fieldsToUpdate } = data
+  return connection('bill').where({ id }).update(fieldsToUpdate)
+}
+
+export async function getBillCount() {
+  const result = await connection('bill').count('id as count')
+  return result[0].count
 }
