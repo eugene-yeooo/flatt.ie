@@ -36,6 +36,7 @@ export async function generatePayments(
       'payment.id',
       'payment.split',
       'payment.paid',
+      'payment.amount',
       'bill.title as billTitle',
       'bill.due_date as dueDate',
       'bill.total_amount as billTotal',
@@ -44,9 +45,6 @@ export async function generatePayments(
     )
     .where('payment.bill_id', billId)
 
-  return payments.map((p) => ({
-    ...p,
-    amount: Number(p.billTotal) * Number(p.split),
-    paid: Boolean(p.paid),
-  }))
+  console.log(paymentsToInsert)
+  return payments
 }

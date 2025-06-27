@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import AddPayment from './AddPaymentForm'
-import GeneratePayment from './GeneratePayment'
 import BillsCardDropdown from './BillsCardDropdown'
 import { Badge } from '@/components/components/ui/badge'
 
@@ -58,6 +57,7 @@ export default function BillCard({
             id: 0,
             name: '',
           }}
+          totalAmount={totalAmount}
         />
       )}
     </div>

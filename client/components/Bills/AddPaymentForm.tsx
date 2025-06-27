@@ -4,6 +4,7 @@ import { X } from 'lucide-react'
 
 interface AddPaymentProps {
   billId: number
+  totalAmount: number
   onClose: () => void
 }
 
@@ -12,7 +13,11 @@ interface Flatmate {
   name: string
 }
 
-export default function AddPayment({ billId, onClose }: AddPaymentProps) {
+export default function AddPayment({
+  billId,
+  totalAmount,
+  onClose,
+}: AddPaymentProps) {
   const [flatmates, setFlatmates] = useState<Flatmate[]>([])
   const [shares, setShares] = useState([
     { flatmateId: '', split: '', paid: false },
@@ -77,6 +82,7 @@ export default function AddPayment({ billId, onClose }: AddPaymentProps) {
         flatmate_id: Number(s.flatmateId),
         split: parseFloat(s.split) / 100,
         paid: s.paid,
+        amount: (parseFloat(s.split) / 100) * totalAmount,
       })),
     })
 
