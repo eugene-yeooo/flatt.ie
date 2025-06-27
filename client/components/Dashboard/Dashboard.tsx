@@ -1,40 +1,38 @@
-import { useAllPayment } from '../../hooks/usePayment'
+import { useAllPayment, useUpdatePaymentStatus } from '../../hooks/usePayment'
+
 import PaymentCard from './PaymentCard'
 
 export default function Dashboard() {
   const { data: payments = [], isLoading, isError } = useAllPayment()
+  const { mutate: updateStatus, isPending: isUpdating } =
+    useUpdatePaymentStatus()
 
   if (isLoading) return <p>Loading payments...</p>
   if (isError) return <p>Error loading payments.</p>
 
   const paymentsByBill = payments.reduce(
     (acc, payment) => {
-      // Get bill title from current payment;
       const key = payment.billTitle || 'Unknown Bill'
-      //if bill title hasnt been seen yet, create empty array for it
       if (!acc[key]) acc[key] = []
-      // Add the current payment to the array for this bill title
       acc[key].push(payment)
       return acc
     },
-    // Start with an empty object to group payments by bill title
     {} as Record<string, typeof payments>,
   )
-
+  const handlePaymentStatus = async (id: number, paidStatus: boolean) => {
+    updateStatus({ id, paid: paidStatus })
+  }
   return (
-    <div>
-      {Object.entries(paymentsByBill).map(([billTitle, billPayments]) => {
-        return (
-          <section key={billTitle} className="mb-8">
-            <h2 className="mb-2 text-xl font-semibold">{billTitle}</h2>
-            <ul>
-              {billPayments.map((payment) => (
-                <PaymentCard />
-              ))}
-            </ul>
-          </section>
-        )
-      })}
+    <div className="grid grid-cols-3 gap-6 ">
+      {Object.entries(paymentsByBill).map(([billTitle, billPayments]) => (
+        <PaymentCard
+          key={billTitle}
+          billTitle={billTitle}
+          billPayments={billPayments}
+          isUpdating={isUpdating}
+          onTogglePaid={handlePaymentStatus}
+        />
+      ))}
     </div>
   )
 }

@@ -5,6 +5,7 @@ export async function getAllPayments() {
     .join('bill', 'payment.bill_id', 'bill.id')
     .join('flattie', 'payment.flatmate_id', 'flattie.id')
     .select(
+      'payment.id',
       'payment.amount',
       'payment.split',
       'payment.paid',
@@ -13,4 +14,8 @@ export async function getAllPayments() {
       'flattie.name as flattieName',
       'flattie.profile_photo as profilePhoto',
     )
+}
+
+export async function updatePaymentStatus(id: number, paid: boolean) {
+  return connection('payment').where({ id }).update({ paid })
 }
