@@ -4,10 +4,18 @@ import Bills from './Bills/Bills'
 import Expenses from './Expenses/Expenses'
 import Navigation from './Navigation'
 import Report from './Reports/Reports'
-
 import Flatties from './Flatties/Flatties'
+import Authenticate from './Authenticate'
+import Front from './Front'
+import { useAuth0 } from '@auth0/auth0-react'
 
 export default function App() {
+  const { isAuthenticated } = useAuth0()
+
+  if (!isAuthenticated) {
+    return <Front />
+  }
+
   //REPORTS SAMPLE DATA
   const sampleData = [
     {
@@ -48,23 +56,24 @@ export default function App() {
         <div className="mx-auto flex w-full max-w-6xl justify-center">
           <Link
             to="/"
-            className="inline-block text-4xl font-extrabold tracking-tight"
+            className="inline-block justify-center text-4xl font-extrabold tracking-tight"
             style={{
               color: 'var(--primary)',
               textShadow: '1px 1px 2px var(--border)',
             }}
           >
-            FlatFunds
+            Flatte
           </Link>
+          <Authenticate />
         </div>
       </header>
 
-      {/* Navigation Tabs */}
       <Navigation />
 
       <main className="mx-auto max-w-5xl p-4">
         <Routes>
-          <Route path="/" element={<Dashboard payments={[]} />} />
+          <Route path="/" element={<Front />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/flatmates" element={<Flatties />} />
           <Route path="/bills" element={<Bills />} />
           <Route path="/expense" element={<Expenses />} />
