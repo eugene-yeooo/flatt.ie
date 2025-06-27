@@ -35,4 +35,24 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
+router.get('/balance', async (req, res) => {
+  try {
+    const flatmatesWithBalance = await db.getFlatmatesWithBalance()
+    res.json(flatmatesWithBalance)
+  } catch (error) {
+    console.error('Error getting flatmates with balance:', error)
+    res.status(500).json({ error: 'Failed to get flatmates with balance' })
+  }
+})
+
+router.get('/overdue', async (req, res) => {
+  try {
+    const flatmates = await db.getFlatmatesWithOverdue()
+    res.json(flatmates)
+  } catch (error) {
+    console.error('Error getting overdue flatmates:', error)
+    res.status(500).json({ error: 'Failed to get overdue flatmates' })
+  }
+})
+
 export default router
