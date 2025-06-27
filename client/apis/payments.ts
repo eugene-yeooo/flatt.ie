@@ -29,3 +29,22 @@ export async function updatePaymentStatus(
     throw error
   }
 }
+
+export async function addPayments(
+  billId: number,
+  payments: Partial<Payment>[],
+): Promise<Payment[]> {
+  try {
+    const res = await request
+      .post('/api/v1/payment')
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+      .send({ billId, payments })
+    return res.body as Payment[]
+  } catch (error: any) {
+    if (error.response && error.response.body && error.reponse.body.error) {
+      throw new Error(error.response.body.error)
+    }
+    throw error
+  }
+}
