@@ -11,15 +11,12 @@ const queryClient = new QueryClient()
 
 document.addEventListener('DOMContentLoaded', () => {
   createRoot(document.getElementById('app') as HTMLElement).render(
-    /**
-     * TODO: replace domain, clientId, and audience
-     */
     <Auth0Provider
-      domain=""
-      clientId=""
+      domain="https://dev-oxjlmuseqrri0f1i.au.auth0.com"
+      clientId="TUdDCyphK5phM2EFm8AMHpwqf2koJ5mD"
       authorizationParams={{
         redirect_uri: window.location.origin,
-        audience: '',
+        audience: 'https://flatte/api',
       }}
     >
       <QueryClientProvider client={queryClient}>

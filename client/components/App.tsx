@@ -4,10 +4,13 @@ import Bills from './Bills/Bills'
 import Expenses from './Expenses/Expenses'
 import Navigation from './Navigation'
 import Report from './Reports/Reports'
-
+import { LogOut } from 'lucide-react'
 import Flatties from './Flatties/Flatties'
+import { useAuth0 } from '@auth0/auth0-react'
 
 export default function App() {
+  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0()
+
   //REPORTS SAMPLE DATA
   const sampleData = [
     {
@@ -56,6 +59,32 @@ export default function App() {
           >
             FlatFunds
           </Link>
+          <div className="flex items-center justify-end px-2 py-2">
+            <div className="flex items-center gap-4 text-sm">
+              {isAuthenticated ? (
+                <>
+                  <span className="text-gray-600">Hey, {user?.name}!</span>
+                  <button
+                    onClick={() =>
+                      logout({
+                        logoutParams: { returnTo: window.location.origin },
+                      })
+                    }
+                    className="rounded-md bg-red-500 px-4 py-2 font-semibold text-white transition hover:bg-red-600"
+                  >
+                    <LogOut />
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={() => loginWithRedirect()}
+                  className="rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
+                >
+                  Login
+                </button>
+              )}
+            </div>
+          </div>
         </div>
       </header>
 
