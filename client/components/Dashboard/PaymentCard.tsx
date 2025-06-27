@@ -20,12 +20,20 @@ export default function PaymentCard({
     .reduce((sum, payment) => sum + payment.amount, 0)
 
   return (
-    <section className="mb-10 rounded-xl border border-primary bg-white p-4 shadow-md ring-1 ring-primary/10">
-      <div className="border-b px-6 py-4">
-        <h2 className="text-2xl font-bold text-gray-800">{billTitle}</h2>
+    <section
+      className="mb-10 rounded-xl p-4"
+      style={{
+        backgroundColor: 'var(--primary-foreground)',
+        borderColor: 'var(--primary)',
+        borderWidth: '3px',
+      }}
+    >
+      <div className=" px-6 py-4">
+        <h2 className="text-2xl font-bold" style={{ color: 'var(--primary)' }}>
+          {billTitle}
+        </h2>{' '}
       </div>
-
-      <ul className="divide-y">
+      <ul>
         {billPayments.map((payment) => (
           <li
             key={payment.id}
@@ -59,8 +67,7 @@ export default function PaymentCard({
           </li>
         ))}
       </ul>
-
-      <div className="border-t px-6 py-4 text-right text-sm text-gray-600">
+      <div className=" px-6 py-4 text-right text-sm text-gray-600">
         <strong className="text-gray-800">
           Total Paid: ${totalPaid.toFixed(2)} of $
           {billPayments[0]?.billTotal?.toFixed(2) ?? '0.00'}
