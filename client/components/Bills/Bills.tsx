@@ -21,10 +21,16 @@ export default function Bills() {
   )
 
   // Logic for search query
-  const filteredBills = uniqueBills?.filter((bill) =>
-    bill.title.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
-  console.log('Filtered bills:', filteredBills)
+  const filteredBills = uniqueBills?.filter((bill) => {
+    const query = searchQuery.toLowerCase()
+
+    return (
+      bill.title.toLowerCase().includes(query) ||
+      bill.expenseCategory?.toLowerCase().includes(query) ||
+      bill.totalAmount.toString().includes(query) ||
+      bill.dueDate.toString().includes(query)
+    )
+  })
 
   function toggleAddBill() {
     setShowAddBill((prev) => !prev)
