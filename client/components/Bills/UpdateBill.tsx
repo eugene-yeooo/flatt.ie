@@ -17,7 +17,7 @@ export default function UpdateBill({
   const mutation = useUpdateBill()
   const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
 
-  console.log(bill)
+  // console.log(bill)
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()

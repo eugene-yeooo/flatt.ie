@@ -12,6 +12,11 @@ export default function Bills() {
   const [showUpdateBill, setShowUpdateBill] = useState(false)
   const [selectedBill, setSelectedBill] = useState<UpdateBillData | null>(null)
 
+  // Remove duplicate bills by ID
+  const uniqueBills = bills?.filter(
+    (bill, index, self) => self.findIndex((b) => b.id === bill.id) === index,
+  )
+
   function toggleAddBill() {
     setShowAddBill((prev) => !prev)
   }
@@ -36,14 +41,14 @@ export default function Bills() {
     setShowAddBill(false)
   }
 
-  console.log('bills', bills)
+  // console.log('bills', bills)
 
   return (
     <div className="mx-auto max-w-4xl p-4">
       <div className="flex justify-end bg-primary">
         <Button
           onClick={toggleAddBill}
-          className="btn border border-gray-300 hover:bg-orange-500"
+          className="btn border border-gray-300 hover:bg-orange-400"
         >
           Add Bill
         </Button>
@@ -62,9 +67,10 @@ export default function Bills() {
         {bills.length === 0 ? (
           <p>No bills found.</p>
         ) : (
-          bills.map((bill) => (
+          uniqueBills?.map((bill) => (
             <BillCard
               key={`${bill.id}-${bill.flattieId ?? 'all'}`}
+              // key={bill.id}
               id={bill.id}
               title={bill.title}
               dueDate={new Date(bill.dueDate)}

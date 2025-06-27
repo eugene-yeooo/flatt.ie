@@ -22,8 +22,6 @@ export async function getAllBills() {
     )
 }
 
-console.log(getAllBills())
-
 // ----------- ADD NEW BILL ------------- //
 
 export async function addBill(data: NewBill) {
@@ -42,4 +40,9 @@ export function deleteBill(id: number) {
 export function updateBill(data: UpdateBillData) {
   const { id, ...fieldsToUpdate } = data
   return connection('bill').where({ id }).update(fieldsToUpdate)
+}
+
+export async function getBillCount() {
+  const result = await connection('bill').count('id as count')
+  return result[0].count
 }
