@@ -10,6 +10,7 @@ export async function getAllPayments() {
       'payment.split',
       'payment.paid',
       'bill.title as billTitle',
+      'bill.total_amount as billTotal',
       'bill.due_date as dueDate',
       'flattie.name as flattieName',
       'flattie.profile_photo as profilePhoto',
@@ -37,7 +38,7 @@ export async function generatePayments(
       'payment.paid',
       'bill.title as billTitle',
       'bill.due_date as dueDate',
-      'bill.total_amount',
+      'bill.total_amount as billTotal',
       'flattie.name as flattieName',
       'flattie.profile_photo as profilePhoto',
     )
@@ -45,7 +46,7 @@ export async function generatePayments(
 
   return payments.map((p) => ({
     ...p,
-    amount: Number(p.total_amount) * Number(p.split),
+    amount: Number(p.billTotal) * Number(p.split),
     paid: Boolean(p.paid),
   }))
 }

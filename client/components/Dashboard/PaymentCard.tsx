@@ -1,6 +1,7 @@
 import { Payment } from 'models/models'
 
 type PaymentCardProps = {
+  billAmount: number
   billTitle: string
   billPayments: Payment[]
   isUpdating: boolean
@@ -13,6 +14,10 @@ export default function PaymentCard({
   isUpdating,
   onTogglePaid,
 }: PaymentCardProps) {
+  const totalPaid = billPayments
+    .filter((payment) => payment.paid)
+    .reduce((sum, payment) => sum + payment.amount, 0)
+
   return (
     <section className="mb-8 rounded border ">
       <h2 className="mb-2 text-xl font-semibold">{billTitle}</h2>
@@ -47,6 +52,9 @@ export default function PaymentCard({
           </li>
         ))}
       </ul>
+      <strong>
+        Total Paid: {totalPaid.toFixed(2)} of {billPayments[0]?.billTotal}
+      </strong>
     </section>
   )
 }

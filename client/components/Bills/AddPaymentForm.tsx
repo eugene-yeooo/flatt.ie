@@ -14,14 +14,14 @@ interface Flatmate {
 
 export default function AddPayment({ billId, onClose }: AddPaymentProps) {
   const [flatmates, setFlatmates] = useState<Flatmate[]>([])
-  const [flatmateId, setFlatmateId] = useState('')
-  const [split, setSplit] = useState('')
-  const [paid, setPaid] = useState(false)
+  const [shares, setShares] = useState([
+    { flatmateId: '', split: '', paid: false },
+  ])
 
   const mutation = useAddPayments()
 
   useEffect(() => {
-    async function fetchFlatmates() {
+    const fetchFlatmates = async () => {
       try {
         const res = await fetch('/api/v1/flatties')
         if (!res.ok) throw new Error('Failed to fetch flatmates')
@@ -31,35 +31,56 @@ export default function AddPayment({ billId, onClose }: AddPaymentProps) {
         console.error('Failed to fetch flatmates:', error)
       }
     }
+
     fetchFlatmates()
   }, [])
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  const handleShareChange = (
+    index: number,
+    field: string,
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => {
+    const updatedShares = [...shares]
+    if (field === 'paid') {
+      updatedShares[index][field] = (
+        e as React.ChangeEvent<HTMLInputElement>
+      ).target.checked
+    } else {
+      updatedShares[index][field] = e.target.value
+    }
+    setShares(updatedShares)
+  }
 
-    if (!flatmateId || !split) {
-      alert('Please fill in all fields')
+  const handleAddShare = () => {
+    setShares([...shares, { flatmateId: '', split: '', paid: false }])
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    const totalSplit = shares.reduce(
+      (sum, s) => sum + parseFloat(s.split || '0'),
+      0,
+    )
+    if (totalSplit !== 100) {
+      alert('Total split must equal 100%')
+      return
+    }
+
+    if (shares.some((s) => !s.flatmateId || !s.split)) {
+      alert('Please fill in all fields for each share')
       return
     }
 
     mutation.mutate({
       billId,
-      payments: [
-        {
-          flatmate_id: Number(flatmateId),
-          split: parseFloat(split),
-          paid,
-        },
-      ],
+      payments: shares.map((s) => ({
+        flatmate_id: Number(s.flatmateId),
+        split: parseFloat(s.split) / 100,
+        paid: s.paid,
+      })),
     })
 
-    // Close the form after submission
     onClose()
-
-    // Optionally reset form
-    setFlatmateId('')
-    setSplit('')
-    setPaid(false)
   }
 
   return (
@@ -80,47 +101,60 @@ export default function AddPayment({ billId, onClose }: AddPaymentProps) {
           </button>
         </div>
 
-        <label className="mb-2 block font-medium">
-          Flatmate Name <span className="text-red-500">*</span>
-          <select
-            value={flatmateId}
-            onChange={(e) => setFlatmateId(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2"
-          >
-            <option value="" disabled>
-              Select a flatmate
-            </option>
-            {flatmates.map((flatmate) => (
-              <option key={flatmate.id} value={flatmate.id}>
-                {flatmate.name}
-              </option>
-            ))}
-          </select>
-        </label>
+        {shares.map((share, index) => (
+          <div key={index} className="mb-4 border-b pb-4">
+            <label className="mb-2 block font-medium">
+              Flatmate
+              <select
+                value={share.flatmateId}
+                onChange={(e) => handleShareChange(index, 'flatmateId', e)}
+                required
+                className="mt-1 block w-full rounded border border-gray-300 px-3 py-2"
+              >
+                <option value="" disabled>
+                  Select a flatmate
+                </option>
+                {flatmates.map((f) => (
+                  <option key={f.id} value={f.id}>
+                    {f.name}
+                  </option>
+                ))}
+              </select>
+            </label>
 
-        <label className="mb-2 block font-medium">
-          Split (%) <span className="text-red-500">*</span>
-          <input
-            type="number"
-            step="0.01"
-            min="0"
-            max="1"
-            value={split}
-            onChange={(e) => setSplit(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2"
-          />
-        </label>
+            <label className="mb-2 block font-medium">
+              Split (%) <span className="text-red-500">*</span>
+              <input
+                type="number"
+                step="0.5"
+                min="0"
+                max="100"
+                value={share.split}
+                onChange={(e) => handleShareChange(index, 'split', e)}
+                required
+                placeholder="e.g. 25 for 25%"
+                className="mt-1 block w-full rounded border border-gray-300 px-3 py-2"
+              />
+            </label>
 
-        <label className="mb-4 flex items-center space-x-2">
-          <input
-            type="checkbox"
-            checked={paid}
-            onChange={(e) => setPaid(e.target.checked)}
-          />
-          <span>Paid</span>
-        </label>
+            <label className="mb-2 flex items-center space-x-2">
+              <input
+                type="checkbox"
+                checked={share.paid}
+                onChange={(e) => handleShareChange(index, 'paid', e)}
+              />
+              <span>Paid</span>
+            </label>
+          </div>
+        ))}
+
+        <button
+          type="button"
+          onClick={handleAddShare}
+          className="mb-4 rounded bg-blue-100 px-3 py-1 text-sm text-blue-800"
+        >
+          + Add Flatmate Share
+        </button>
 
         <button
           type="submit"
