@@ -1,6 +1,7 @@
 import { Routes, Route, Link } from 'react-router-dom'
 import Dashboard from './Dashboard/Dashboard'
 import Bills from './Bills/Bills'
+import Expenses from './Expenses/Expenses'
 import Navigation from './Navigation'
 import Report from './Reports/Reports'
 
@@ -31,7 +32,7 @@ export default function App() {
 
   return (
     <div
-      className="text-foreground min-h-screen"
+      className="min-h-screen text-foreground"
       style={{
         backgroundColor: 'var(--background)',
         color: 'var(--foreground)',
@@ -66,6 +67,7 @@ export default function App() {
           <Route path="/" element={<Dashboard payments={[]} />} />
           <Route path="/flatmates" element={<Flatties />} />
           <Route path="/bills" element={<Bills />} />
+          <Route path="/expense" element={<Expenses />} />
           <Route path="/report" element={<Report data={sampleData} />} />
           <Route path="/flatmates" element={<Flatties />} />
         </Routes>

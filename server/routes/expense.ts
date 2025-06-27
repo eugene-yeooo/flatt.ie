@@ -16,4 +16,14 @@ router.get('/', async (req, res) => {
   }
 })
 
+router.post('/', async (req, res) => {
+  try {
+    const expense = await db.addExpense(req.body)
+    res.status(201).json({ expense })
+  } catch (error) {
+    console.error('Error adding expense type:', error)
+    res.status(500).json({ error: 'Failed to add expense type' })
+  }
+})
+
 export default router
