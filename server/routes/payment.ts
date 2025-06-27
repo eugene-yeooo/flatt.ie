@@ -52,6 +52,7 @@ router.post('/', async (req, res) => {
 
   try {
     const newPayments = await db.generatePayments(paymentsToInsert, billId)
+    console.log(newPayments)
     res.status(200).json(newPayments)
   } catch (err) {
     console.error('Error creating payments', err)
