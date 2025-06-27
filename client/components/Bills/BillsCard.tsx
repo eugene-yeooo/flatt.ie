@@ -1,5 +1,6 @@
 import { Badge } from '@/components/components/ui/badge'
 import BillsCardDropdown from './BillsCardDropdown'
+import GeneratePayment from './GeneratePayment'
 interface BillCardProps {
   id: number
   title: string
@@ -16,7 +17,6 @@ export default function BillCard({
 }: BillCardProps) {
   return (
     <div className="relative rounded-md bg-white p-4 shadow">
-      {/* Badge positioned top-right */}
       {expenseCategory && (
         <Badge
           variant="secondary"
@@ -33,6 +33,7 @@ export default function BillCard({
           Amount: ${totalAmount.toFixed(2)}
         </p>
       </div>
+      <GeneratePayment />
     </div>
   )
 }
