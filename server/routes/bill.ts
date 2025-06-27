@@ -2,7 +2,6 @@ import express from 'express'
 // import checkJwt, { JwtRequest } from '../auth0.ts'
 
 import * as db from '../db/bill.ts'
-import { json } from 'node:stream/consumers'
 
 const router = express.Router()
 
