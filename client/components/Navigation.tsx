@@ -3,7 +3,7 @@ import { Card } from '@/components/components/ui/card'
 import { Home, Users, Clipboard, Receipt } from 'lucide-react'
 
 const navTabs = [
-  { id: '/', label: 'Dashboard', icon: Home },
+  { id: '/dashboard', label: 'Dashboard', icon: Home },
   { id: '/flatmates', label: 'Flatties', icon: Users },
   { id: '/bills', label: 'Bills', icon: Receipt },
   { id: '/expense', label: 'Expenses', icon: Receipt },

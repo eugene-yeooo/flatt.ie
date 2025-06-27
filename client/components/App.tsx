@@ -57,7 +57,7 @@ export default function App() {
             className="] text-4xl font-extrabold tracking-tight text-[var(--primary)] drop-shadow-[1px_1px_2px_var(--border)]"
             aria-label="Flatt.ie Home"
           >
-            Flatt.ie
+            flatt.ie
           </Link>
 
           <nav className="flex-1">
