@@ -34,6 +34,7 @@ export default function BillCard({
           {expenseCategory}
         </Badge>
       )}
+
       <BillsCardDropdown
         id={id}
         title={title}
@@ -43,9 +44,12 @@ export default function BillCard({
         setShowUpdateBill={setShowUpdateBill}
         setSelectedBill={setSelectedBill}
       />
+
       <div>
         <h2 className="text-lg font-semibold">{title}</h2>
-        <p className="text-sm text-gray-500">Due: {dueDate.toLocaleString()}</p>
+        <p className="text-sm text-gray-500">
+          Due: {dueDate.toLocaleDateString()}
+        </p>
         <p className="text-sm text-gray-700">
           Amount: ${totalAmount.toFixed(2)}
         </p>
