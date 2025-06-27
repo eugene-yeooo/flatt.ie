@@ -1,57 +1,45 @@
 import { useEffect, useState } from 'react'
+import FlattieCard from './FlattiesCard'
+import AddFlatmateForm from './AddFlatmateForm'
 
 interface Flatmate {
   id: number
   name: string
   credit: number
   debt: number
+  profilePhoto?: string
+  balance: number
+  unpaid: number
 }
 
 export default function Flatties() {
   const [flatmates, setFlatmates] = useState<Flatmate[]>([])
-  const [newName, setNewName] = useState('')
-  const [credit, setCredit] = useState('')
-  const [debt, setDebt] = useState('')
 
-  // Fetch flatmates on mount
   useEffect(() => {
-    async function fetchData() {
-      try {
-      const res = await fetch('/api/v1/flatties')
-      const data = await res.json()
-      setFlatmates(data)
-      } catch (error) {
-        console.error('Failed to fetch flatmates:', error)
-      }
-    }
-    fetchData()
+    fetch('/api/v1/flatties/balance')
+    .then((res) => res.json())
+    .then((data) => setFlatmates(data))
+    .catch((err) => console.error('Failed to fetch flatmates:', err))
   }, [])
 
   // Add flatmate
-  async function handleAddFlatmate(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleAddFlatmate(newMate: { name: string; credit: number; debt: number }) {
     try {
     const res = await fetch('/api/v1/flatties', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: newName, credit: Number(credit), debt: Number(debt) }),
+      body: JSON.stringify(newMate),
     })
-    const newFlatmate = await res.json()
-
-    setFlatmates([...flatmates, newFlatmate]) 
-
-    setNewName('')
-    setCredit('')
-    setDebt('')
+    const created = await res.json()
+    setFlatmates([...flatmates, {...created, balance: created.credit - created.debt, unpaid: 0 }]) 
     } catch (error) {
       console.error('Failed to add flatmate:', error)
     }
   }
 
-  // Delete flatmate
   async function handleDelete(id: number) {
     try {
-      await fetch(`/api/v1/flatties/${id}`, { method: 'DELETE' })
+      await fetch(`/api/v1/flatties/${id}`, {method: 'DELETE'})
       setFlatmates(flatmates.filter((mate) => mate.id !== id))
     } catch (err) {
       console.error('Failed to delete flatmate:', err)
@@ -59,44 +47,21 @@ export default function Flatties() {
   }
 
   return (
-    <div className="max-w-md mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Flatmates</h1>
-      <form onSubmit={handleAddFlatmate} className="space-y-4">
-        <div>
-        <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
-        <input id="name" type="text" value={newName} onChange={(e) => setNewName(e.target.value)}
-         className="border px-3 py-2 rounded-md w-full" required />
-        </div>
-        <div>
-          <label htmlFor="credit" className="block text-sm font-medium text-gray-700">Credit</label>
-        <input id="credit" type="number" value={credit} onChange={(e) => setCredit(e.target.value)}
-         className="border px-3 py-2 rounded-md w-full" required />
-        </div>
-        <div>
-          <label htmlFor="debt" className="block text-sm font-medium text-gray-700">Debt</label>
-        <input id="debt" type="number" value={debt} onChange={(e) => setDebt(e.target.value)}
-         className="border px-3 py-2 rounded-md w-full" required />
-        </div>
-        <button type="submit" className="bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600">Add Flatmate</button>
-      </form>
-
-      <ul className="mt-8 space-y-4">
+    <div className="max-w-3xl mx-auto px-4">
+      <h1 className="text-3xl font-bold mb-6 text-center">Flatmates</h1>
+      <AddFlatmateForm onAdd={handleAddFlatmate} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {flatmates.map((mate) => (
-          <li key={mate.id} className="border-b pb-4">
-            <div className="flex justify-between items-center">
-              <div>
-            <p className="font-semibold">{mate.name}</p>
-            <p>Credit: ${mate.credit}</p>
-            <p>Debt: ${mate.debt}</p>
-            <p className="font-medium">Balance: ${mate.credit - mate.debt}</p>
-            </div>
-            <button onClick={() => handleDelete(mate.id)} className="text-red-500 hover:underline text-sm">
-              Delete
-            </button>
-            </div>
-          </li>
+          <FlattieCard 
+            key={mate.id}
+            name={mate.name}
+            credit={mate.credit}
+            debt={mate.debt}
+            overdue={mate.unpaid}
+            onDelete={() => handleDelete(mate.id)}
+          />
         ))}
-        </ul>
+        </div>
       </div>
   )
 }
