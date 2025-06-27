@@ -5,17 +5,25 @@ import { useState } from 'react'
 import { Button } from '@/components/components/ui/button'
 import { UpdateBillData } from 'models/models'
 import UpdateBill from './UpdateBill'
+import BillSearch from './BillSearch'
 
 export default function Bills() {
   const { data: bills, isPending, error } = useGetAllBills()
   const [showAddBill, setShowAddBill] = useState(false)
   const [showUpdateBill, setShowUpdateBill] = useState(false)
   const [selectedBill, setSelectedBill] = useState<UpdateBillData | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Remove duplicate bills by ID
   const uniqueBills = bills?.filter(
     (bill, index, self) => self.findIndex((b) => b.id === bill.id) === index,
   )
+
+  // Logic for search query
+  const filteredBills = uniqueBills?.filter((bill) =>
+    bill.title.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
+  console.log('Filtered bills:', filteredBills)
 
   function toggleAddBill() {
     setShowAddBill((prev) => !prev)
@@ -45,7 +53,8 @@ export default function Bills() {
 
   return (
     <div className="mx-auto max-w-4xl p-4">
-      <div className="flex justify-end bg-primary">
+      <div className="flex justify-end gap-3 bg-primary">
+        <BillSearch onSearch={setSearchQuery} />
         <Button
           onClick={toggleAddBill}
           className="btn border border-gray-300 hover:bg-orange-400"
@@ -64,13 +73,12 @@ export default function Bills() {
         className="mt-4 grid gap-6"
         style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
       >
-        {bills.length === 0 ? (
+        {filteredBills?.length === 0 ? (
           <p>No bills found.</p>
         ) : (
-          uniqueBills?.map((bill) => (
+          filteredBills?.map((bill) => (
             <BillCard
               key={`${bill.id}-${bill.flattieId ?? 'all'}`}
-              // key={bill.id}
               id={bill.id}
               title={bill.title}
               dueDate={new Date(bill.dueDate)}
