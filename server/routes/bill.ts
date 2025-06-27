@@ -2,7 +2,6 @@ import express from 'express'
 // import checkJwt, { JwtRequest } from '../auth0.ts'
 
 import * as db from '../db/bill.ts'
-import { json } from 'node:stream/consumers'
 
 const router = express.Router()
 
@@ -41,6 +40,21 @@ router.delete('/delete-bill/:id', async (req, res) => {
   } catch (err) {
     console.error(err)
     res.status(500).json({ message: 'Server error: failed to delete bill' })
+  }
+})
+
+// PATCH /api/v1/bill/update-bill
+router.patch('/update-bill', async (req, res) => {
+  try {
+    const data = req.body
+    if (!data?.id) {
+      return res.status(400).json({ message: 'Bill ID is required' })
+    }
+    await db.updateBill(data)
+    res.status(200).json({ message: 'Bill updated successfully' })
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ message: 'Server error: failed to update bill' })
   }
 })
 
