@@ -71,7 +71,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
         </label>
 
         <label className="mb-2 block font-medium">
-          Total Amount <span className="text-red-500">*</span>
+          Total Amount $ <span className="text-red-500">*</span>
           <input
             type="number"
             min="0"
