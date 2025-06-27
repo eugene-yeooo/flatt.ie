@@ -40,37 +40,37 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen text-foreground"
-      style={{
-        backgroundColor: 'var(--background)',
-        color: 'var(--foreground)',
-      }}
+      className="min-h-screen bg-[var(--background)] text-foreground"
+      style={{ color: 'var(--foreground)' }}
     >
       <header
-        className="px-6 py-4 shadow-md"
+        className=" px-6 py-4"
         style={{
-          backgroundColor: 'var(--card)',
-          borderBottom: '1px solid var(--border)',
+          backgroundColor: 'var(--background)',
+          borderColor: 'var(--border)',
         }}
+        role="banner"
       >
-        <div className="mx-auto flex w-full max-w-6xl justify-center">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-6">
           <Link
             to="/"
-            className="inline-block justify-center text-4xl font-extrabold tracking-tight"
-            style={{
-              color: 'var(--primary)',
-              textShadow: '1px 1px 2px var(--border)',
-            }}
+            className="] text-4xl font-extrabold tracking-tight text-[var(--primary)] drop-shadow-[1px_1px_2px_var(--border)]"
+            aria-label="Flatt.ie Home"
           >
-            Flatte
+            Flatt.ie
           </Link>
-          <Authenticate />
+
+          <nav className="flex-1">
+            <Navigation />
+          </nav>
+
+          <div>
+            <Authenticate />
+          </div>
         </div>
       </header>
 
-      <Navigation />
-
-      <main className="mx-auto max-w-5xl p-4">
+      <main className="mx-auto max-w-5xl p-6">
         <Routes>
           <Route path="/" element={<Front />} />
           <Route path="/dashboard" element={<Dashboard />} />
@@ -78,7 +78,6 @@ export default function App() {
           <Route path="/bills" element={<Bills />} />
           <Route path="/expense" element={<Expenses />} />
           <Route path="/report" element={<Report data={sampleData} />} />
-          <Route path="/flatmates" element={<Flatties />} />
         </Routes>
       </main>
     </div>

@@ -31,6 +31,7 @@ export default function Dashboard() {
           billPayments={billPayments}
           isUpdating={isUpdating}
           onTogglePaid={handlePaymentStatus}
+          billAmount={0}
         />
       ))}
     </div>
