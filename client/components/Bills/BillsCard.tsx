@@ -29,7 +29,7 @@ export default function BillCard({
       {expenseCategory && (
         <Badge
           variant="secondary"
-          className="absolute right-6 top-2 rounded-full px-3 py-1 text-xs font-semibold uppercase"
+          className="absolute right-10 top-3 rounded-full px-3 py-1 text-xs font-semibold uppercase"
         >
           {expenseCategory}
         </Badge>

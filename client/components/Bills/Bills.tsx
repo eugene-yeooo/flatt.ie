@@ -41,7 +41,10 @@ export default function Bills() {
   return (
     <div className="mx-auto max-w-4xl p-4">
       <div className="flex justify-end bg-primary">
-        <Button onClick={toggleAddBill} className="btn">
+        <Button
+          onClick={toggleAddBill}
+          className="btn border border-gray-300 hover:bg-orange-500"
+        >
           Add Bill
         </Button>
       </div>

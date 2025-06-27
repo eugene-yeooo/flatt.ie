@@ -40,7 +40,7 @@ export default function UpdateBill({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col justify-center rounded-md bg-white p-6 shadow-md"
+        className="flex w-[600px] flex-col justify-center rounded-md bg-white p-6 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Update Bill</h2>
@@ -110,7 +110,7 @@ export default function UpdateBill({
 
         <button
           type="submit"
-          className="mt-2 rounded-lg bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-500 hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="mx-auto mt-2 w-40 rounded-lg border border-gray-300 bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
           Update Bill
         </button>

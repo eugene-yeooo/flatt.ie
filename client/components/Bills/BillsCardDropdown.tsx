@@ -40,7 +40,7 @@ export default function BillsCardDropdown({
       <DropdownMenu.Portal>
         <DropdownMenu.Content
           className="w-35 z-50 rounded border bg-white py-2 shadow-md"
-          sideOffset={3}
+          sideOffset={5}
           align="end"
         >
           <DropdownMenu.Item
