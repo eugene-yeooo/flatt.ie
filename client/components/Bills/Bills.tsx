@@ -34,7 +34,7 @@ export default function Bills() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl space-y-4 p-4">
+    <div className="mx-auto max-w-4xl p-4">
       <div className="flex justify-end bg-primary">
         <Button onClick={toggleAddBill} className="btn">
           Add Bill
@@ -44,7 +44,7 @@ export default function Bills() {
       {showAddBill && <AddBill onAddBill={handleAddBill} />}
 
       <div
-        className="grid gap-6"
+        className="mt-4 grid gap-6"
         style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
       >
         {bills.length === 0 ? (
