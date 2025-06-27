@@ -28,12 +28,12 @@ export default function Front() {
           justifyContent: 'center',
           alignItems: 'center',
           backgroundColor: 'var(--background)',
-          color: 'var(--foreground)',
+          color: 'var(--primary)',
           fontSize: '1.5rem',
           fontWeight: 'bold',
         }}
       >
-        ...
+        . . .
       </div>
     )
   }
