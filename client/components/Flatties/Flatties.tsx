@@ -57,7 +57,7 @@ export default function Flatties() {
             name={mate.name}
             credit={mate.credit}
             debt={mate.debt}
-            unpaid={mate.unpaid}
+            overdue={mate.unpaid}
             onDelete={() => handleDelete(mate.id)}
           />
         ))}

@@ -45,4 +45,14 @@ router.get('/balance', async (req, res) => {
   }
 })
 
+router.get('/overdue', async (req, res) => {
+  try {
+    const flatmates = await db.getFlatmatesWithOverdue()
+    res.json(flatmates)
+  } catch (error) {
+    console.error('Error getting overdue flatmates:', error)
+    res.status(500).json({ error: 'Failed to get overdue flatmates' })
+  }
+})
+
 export default router
