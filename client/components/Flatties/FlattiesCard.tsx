@@ -2,9 +2,11 @@ interface FlattieCardProps {
   name: string
   credit: number
   debt: number
+  unpaid: number
+  onDelete: () => void
 }
 
-export default function FlattieCard({ name, credit, debt }: FlattieCardProps) {
+export default function FlattieCard({ name, credit, debt, unpaid, onDelete, }: FlattieCardProps) {
   const balance = credit - debt
   const balanceColor =
     balance > 0
@@ -25,6 +27,12 @@ export default function FlattieCard({ name, credit, debt }: FlattieCardProps) {
       <div className={`mt-1 text-sm font-medium ${balanceColor}`}>
         Balance: ${balance.toFixed(2)}
       </div>
+      <div className="text-sm text-muted-foreground">
+        Unpaid: ${unpaid.toFixed(2)}
+      </div>
+      <button onClick={onDelete} className="mt-2 text-sm text-red-500 hover:underline">
+        Delete
+      </button>
     </div>
   )
 }
