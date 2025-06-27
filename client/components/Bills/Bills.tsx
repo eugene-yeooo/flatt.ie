@@ -54,9 +54,10 @@ export default function Bills() {
 
   return (
     <div className="mx-auto max-w-4xl p-4">
-      <div className="flex justify-between">
-        <p className="mt-4 text-sm text-gray-600">
-          Showing {filteredBills?.length} bill
+      <div className="flex justify-between pb-1">
+        <p className="text-md ml-2 mt-4 border-b">
+          Showing <span className="font-semibold">{filteredBills?.length}</span>{' '}
+          bill
           {filteredBills?.length !== 1 && 's'}
         </p>
         <div className="flex h-10 justify-end gap-3 bg-primary">

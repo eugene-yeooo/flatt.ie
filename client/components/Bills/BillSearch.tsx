@@ -13,8 +13,9 @@ export default function BillSearch({
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setQuery(e.target.value)
-    onSearch(query.trim().toLowerCase())
+    const newQuery = e.target.value
+    setQuery(newQuery)
+    onSearch(newQuery.trim().toLowerCase())
   }
 
   return (
