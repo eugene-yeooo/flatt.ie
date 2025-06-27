@@ -62,7 +62,7 @@ export default function Front() {
             userSelect: 'none',
           }}
         >
-          flatte
+          flatt.ie
         </div>
 
         <div style={{ display: 'flex', gap: '1.5rem' }}>

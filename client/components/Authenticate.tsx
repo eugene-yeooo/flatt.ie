@@ -12,7 +12,15 @@ export default function Authenticate() {
   return (
     <div className="flex w-full items-center justify-end px-2 py-2">
       <div className="ml-auto flex items-center gap-4 text-sm">
-        <span style={{ color: 'var(--primary)' }}>Hey, {user?.name}!</span>
+        <span
+          style={{
+            color: 'var(--primary)',
+            backgroundColor: 'rgba(255 255 255 / 0.6)',
+            borderColor: 'var(--border)',
+          }}
+        >
+          {user?.name}&apos;s Flat Account
+        </span>
         <button
           onClick={() =>
             logout({
@@ -25,7 +33,6 @@ export default function Authenticate() {
             padding: '0.5rem 1rem',
             fontWeight: 600,
             color: 'var(--primary-foreground)',
-            transition: 'background-color 0.3s ease',
           }}
         >
           <LogOut />
