@@ -64,7 +64,7 @@ export default function App() {
 
       <main className="mx-auto max-w-5xl p-4">
         <Routes>
-          <Route path="/" element={<Dashboard payments={[]} />} />
+          <Route path="/" element={<Dashboard />} />
           <Route path="/flatmates" element={<Flatties />} />
           <Route path="/bills" element={<Bills />} />
           <Route path="/expense" element={<Expenses />} />
