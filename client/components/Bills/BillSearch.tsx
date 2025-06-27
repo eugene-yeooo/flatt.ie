@@ -28,7 +28,7 @@ export default function BillSearch({
       />
       <button
         type="submit"
-        className="rounded-r-md border border-l-0 border-gray-300 bg-primary px-4 py-2 hover:bg-orange-400"
+        className="rounded-r-md border border-l-0 border-gray-300 bg-white px-4 py-2 hover:bg-orange-400"
       >
         Search
       </button>

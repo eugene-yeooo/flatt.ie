@@ -6,6 +6,7 @@ import { Button } from '@/components/components/ui/button'
 import { UpdateBillData } from 'models/models'
 import UpdateBill from './UpdateBill'
 import BillSearch from './BillSearch'
+import { Plus } from 'lucide-react'
 
 export default function Bills() {
   const { data: bills, isPending, error } = useGetAllBills()
@@ -53,14 +54,21 @@ export default function Bills() {
 
   return (
     <div className="mx-auto max-w-4xl p-4">
-      <div className="flex justify-end gap-3 bg-primary">
-        <BillSearch onSearch={setSearchQuery} />
-        <Button
-          onClick={toggleAddBill}
-          className="btn border border-gray-300 hover:bg-orange-400"
-        >
-          Add Bill
-        </Button>
+      <div className="flex justify-between">
+        <p className="mt-4 text-sm text-gray-600">
+          Showing {filteredBills?.length} bill
+          {filteredBills?.length !== 1 && 's'}
+        </p>
+        <div className="flex h-10 justify-end gap-3 bg-primary">
+          <BillSearch onSearch={setSearchQuery} />
+          <Button
+            onClick={toggleAddBill}
+            className="flex min-w-fit items-center gap-1 border border-gray-300 bg-white px-3 py-2 hover:bg-orange-400"
+          >
+            <Plus size={16} />
+            Add Bill
+          </Button>
+        </div>
       </div>
 
       {showAddBill && <AddBill onAddBill={handleAddBill} />}
