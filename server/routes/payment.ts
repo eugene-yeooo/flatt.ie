@@ -34,7 +34,28 @@ router.patch('/:id', async (req, res) => {
     res.status(200).json({ message: 'Payment status updated successfully' })
   } catch (err) {
     console.error('Error updating Payments', err)
-    res.status(500).json({ error: 'Failed to update payment statys' })
+    res.status(500).json({ error: 'Failed to update payment status' })
+  }
+})
+
+// POST /api/v1/payment
+router.post('/', async (req, res) => {
+  const { billId, payments } = req.body
+
+  if (!billId || !Array.isArray(payments) || payments.length === 0) {
+    return res.status(400).json({ error: 'Missing billId or payments array' })
+  }
+  const paymentsToInsert = payments.map((payment) => ({
+    ...payment,
+    bill_id: billId,
+  }))
+
+  try {
+    const newPayments = await db.generatePayments(paymentsToInsert, billId)
+    res.status(200).json(newPayments)
+  } catch (err) {
+    console.error('Error creating payments', err)
+    res.status(500).json({ error: 'Failed to create payments' })
   }
 })
 

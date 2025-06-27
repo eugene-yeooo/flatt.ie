@@ -53,7 +53,8 @@ export interface Payment {
   split: number
   paid: boolean
   billTitle: string
-  due_date: string | Date
+  billTotal: number
+  dueDate: string | Date
   flattieName: string
   profilePhoto?: string
 }
