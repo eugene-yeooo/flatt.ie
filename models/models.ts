@@ -37,6 +37,14 @@ export interface NewBill {
   expense_category: string
 }
 
+export interface NewExpense {
+  category: string
+  frequency: 'weekly' | 'monthly' | 'one_off'
+  default_amount: number | null
+  calc_method: 'fixed_split' | 'manual' | 'percentage_split'
+  notes?: string
+}
+
 export interface Payment {
   id: number
   billId: number
