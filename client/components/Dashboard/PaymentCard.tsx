@@ -1,5 +1,7 @@
 import { Payment } from 'models/models'
 import '../../styles/main.css'
+import { useDeletePayment } from '../../hooks/usePayment'
+import { text } from 'express'
 
 type PaymentCardProps = {
   billAmount: number
@@ -18,20 +20,24 @@ export default function PaymentCard({
   const totalPaid = billPayments
     .filter((payment) => payment.paid)
     .reduce((sum, payment) => sum + payment.amount, 0)
+  const deleteMutation = useDeletePayment()
 
+  const handleDelete = (id: number) => {
+    if (confirm('Are you sure you want to delete this payment?')) {
+      deleteMutation.mutate(id)
+    }
+  }
   return (
     <section
-      className="mb-10 rounded-xl p-4"
+      className="mb-10 rounded-xl p-4 shadow"
       style={{
         backgroundColor: 'var(--primary-foreground)',
-        borderColor: 'var(--primary)',
-        borderWidth: '3px',
       }}
     >
       <div className=" px-6 py-4">
         <h2 className="text-2xl font-bold" style={{ color: 'var(--primary)' }}>
           {billTitle}
-        </h2>{' '}
+        </h2>
       </div>
       <ul>
         {billPayments.map((payment) => (
@@ -53,17 +59,30 @@ export default function PaymentCard({
                   : '0.00'}
               </span>
             </div>
-            <button
-              disabled={isUpdating}
-              onClick={() => onTogglePaid(payment.id, !payment.paid)}
-              className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
-                payment.paid
-                  ? 'bg-green-500 text-white hover:bg-green-600'
-                  : 'bg-red-500 text-white hover:bg-red-600'
-              } disabled:cursor-not-allowed disabled:opacity-50`}
-            >
-              {payment.paid ? 'Mark Unpaid' : 'Mark Paid'}
-            </button>
+            {/* MARK UNPAID/PAID */}
+            <div className="ml-auto flex items-center gap-2">
+              <button
+                disabled={isUpdating}
+                onClick={() => onTogglePaid(payment.id, !payment.paid)}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
+                  payment.paid
+                    ? 'bg-green-500 text-white hover:bg-green-600'
+                    : 'bg-red-500 text-white hover:bg-red-600'
+                } disabled:cursor-not-allowed disabled:opacity-50`}
+              >
+                {payment.paid ? 'Mark Unpaid' : 'Mark Paid'}
+              </button>
+              {/* Delete X */}
+              <button
+                disabled={isUpdating || deleteMutation.isPending}
+                onClick={() => handleDelete(payment.id)}
+                aria-label="Delete payment"
+                className="rounded-full px-2 py-1.5 text-sm font-bold transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+                style={{ color: 'var(--primary)' }}
+              >
+                x
+              </button>
+            </div>
           </li>
         ))}
       </ul>
