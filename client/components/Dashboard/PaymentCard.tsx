@@ -1,4 +1,5 @@
 import { Payment } from 'models/models'
+import '../../styles/main.css'
 
 type PaymentCardProps = {
   billAmount: number
@@ -19,42 +20,52 @@ export default function PaymentCard({
     .reduce((sum, payment) => sum + payment.amount, 0)
 
   return (
-    <section className="mb-8 rounded border ">
-      <h2 className="mb-2 text-xl font-semibold">{billTitle}</h2>
-      <ul className="grid grid-cols-1">
+    <section className="mb-10 rounded-xl border border-primary bg-white p-4 shadow-md ring-1 ring-primary/10">
+      <div className="border-b px-6 py-4">
+        <h2 className="text-2xl font-bold text-gray-800">{billTitle}</h2>
+      </div>
+
+      <ul className="divide-y">
         {billPayments.map((payment) => (
           <li
             key={payment.id}
-            className={`mb-1 rounded p-2 ${
+            className={`flex items-center justify-between px-6 py-4 ${
               payment.paid
-                ? 'bg-green-100 text-green-800'
-                : 'bg-red-100 text-red-800'
-            } flex items-center justify-between`}
+                ? 'bg-green-50 text-green-800'
+                : 'bg-red-50 text-red-800'
+            }`}
           >
-            <div>
-              <strong>{payment.flattieName}</strong>{' '}
-              {payment.paid ? 'has' : "hasn't"} paid $
-              {typeof payment.amount === 'number'
-                ? payment.amount.toFixed(2)
-                : '0.00'}
+            <div className="text-sm sm:text-base">
+              <span className="font-semibold">{payment.flattieName}</span>{' '}
+              {payment.paid ? 'has paid' : "hasn't paid"}{' '}
+              <span className="font-bold">
+                $
+                {typeof payment.amount === 'number'
+                  ? payment.amount.toFixed(2)
+                  : '0.00'}
+              </span>
             </div>
             <button
               disabled={isUpdating}
               onClick={() => onTogglePaid(payment.id, !payment.paid)}
-              className={`ml-4 rounded px-2 py-1 text-sm font-medium ${
+              className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
                 payment.paid
                   ? 'bg-green-500 text-white hover:bg-green-600'
                   : 'bg-red-500 text-white hover:bg-red-600'
-              }`}
+              } disabled:cursor-not-allowed disabled:opacity-50`}
             >
               {payment.paid ? 'Mark Unpaid' : 'Mark Paid'}
             </button>
           </li>
         ))}
       </ul>
-      <strong>
-        Total Paid: {totalPaid.toFixed(2)} of {billPayments[0]?.billTotal}
-      </strong>
+
+      <div className="border-t px-6 py-4 text-right text-sm text-gray-600">
+        <strong className="text-gray-800">
+          Total Paid: ${totalPaid.toFixed(2)} of $
+          {billPayments[0]?.billTotal?.toFixed(2) ?? '0.00'}
+        </strong>
+      </div>
     </section>
   )
 }
