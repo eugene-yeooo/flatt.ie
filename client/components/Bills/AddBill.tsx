@@ -34,7 +34,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col justify-center rounded-md bg-white p-6 shadow-md"
+        className="flex w-[600px] flex-col justify-center rounded-md bg-white p-8 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Add New Bill</h2>
