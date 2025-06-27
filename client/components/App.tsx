@@ -5,7 +5,6 @@ import Expenses from './Expenses/Expenses'
 import Navigation from './Navigation'
 import Report from './Reports/Reports'
 import Flatties from './Flatties/Flatties'
-import Authenticate from './Authenticate'
 import Front from './Front'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -64,9 +63,7 @@ export default function App() {
             <Navigation />
           </nav>
 
-          <div>
-            <Authenticate />
-          </div>
+          <div></div>
         </div>
       </header>
 

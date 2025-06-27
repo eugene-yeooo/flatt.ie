@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom'
 import { Card } from '@/components/components/ui/card'
 import { Home, Users, Clipboard, Receipt } from 'lucide-react'
+import Authenticate from './Authenticate'
 
 const navTabs = [
   { id: '/dashboard', label: 'Dashboard', icon: Home },
@@ -53,6 +54,7 @@ export default function Navigation() {
             </Link>
           )
         })}
+        <Authenticate />
       </div>
     </Card>
   )

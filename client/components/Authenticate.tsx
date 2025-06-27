@@ -15,7 +15,6 @@ export default function Authenticate() {
         <span
           style={{
             color: 'var(--primary)',
-            backgroundColor: 'rgba(255 255 255 / 0.6)',
             borderColor: 'var(--border)',
           }}
         >
