@@ -51,26 +51,37 @@ export default function App() {
         <div className="mx-auto flex w-full max-w-6xl justify-center">
           <Link
             to="/"
-            className="inline-block text-4xl font-extrabold tracking-tight"
+            className="inline-block justify-center text-4xl font-extrabold tracking-tight"
             style={{
               color: 'var(--primary)',
               textShadow: '1px 1px 2px var(--border)',
             }}
           >
-            FlatFunds
+            Flatte
           </Link>
-          <div className="flex items-center justify-end px-2 py-2">
-            <div className="flex items-center gap-4 text-sm">
+          <div className="flex w-full items-center justify-end px-2 py-2">
+            {' '}
+            <div className="ml-auto flex items-center gap-4 text-sm">
+              {' '}
               {isAuthenticated ? (
                 <>
-                  <span className="text-gray-600">Hey, {user?.name}!</span>
+                  <span style={{ color: 'var(--primary)' }}>
+                    Hey, {user?.name}!
+                  </span>
                   <button
                     onClick={() =>
                       logout({
                         logoutParams: { returnTo: window.location.origin },
                       })
                     }
-                    className="rounded-md bg-red-500 px-4 py-2 font-semibold text-white transition hover:bg-red-600"
+                    style={{
+                      borderRadius: '0.375rem',
+                      backgroundColor: 'var(--primary)',
+                      padding: '0.5rem 1rem',
+                      fontWeight: 600,
+                      color: 'var(--primary-foreground)',
+                      transition: 'background-color 0.3s ease',
+                    }}
                   >
                     <LogOut />
                   </button>
@@ -78,7 +89,14 @@ export default function App() {
               ) : (
                 <button
                   onClick={() => loginWithRedirect()}
-                  className="rounded-md bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700"
+                  style={{
+                    borderRadius: '0.375rem',
+                    backgroundColor: 'var(--primary)',
+                    padding: '0.5rem 1rem',
+                    fontWeight: 600,
+                    color: 'var(--primary-foreground)',
+                    transition: 'background-color 0.3s ease',
+                  }}
                 >
                   Login
                 </button>
