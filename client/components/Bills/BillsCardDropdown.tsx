@@ -54,7 +54,7 @@ export default function BillsCardDropdown({
               })
               setShowUpdateBill(true)
             }}
-            className="flex items-center px-4 py-2 text-sm hover:bg-gray-100"
+            className="flex cursor-pointer items-center px-4 py-2 text-sm hover:bg-gray-100"
           >
             <Edit3 size={16} className="mr-2" />
             Edit
