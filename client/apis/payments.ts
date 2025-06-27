@@ -40,9 +40,10 @@ export async function addPayments(
       .set('Accept', 'application/json')
       .set('Content-Type', 'application/json')
       .send({ billId, payments })
+
     return res.body as Payment[]
   } catch (error: any) {
-    if (error.response && error.response.body && error.reponse.body.error) {
+    if (error.response && error.response.body && error.response.body.error) {
       throw new Error(error.response.body.error)
     }
     throw error
