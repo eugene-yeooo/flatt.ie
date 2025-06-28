@@ -5,17 +5,36 @@ import { useState } from 'react'
 import { Button } from '@/components/components/ui/button'
 import { UpdateBillData } from 'models/models'
 import UpdateBill from './UpdateBill'
+import BillSearch from './BillSearch'
+import { Plus } from 'lucide-react'
 
 export default function Bills() {
   const { data: bills, isPending, error } = useGetAllBills()
   const [showAddBill, setShowAddBill] = useState(false)
   const [showUpdateBill, setShowUpdateBill] = useState(false)
   const [selectedBill, setSelectedBill] = useState<UpdateBillData | null>(null)
+  const [searchQuery, setSearchQuery] = useState('')
 
-  // Remove duplicate bills by ID
-  const uniqueBills = bills?.filter(
-    (bill, index, self) => self.findIndex((b) => b.id === bill.id) === index,
-  )
+  // Remove duplicate bills by ID, and then sort by due date (showing most recent bills first)
+  const uniqueBills = bills
+    ?.filter(
+      (bill, index, self) => self.findIndex((b) => b.id === bill.id) === index,
+    )
+    .sort(
+      (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime(),
+    )
+
+  // Logic for search query
+  const filteredBills = uniqueBills?.filter((bill) => {
+    const query = searchQuery.toLowerCase()
+
+    return (
+      bill.title.toLowerCase().includes(query) ||
+      bill.expenseCategory?.toLowerCase().includes(query) ||
+      bill.totalAmount.toString().includes(query) ||
+      bill.dueDate.toString().includes(query)
+    )
+  })
 
   function toggleAddBill() {
     setShowAddBill((prev) => !prev)
@@ -45,13 +64,22 @@ export default function Bills() {
 
   return (
     <div className="mx-auto max-w-4xl p-4">
-      <div className="flex justify-end bg-primary">
-        <Button
-          onClick={toggleAddBill}
-          className="btn border border-gray-300 hover:bg-orange-400"
-        >
-          Add Bill
-        </Button>
+      <div className="flex justify-between pb-1">
+        <p className="text-md ml-2 mt-4 border-b">
+          Showing <span className="font-semibold">{filteredBills?.length}</span>{' '}
+          bill
+          {filteredBills?.length !== 1 && 's'}
+        </p>
+        <div className="flex h-10 justify-end gap-3 bg-primary">
+          <BillSearch onSearch={setSearchQuery} />
+          <Button
+            onClick={toggleAddBill}
+            className="flex min-w-fit items-center gap-1 border border-gray-300 bg-white px-3 py-2 hover:bg-orange-400"
+          >
+            <Plus size={16} />
+            Add Bill
+          </Button>
+        </div>
       </div>
 
       {showAddBill && <AddBill onAddBill={handleAddBill} />}
@@ -64,13 +92,12 @@ export default function Bills() {
         className="mt-4 grid gap-6"
         style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
       >
-        {bills.length === 0 ? (
+        {filteredBills?.length === 0 ? (
           <p>No bills found.</p>
         ) : (
-          uniqueBills?.map((bill) => (
+          filteredBills?.map((bill) => (
             <BillCard
               key={`${bill.id}-${bill.flattieId ?? 'all'}`}
-              // key={bill.id}
               id={bill.id}
               title={bill.title}
               dueDate={new Date(bill.dueDate)}
