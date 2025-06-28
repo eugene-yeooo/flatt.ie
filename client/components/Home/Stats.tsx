@@ -27,7 +27,7 @@ export default function SummaryStats({
       },
     },
     {
-      label: 'This Month Expenses',
+      label: "This Month's Expenses",
       value: `$${totalMonthlyExpenses.toFixed(2)}`,
       valueStyle: {
         fontSize: '1.5rem',

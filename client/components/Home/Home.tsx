@@ -8,13 +8,6 @@ export default function Home() {
   if (isLoading) return <p>Loading summary...</p>
   if (isError) return <p>Failed to load summary.</p>
 
-  // Calculate totals and unique flatmates
-  const totalPaid = payments
-    .filter((p) => p.paid)
-    .reduce((sum, p) => sum + p.amount, 0)
-  const totalOwed = payments
-    .filter((p) => !p.paid)
-    .reduce((sum, p) => sum + p.amount, 0)
   const uniqueFlatmates = new Set(payments.map((p) => p.flattieName)).size
 
   const today = new Date()
