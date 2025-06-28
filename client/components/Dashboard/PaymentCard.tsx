@@ -53,18 +53,20 @@ export default function PaymentCard({
       deleteMutation.mutate(id)
     }
   }
-  console.log('Due date:', billDueDate)
-  console.log('Now:', new Date().toISOString())
+  const isBillPaid = totalPaid >= (billPayments[0]?.billTotal ?? 0)
 
   return (
     <section
-      className="mb-10 rounded-xl p-4 shadow"
+      className="mb-10 rounded-xl p-4 shadow transition-colors"
       style={{
-        backgroundColor: 'var(--primary-foreground)',
+        backgroundColor: isBillPaid ? '#f0fdf4 ' : 'var(--primary-foreground)', // '#dcfce7' is Tailwind's green-50 hex
       }}
     >
-      <div className=" px-6 py-4">
-        <h2 className="text-2xl font-bold" style={{ color: 'var(--primary)' }}>
+      <div className="px-6 py-4">
+        <h2
+          className="text-2xl font-bold"
+          style={{ color: isBillPaid ? '#166534' : 'var(--primary)' }}
+        >
           {billTitle}
         </h2>
       </div>
@@ -74,8 +76,8 @@ export default function PaymentCard({
             key={payment.id}
             className={`flex items-center justify-between px-6 py-4 ${
               payment.paid
-                ? 'bg-green-50 text-green-800'
-                : 'bg-red-50 text-red-800'
+                ? 'rounded bg-green-50 text-green-800'
+                : 'rounded bg-red-50 text-red-800'
             }`}
           >
             <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:gap-2 sm:text-base">
@@ -127,11 +129,17 @@ export default function PaymentCard({
           </li>
         ))}
       </ul>
-      <div className=" px-6 py-4 text-right text-sm text-gray-600">
-        <strong className="text-gray-800">
-          Total Paid: ${totalPaid.toFixed(2)} of $
-          {billPayments[0]?.billTotal?.toFixed(2) ?? '0.00'}
-        </strong>
+      <div className="px-6 py-4 text-right text-sm text-gray-600">
+        {totalPaid >= (billPayments[0]?.billTotal ?? 0) ? (
+          <strong className="font-semibold text-green-700">
+            Bill of ${billPayments[0]?.billTotal?.toFixed(2) ?? '0.00'} Paid!
+          </strong>
+        ) : (
+          <strong className="text-gray-800">
+            Total Paid: ${totalPaid.toFixed(2)} of $
+            {billPayments[0]?.billTotal?.toFixed(2) ?? '0.00'}
+          </strong>
+        )}
       </div>
     </section>
   )
