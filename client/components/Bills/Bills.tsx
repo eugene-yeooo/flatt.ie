@@ -15,10 +15,14 @@ export default function Bills() {
   const [selectedBill, setSelectedBill] = useState<UpdateBillData | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
 
-  // Remove duplicate bills by ID
-  const uniqueBills = bills?.filter(
-    (bill, index, self) => self.findIndex((b) => b.id === bill.id) === index,
-  )
+  // Remove duplicate bills by ID, and then sort by due date (showing most recent bills first)
+  const uniqueBills = bills
+    ?.filter(
+      (bill, index, self) => self.findIndex((b) => b.id === bill.id) === index,
+    )
+    .sort(
+      (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime(),
+    )
 
   // Logic for search query
   const filteredBills = uniqueBills?.filter((bill) => {

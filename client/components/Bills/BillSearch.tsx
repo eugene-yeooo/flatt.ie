@@ -22,7 +22,7 @@ export default function BillSearch({
     <form className="flex w-full max-w-md" onSubmit={handleSubmit}>
       <input
         type="text"
-        placeholder="Search bill..."
+        placeholder="Search bills..."
         value={query}
         onChange={handleChange}
         className="w-full rounded-l-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
