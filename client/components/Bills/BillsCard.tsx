@@ -3,6 +3,7 @@ import AddPayment from './AddPaymentForm'
 import BillsCardDropdown from './BillsCardDropdown'
 import { Badge } from '@/components/components/ui/badge'
 import { UpdateBillData } from 'models/models'
+
 interface BillCardProps {
   id: number
   title: string
@@ -25,53 +26,55 @@ export default function BillCard({
   const [showAddPaymentForm, setShowAddPaymentForm] = useState(false)
 
   return (
-    <div className="relative rounded-md bg-white p-4 shadow">
+    <div className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
+      {/* Dropdown Menu */}
+      <div className="absolute right-3 top-3">
+        <BillsCardDropdown
+          id={id}
+          title={title}
+          dueDate={dueDate}
+          totalAmount={totalAmount}
+          expenseCategory={expenseCategory}
+          setShowUpdateBill={setShowUpdateBill}
+          setSelectedBill={setSelectedBill}
+        />
+      </div>
+
+      {/* Category badge */}
       {expenseCategory && (
         <Badge
-          variant="secondary"
-          className="absolute right-10 top-3 rounded-full px-3 py-1 text-xs font-semibold uppercase"
+          variant="outline"
+          className="mb-1 w-fit rounded-full border bg-gray-50 px-2 py-0.5 text-xs uppercase text-gray-600"
         >
           {expenseCategory}
         </Badge>
       )}
 
-      <BillsCardDropdown
-        id={id}
-        title={title}
-        dueDate={dueDate}
-        totalAmount={totalAmount}
-        expenseCategory={expenseCategory}
-        setShowUpdateBill={setShowUpdateBill}
-        setSelectedBill={setSelectedBill}
-      />
+      {/* Bill content */}
+      <h3 className="mb-0.5 text-base font-semibold text-gray-900">{title}</h3>
+      <p className="text-xs text-gray-500">
+        Due: {dueDate.toLocaleDateString()}
+      </p>
+      <p className="mt-0.5 text-sm font-medium text-gray-700">
+        Total: ${totalAmount.toFixed(2)}
+      </p>
 
-      <div>
-        <h2 className="text-lg font-semibold">{title}</h2>
-        <p className="text-sm text-gray-500">
-          Due: {dueDate.toLocaleDateString()}
-        </p>
-        <p className="text-sm text-gray-700">
-          Amount: ${totalAmount.toFixed(2)}
-        </p>
-      </div>
-
-      <div className="mt-4 flex justify-end gap-2">
+      {/* Actions */}
+      <div className="mt-3 flex justify-end">
         <button
           onClick={() => setShowAddPaymentForm(true)}
-          className="rounded-md border border-orange-500 px-4 py-2 text-sm font-medium text-orange-500 hover:bg-orange-50"
+          className="rounded-md border border-orange-500 bg-orange-50 px-3 py-1 text-sm font-medium text-orange-600 transition hover:bg-orange-100"
         >
           Add Payment
         </button>
       </div>
 
+      {/* Payment form */}
       {showAddPaymentForm && (
         <AddPayment
           billId={id}
           onClose={() => setShowAddPaymentForm(false)}
-          flatmates={{
-            id: 0,
-            name: '',
-          }}
+          flatmates={{ id: 0, name: '' }}
           totalAmount={totalAmount}
         />
       )}
