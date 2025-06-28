@@ -23,7 +23,7 @@ export default function Dashboard() {
     updateStatus({ id, paid: paidStatus })
   }
   return (
-    <div className=" gap-6 ">
+    <div className="grid grid-cols-2 gap-6 ">
       {Object.entries(paymentsByBill).map(([billTitle, billPayments]) => (
         <PaymentCard
           key={billTitle}

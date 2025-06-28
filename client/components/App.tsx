@@ -7,6 +7,7 @@ import Report from './Reports/Reports'
 import Flatties from './Flatties/Flatties'
 import Front from './Front'
 import { useAuth0 } from '@auth0/auth0-react'
+import Home from './Home/Home'
 
 export default function App() {
   const { isAuthenticated } = useAuth0()
@@ -52,8 +53,9 @@ export default function App() {
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6">
           <Link
-            to="/"
-            className="] text-4xl font-extrabold tracking-tight text-[var(--primary)] drop-shadow-[1px_1px_2px_var(--border)]"
+            to="/flattie"
+            style={{ backgroundColor: 'var(--background)' }}
+            className="rounded-xl border-8 border-white px-3 py-2 text-4xl font-extrabold tracking-tight text-[var(--primary)] shadow drop-shadow-[1px_1px_2px_var(--border)] backdrop-blur-sm "
             aria-label="Flatt.ie Home"
           >
             flatt.ie
@@ -62,15 +64,14 @@ export default function App() {
           <nav className="flex-1">
             <Navigation />
           </nav>
-
-          <div></div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-5xl p-6">
+      <main className="mx-auto max-w-6xl rounded-xl bg-white p-6 shadow">
         <Routes>
           <Route path="/" element={<Front />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/flattie" element={<Home />} />
+          <Route path="/payments" element={<Dashboard />} />
           <Route path="/flatmates" element={<Flatties />} />
           <Route path="/bills" element={<Bills />} />
           <Route path="/expense" element={<Expenses />} />
