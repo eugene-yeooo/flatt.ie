@@ -50,7 +50,7 @@ export default function Bills() {
       (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime(),
     )
 
-  console.log(bills)
+  // console.log(bills)
 
   // Logic for search query and filtering
   const filteredBills = uniqueBills?.filter((bill) => {

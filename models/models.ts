@@ -26,7 +26,7 @@ export interface Bill {
   paymentId: number
   paymentAmount: number
   split: number
-  paid: boolean
+  paid: number
   flattieId: number
   flattieName: string
 }
