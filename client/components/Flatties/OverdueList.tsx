@@ -1,3 +1,4 @@
+import { FlatmateWithData } from "models/models"
 import { useEffect, useState } from "react"
 
 interface OverdueFlattie {
@@ -10,9 +11,13 @@ export default function OverdueList() {
   const [overdueList, setOverdueList] = useState<OverdueFlattie[]>([])
 
   useEffect(() => {
-    fetch('/api/v1/flatties/overdue')
+    fetch('/api/v1/flatties/data')
     .then((res) => res.json())
-    .then((data) => setOverdueList(data))
+    .then((rawData) => {
+      const data = rawData as FlatmateWithData[]
+      const filtered = data.filter((f) => f.overdue > 0)
+      setOverdueList(filtered)
+    })
     .catch((err) => console.error('Failed to fetch overdue list:', err))
   }, [])
 

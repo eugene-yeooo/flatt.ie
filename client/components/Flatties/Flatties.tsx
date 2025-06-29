@@ -1,19 +1,10 @@
 import { useEffect, useState } from 'react'
 import FlattieCard from './FlattiesCard'
 import AddFlatmateForm from './AddFlatmateForm'
-
-interface Flatmate {
-  id: number
-  name: string
-  credit: number
-  debt: number
-  profilePhoto?: string
-  balance: number
-  unpaid: number
-}
+import { FlatmateWithData } from 'models/models'
 
 export default function Flatties() {
-  const [flatmates, setFlatmates] = useState<Flatmate[]>([])
+  const [flatmates, setFlatmates] = useState<FlatmateWithData[]>([])
 
   useEffect(() => {
     fetch('/api/v1/flatties/balance')
@@ -23,15 +14,15 @@ export default function Flatties() {
   }, [])
 
   // Add flatmate
-  async function handleAddFlatmate(newMate: { name: string; credit: number; debt: number }) {
+  async function handleAddFlatmate(formData: FormData) {
     try {
-    const res = await fetch('/api/v1/flatties', {
+    await fetch('/api/v1/flatties', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newMate),
+      body: formData,
     })
-    const created = await res.json()
-    setFlatmates([...flatmates, {...created, balance: created.credit - created.debt, unpaid: 0 }]) 
+    const updated = await fetch('/api/v1/flatties/balance')
+    const data = await updated.json()
+    setFlatmates(data)
     } catch (error) {
       console.error('Failed to add flatmate:', error)
     }
@@ -56,8 +47,8 @@ export default function Flatties() {
             key={mate.id}
             name={mate.name}
             credit={mate.credit}
-            debt={mate.debt}
-            overdue={mate.unpaid}
+            overdue={mate.overdue}
+            profilePhoto={mate.profilePhoto}
             onDelete={() => handleDelete(mate.id)}
           />
         ))}
