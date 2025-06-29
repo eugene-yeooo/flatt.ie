@@ -7,6 +7,7 @@ export async function getAllBills() {
   return connection('bill')
     .leftJoin('expense', 'bill.expense_category', 'expense.category')
     .leftJoin('payment', 'bill.id', 'payment.bill_id')
+    .leftJoin('flattie', 'payment.flatmate_id', 'flattie.id')
     .select(
       'bill.id',
       'bill.title',
@@ -19,6 +20,7 @@ export async function getAllBills() {
       'payment.split',
       'payment.paid',
       'payment.flatmate_id as flattieId',
+      'flattie.name as flattieName',
     )
 }
 
