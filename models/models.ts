@@ -2,7 +2,7 @@ export interface Flatmate {
   id: number
   name: string
   credit: number
-  debt: number
+  debt?: number
   balance: number
   profilePhoto?: string
 }

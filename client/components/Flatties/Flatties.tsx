@@ -14,15 +14,15 @@ export default function Flatties() {
   }, [])
 
   // Add flatmate
-  async function handleAddFlatmate(newMate: { name: string; credit: number }) {
+  async function handleAddFlatmate(formData: FormData) {
     try {
-    const res = await fetch('/api/v1/flatties', {
+    await fetch('/api/v1/flatties', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newMate),
+      body: formData,
     })
-    const created = await res.json()
-    setFlatmates([...flatmates, {...created, balance: created.credit, unpaid: 0, overdue: 0 }]) 
+    const updated = await fetch('/api/v1/flatties/balance')
+    const data = await updated.json()
+    setFlatmates(data)
     } catch (error) {
       console.error('Failed to add flatmate:', error)
     }
@@ -48,6 +48,7 @@ export default function Flatties() {
             name={mate.name}
             credit={mate.credit}
             overdue={mate.overdue}
+            profilePhoto={mate.profilePhoto}
             onDelete={() => handleDelete(mate.id)}
           />
         ))}

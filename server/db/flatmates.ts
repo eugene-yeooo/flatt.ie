@@ -22,7 +22,12 @@ export async function getAllFlatmates() {
 
 // Add a new flatmate
 export async function addFlatmate(flatmate:Omit<Flatmate, 'id' | 'balance' | 'unpaid' | 'overdue'>) {
-  return connection('flattie').insert(flatmate).returning('*')
+  const flatmateToInsert = {
+    name: flatmate.name,
+    credit: flatmate.credit,
+    profile_photo: flatmate.profilePhoto,
+  }
+  return connection('flattie').insert(flatmateToInsert).returning('*')
 }
 
 // Delete a flatmate
@@ -35,15 +40,12 @@ export async function getFlatmatesWithData() {
   const flatmates: FlatmateDBRow[] = await connection('flattie')
   .leftJoin('payment', 'flattie.id', 'payment.flatmate_id')
   .leftJoin('bill', 'payment.bill_id', 'bill.id')
-  .select(
-    'flattie.id', 'flattie.name', 'flattie.credit', 'flattie.profile_photo as profilePhoto'
-  )
-.select(
-      connection.raw(`
-        COALESCE(SUM(CASE WHEN payment.paid = false THEN payment.amount ELSE 0 END), 0) AS unpaidAmount,
-        COALESCE(SUM(CASE WHEN payment.paid = false AND bill.due_date < ? THEN payment.amount ELSE 0 END), 0) AS overdueAmount
-      `, [today])
-    )  .groupBy('flattie.id')
+  .select([
+    'flattie.id', 'flattie.name', 'flattie.credit', 'flattie.profile_photo as profilePhoto',
+    connection.raw(`COALESCE(SUM(CASE WHEN payment.paid = false THEN payment.amount ELSE 0 END), 0) AS unpaidAmount`),
+    connection.raw(`COALESCE(SUM(CASE WHEN payment.paid = false AND bill.due_date < ? THEN payment.amount ELSE 0 END), 0) AS overdueAmount`, [today])
+  ])
+  .groupBy('flattie.id', 'flattie.name', 'flattie.credit', 'flattie.profile_photo')
 
   return flatmates.map((f) => {
     const credit = Number(f.credit) || 0
@@ -56,7 +58,7 @@ export async function getFlatmatesWithData() {
     profilePhoto: f.profilePhoto,
     overdue,
     unpaid,
-    balance: f.credit - overdue,
+    balance: credit - overdue,
   }})
 }
 

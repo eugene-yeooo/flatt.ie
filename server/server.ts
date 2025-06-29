@@ -1,5 +1,5 @@
 import express from 'express'
-import * as Path from 'node:path'
+import path, * as Path from 'node:path'
 
 import flattiesRoutes from './routes/flatties.ts'
 import expenseRoutes from './routes/expense.ts'
@@ -9,6 +9,7 @@ import paymentRoutes from './routes/payment.ts'
 const server = express()
 
 server.use(express.json())
+server.use('/uploads', express.static(path.resolve('server/public/uploads')))
 
 server.use('/api/v1/flatties', flattiesRoutes)
 server.use('/api/v1/expense', expenseRoutes)

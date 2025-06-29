@@ -5,12 +5,12 @@ import { Payment } from "models/models"
 interface FlattieCardProps {
   name: string
   credit: number
-  debt?: number
   overdue?: number
+  profilePhoto?: string
   onDelete?: () => void
 }
 
-export default function FlattieCard({ name, credit, overdue, onDelete }: FlattieCardProps) {
+export default function FlattieCard({ name, credit, overdue, profilePhoto, onDelete }: FlattieCardProps) {
   const balance = credit - (overdue ?? 0)
   const balanceColor =
     balance > 0
@@ -31,6 +31,7 @@ export default function FlattieCard({ name, credit, overdue, onDelete }: Flattie
 
   return (
     <div className="rounded-xl border border-border bg-card p-4 shadow-sm transition hover:shadow-md">
+      <img src={profilePhoto ? `http://localhost:3000${profilePhoto}` : '/images/profilePhoto.png'} alt={profilePhoto ? `${name}'s profile` : 'Default avatar'} className="w-20 h-20 rounded-full object-cover mb-2" />
       <h3 className="text-lg font-semibold text-foreground">{name}</h3>
       <div className="text-sm text-muted-foreground">
         Credit: ${credit.toFixed(2)}
