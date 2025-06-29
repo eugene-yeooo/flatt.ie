@@ -12,6 +12,7 @@ interface BillCardProps {
   totalAmount: number
   expenseCategory?: string
   paid: boolean
+  unpaidFlatties: string[]
   setShowUpdateBill: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedBill: React.Dispatch<React.SetStateAction<UpdateBillData | null>>
 }
@@ -30,6 +31,7 @@ export default function BillCard({
   totalAmount,
   expenseCategory,
   paid,
+  unpaidFlatties,
   setShowUpdateBill,
   setSelectedBill,
 }: BillCardProps) {
@@ -80,12 +82,17 @@ export default function BillCard({
 
       {/* Bill content */}
       <h3 className="mb-0.5 text-base font-semibold text-gray-900">{title}</h3>
-      <p className="text-xs text-gray-500">
+      <p className="text-sm text-gray-500">
         Due: {dueDate.toLocaleDateString()}
       </p>
       <p className="mt-0.5 text-sm font-medium text-gray-700">
         Total: ${totalAmount.toFixed(2)}
       </p>
+      {unpaidFlatties.length > 0 && (
+        <p className="mt-1 text-sm font-semibold text-red-500">
+          Unpaid by: {unpaidFlatties.join(', ')}
+        </p>
+      )}
 
       {/* Actions */}
       <div className="mt-3 flex justify-end">

@@ -19,6 +19,28 @@ export default function Bills() {
     new Set(bills?.map((b) => b.expenseCategory).filter(Boolean)),
   )
 
+  // Map paid status
+  const billStatusMap = new Map<
+    number,
+    { isUnpaid: boolean; unpaidFlatties: string[] }
+  >()
+
+  bills?.forEach((bill) => {
+    const current = billStatusMap.get(bill.id) ?? {
+      isUnpaid: false,
+      unpaidFlatties: [],
+    }
+
+    if (bill.paid === 0) {
+      current.isUnpaid = true
+      if (bill.flattieId) {
+        current.unpaidFlatties.push(bill.flattieName)
+      }
+    }
+
+    billStatusMap.set(bill.id, current)
+  })
+
   // Remove duplicate bills by ID, and then sort by due date (showing most recent bills first)
   const uniqueBills = bills
     ?.filter(
@@ -30,13 +52,14 @@ export default function Bills() {
 
   console.log(bills)
 
-  // Logic for search query
+  // Logic for search query and filtering
   const filteredBills = uniqueBills?.filter((bill) => {
     const query = searchQuery.toLowerCase()
     const now = new Date()
     const due = new Date(bill.dueDate)
 
-    const isUnpaid = bill.paid === false
+    const status = billStatusMap.get(bill.id)
+    const isUnpaid = status?.isUnpaid ?? false
     const isOverdue = due < now && isUnpaid
     const isUpcoming = due >= now && isUnpaid
 
@@ -145,6 +168,8 @@ export default function Bills() {
               totalAmount={bill.totalAmount}
               expenseCategory={bill.expenseCategory}
               setShowUpdateBill={setShowUpdateBill}
+              paid={!billStatusMap.get(bill.id)?.isUnpaid}
+              unpaidFlatties={billStatusMap.get(bill.id)?.unpaidFlatties || []}
               setSelectedBill={setSelectedBill}
             />
           ))

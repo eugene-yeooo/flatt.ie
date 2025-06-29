@@ -28,6 +28,7 @@ export interface Bill {
   split: number
   paid: boolean
   flattieId: number
+  flattieName: string
 }
 
 export interface NewBill {
