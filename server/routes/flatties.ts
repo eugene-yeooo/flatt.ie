@@ -37,8 +37,8 @@ router.delete('/:id', async (req, res) => {
 
 router.get('/balance', async (req, res) => {
   try {
-    const flatmatesWithBalance = await db.getFlatmatesWithBalance()
-    res.json(flatmatesWithBalance)
+    const flatmatesWithData = await db.getFlatmatesWithData()
+    res.json(flatmatesWithData)
   } catch (error) {
     console.error('Error getting flatmates with balance:', error)
     res.status(500).json({ error: 'Failed to get flatmates with balance' })
@@ -47,8 +47,9 @@ router.get('/balance', async (req, res) => {
 
 router.get('/overdue', async (req, res) => {
   try {
-    const flatmates = await db.getFlatmatesWithOverdue()
-    res.json(flatmates)
+    const flatmates = await db.getFlatmatesWithData()
+    const overdueOnly = flatmates.filter((f) => f.overdue > 0)
+    res.json(overdueOnly)
   } catch (error) {
     console.error('Error getting overdue flatmates:', error)
     res.status(500).json({ error: 'Failed to get overdue flatmates' })

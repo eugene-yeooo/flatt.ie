@@ -7,6 +7,11 @@ export interface Flatmate {
   profilePhoto?: string
 }
 
+export interface FlatmateWithData extends Flatmate {
+  overdue: number
+  unpaid: number
+}
+
 export interface Expense {
   id: number
   category: string
