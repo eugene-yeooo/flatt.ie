@@ -11,6 +11,7 @@ interface BillCardProps {
   dueDate: Date
   totalAmount: number
   expenseCategory?: string
+  paid: boolean
   setShowUpdateBill: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedBill: React.Dispatch<React.SetStateAction<UpdateBillData | null>>
 }
@@ -28,6 +29,7 @@ export default function BillCard({
   dueDate,
   totalAmount,
   expenseCategory,
+  paid,
   setShowUpdateBill,
   setSelectedBill,
 }: BillCardProps) {
@@ -53,18 +55,28 @@ export default function BillCard({
         />
       </div>
 
-      {/* Category badge */}
-      {expenseCategory && (
-        <Badge
-          variant="outline"
-          className={clsx(
-            'mb-1 w-fit rounded border px-2 py-0.5 text-xs font-semibold uppercase',
-            badgeClass,
-          )}
-        >
-          {expenseCategory}
-        </Badge>
-      )}
+      {/* Category and unpaid badge */}
+      <div className="flex gap-2">
+        {expenseCategory && (
+          <Badge
+            variant="outline"
+            className={clsx(
+              'mb-1 w-fit rounded border px-2 py-0.5 text-xs font-semibold uppercase',
+              badgeClass,
+            )}
+          >
+            {expenseCategory}
+          </Badge>
+        )}
+        {!paid && (
+          <Badge
+            variant="outline"
+            className="mb-1 w-fit rounded border border-red-500 bg-red-100 px-2 py-0.5 text-xs font-semibold uppercase text-red-500"
+          >
+            UNPAID
+          </Badge>
+        )}
+      </div>
 
       {/* Bill content */}
       <h3 className="mb-0.5 text-base font-semibold text-gray-900">{title}</h3>

@@ -6,7 +6,7 @@ import { Button } from '@/components/components/ui/button'
 import { UpdateBillData } from 'models/models'
 import UpdateBill from './UpdateBill'
 import BillSearch from './BillSearch'
-import { Plus } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 
 export default function Bills() {
   const { data: bills, isPending, error } = useGetAllBills()
@@ -14,6 +14,10 @@ export default function Bills() {
   const [showUpdateBill, setShowUpdateBill] = useState(false)
   const [selectedBill, setSelectedBill] = useState<UpdateBillData | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [filter, setFilter] = useState('')
+  const categories = Array.from(
+    new Set(bills?.map((b) => b.expenseCategory).filter(Boolean)),
+  )
 
   // Remove duplicate bills by ID, and then sort by due date (showing most recent bills first)
   const uniqueBills = bills
@@ -24,16 +28,31 @@ export default function Bills() {
       (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime(),
     )
 
+  console.log(bills)
+
   // Logic for search query
   const filteredBills = uniqueBills?.filter((bill) => {
     const query = searchQuery.toLowerCase()
+    const now = new Date()
+    const due = new Date(bill.dueDate)
 
-    return (
+    const isUnpaid = bill.paid === false
+    const isOverdue = due < now && isUnpaid
+    const isUpcoming = due >= now && isUnpaid
+
+    const matchesSearch =
       bill.title.toLowerCase().includes(query) ||
       bill.expenseCategory?.toLowerCase().includes(query) ||
       bill.totalAmount.toString().includes(query) ||
       bill.dueDate.toString().includes(query)
-    )
+
+    const matchesFilter =
+      filter === '' ||
+      bill.expenseCategory === filter ||
+      (filter === 'overdue' && isOverdue) ||
+      (filter === 'upcoming' && isUpcoming)
+
+    return matchesSearch && matchesFilter
   })
 
   function toggleAddBill() {
@@ -71,6 +90,28 @@ export default function Bills() {
           {filteredBills?.length !== 1 && 's'}
         </p>
         <div className="flex h-10 justify-end gap-3 bg-primary">
+          {filter !== '' && (
+            <button
+              onClick={() => setFilter('')}
+              className="flex flex-shrink-0 translate-y-0.5 items-center text-sm italic text-gray-400"
+            >
+              <X size={16} className="translate-y-0 pr-1" /> clear filter
+            </button>
+          )}
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="w-md text-md mt-1 block rounded border border-gray-300 px-3 py-0 leading-normal focus:border-primary focus:ring focus:ring-primary/50"
+          >
+            <option value="">All</option>
+            <option value="overdue">Overdue</option>
+            <option value="upcoming">Upcoming</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
           <BillSearch onSearch={setSearchQuery} />
           <Button
             onClick={toggleAddBill}
