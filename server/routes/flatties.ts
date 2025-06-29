@@ -15,10 +15,10 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-router.get('/', async (req,res) => {
+router.get('/', async (req, res) => {
   try {
-  const flatmates = await db.getAllFlatmates()
-  res.json(flatmates)
+    const flatmates = await db.getAllFlatmates()
+    res.json(flatmates)
   } catch (error) {
     console.error('Error getting flatmates:', error)
     res.status(500).json({ error: 'Failed to get flatmates' })

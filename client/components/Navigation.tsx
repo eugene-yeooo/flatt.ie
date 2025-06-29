@@ -1,11 +1,13 @@
 import { Link, useLocation } from 'react-router-dom'
 import { Card } from '@/components/components/ui/card'
 import { Home, Users, Clipboard, Receipt } from 'lucide-react'
+import Authenticate from './Authenticate'
 
 const navTabs = [
-  { id: '/', label: 'Dashboard', icon: Home },
+  { id: '/payments', label: 'Payments', icon: Home },
   { id: '/flatmates', label: 'Flatties', icon: Users },
   { id: '/bills', label: 'Bills', icon: Receipt },
+  { id: '/expense', label: 'Expenses', icon: Receipt },
   { id: '/report', label: 'Reports', icon: Clipboard },
 ]
 
@@ -15,7 +17,7 @@ export default function Navigation() {
 
   return (
     <Card
-      className="m-4 p-1 backdrop-blur-sm"
+      className="m-4 p-2 backdrop-blur-sm"
       style={{
         backgroundColor: 'rgba(255 255 255 / 0.6)',
         borderColor: 'var(--border)',
@@ -30,13 +32,13 @@ export default function Navigation() {
             <Link
               key={tab.id}
               to={tab.id}
-              className={`flex flex-1 items-center justify-center gap-2 rounded-md px-4 py-3 font-medium transition-all duration-200`}
+              className={`flex flex-1 items-center justify-center gap-2 rounded-xl px-4 py-3 font-medium shadow  transition-all duration-200 hover:shadow-md`}
               style={{
                 backgroundColor: isActive
                   ? 'var(--primary)'
-                  : 'var(--primary-foreground)',
+                  : 'var(--background)',
                 color: isActive
-                  ? 'var(--primary-foreground)'
+                  ? 'var(--background)'
                   : 'var(--muted-foreground)',
               }}
             >
@@ -52,6 +54,7 @@ export default function Navigation() {
             </Link>
           )
         })}
+        <Authenticate />
       </div>
     </Card>
   )

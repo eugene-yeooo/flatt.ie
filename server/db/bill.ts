@@ -1,4 +1,4 @@
-import { NewBill } from 'models/models.ts'
+import { NewBill, UpdateBillData } from 'models/models.ts'
 import connection from './connection.ts'
 
 // ----------- GET BILLS ------------- //
@@ -7,6 +7,7 @@ export async function getAllBills() {
   return connection('bill')
     .leftJoin('expense', 'bill.expense_category', 'expense.category')
     .leftJoin('payment', 'bill.id', 'payment.bill_id')
+    .leftJoin('flattie', 'payment.flatmate_id', 'flattie.id')
     .select(
       'bill.id',
       'bill.title',
@@ -19,6 +20,7 @@ export async function getAllBills() {
       'payment.split',
       'payment.paid',
       'payment.flatmate_id as flattieId',
+      'flattie.name as flattieName',
     )
 }
 
@@ -33,4 +35,16 @@ export async function addBill(data: NewBill) {
 
 export function deleteBill(id: number) {
   return connection('bill').where({ id }).delete()
+}
+
+// ----------- UPDATE BILL ------------- //
+
+export function updateBill(data: UpdateBillData) {
+  const { id, ...fieldsToUpdate } = data
+  return connection('bill').where({ id }).update(fieldsToUpdate)
+}
+
+export async function getBillCount() {
+  const result = await connection('bill').count('id as count')
+  return result[0].count
 }

@@ -1,5 +1,5 @@
 import request from 'superagent'
-import { Bill, NewBill } from '../../models/models'
+import { Bill, NewBill, UpdateBillData } from '../../models/models'
 
 const billURL = '/api/v1/bill'
 
@@ -40,6 +40,18 @@ export async function deleteBill(id: number) {
     return res.body
   } catch (err) {
     console.error('Failed to delete bill', err)
+    throw err
+  }
+}
+
+// ---------- UPDATE BILL ---------- //
+
+export async function updateBill(data: UpdateBillData) {
+  try {
+    const res = await request.patch(`${billURL}/update-bill`).send(data)
+    return res.body
+  } catch (err) {
+    console.error('Failed to update bill', err)
     throw err
   }
 }

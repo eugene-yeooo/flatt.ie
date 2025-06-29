@@ -52,10 +52,23 @@ router.post('/', async (req, res) => {
 
   try {
     const newPayments = await db.generatePayments(paymentsToInsert, billId)
+    console.log(newPayments)
     res.status(200).json(newPayments)
   } catch (err) {
     console.error('Error creating payments', err)
     res.status(500).json({ error: 'Failed to create payments' })
+  }
+})
+
+// Delete payment by id
+router.delete('/:id', async (req, res) => {
+  const paymentId = Number(req.params.id)
+  try {
+    await db.deletePaymentById(paymentId)
+    res.status(204).send()
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to delete payment' })
   }
 })
 

@@ -1,12 +1,21 @@
 import { Routes, Route, Link } from 'react-router-dom'
 import Dashboard from './Dashboard/Dashboard'
 import Bills from './Bills/Bills'
+import Expenses from './Expenses/Expenses'
 import Navigation from './Navigation'
 import Report from './Reports/Reports'
-
 import Flatties from './Flatties/Flatties'
+import Front from './Front'
+import { useAuth0 } from '@auth0/auth0-react'
+import Home from './Home/Home'
 
 export default function App() {
+  const { isAuthenticated } = useAuth0()
+
+  if (!isAuthenticated) {
+    return <Front />
+  }
+
   //REPORTS SAMPLE DATA
   const sampleData = [
     {
@@ -31,43 +40,42 @@ export default function App() {
 
   return (
     <div
-      className="text-foreground min-h-screen"
-      style={{
-        backgroundColor: 'var(--background)',
-        color: 'var(--foreground)',
-      }}
+      className="min-h-screen bg-[var(--background)] text-foreground"
+      style={{ color: 'var(--foreground)' }}
     >
       <header
-        className="px-6 py-4 shadow-md"
+        className=" px-6 py-4"
         style={{
-          backgroundColor: 'var(--card)',
-          borderBottom: '1px solid var(--border)',
+          backgroundColor: 'var(--background)',
+          borderColor: 'var(--border)',
         }}
+        role="banner"
       >
-        <div className="mx-auto flex w-full max-w-6xl justify-center">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-6">
           <Link
-            to="/"
-            className="inline-block text-4xl font-extrabold tracking-tight"
-            style={{
-              color: 'var(--primary)',
-              textShadow: '1px 1px 2px var(--border)',
-            }}
+            to="/flattie"
+            style={{ backgroundColor: 'var(--background)' }}
+            className="rounded-xl border-8 border-white px-3 py-2 text-4xl font-extrabold tracking-tight text-[var(--primary)] shadow drop-shadow-[1px_1px_2px_var(--border)] backdrop-blur-sm "
+            aria-label="Flatt.ie Home"
           >
-            FlatFunds
+            flatt.ie
           </Link>
+
+          <nav className="flex-1">
+            <Navigation />
+          </nav>
         </div>
       </header>
 
-      {/* Navigation Tabs */}
-      <Navigation />
-
-      <main className="mx-auto max-w-5xl p-4">
+      <main className="mx-auto max-w-6xl rounded-xl bg-white p-6 shadow">
         <Routes>
-          <Route path="/" element={<Dashboard payments={[]} />} />
+          <Route path="/" element={<Front />} />
+          <Route path="/flattie" element={<Home />} />
+          <Route path="/payments" element={<Dashboard />} />
           <Route path="/flatmates" element={<Flatties />} />
           <Route path="/bills" element={<Bills />} />
+          <Route path="/expense" element={<Expenses />} />
           <Route path="/report" element={<Report data={sampleData} />} />
-          <Route path="/flatmates" element={<Flatties />} />
         </Routes>
       </main>
     </div>
