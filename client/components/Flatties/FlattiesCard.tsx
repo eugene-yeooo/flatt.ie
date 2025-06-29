@@ -5,13 +5,13 @@ import { Payment } from "models/models"
 interface FlattieCardProps {
   name: string
   credit: number
-  debt: number
   overdue?: number
+  profilePhoto?: string
   onDelete?: () => void
 }
 
-export default function FlattieCard({ name, credit, debt, overdue, onDelete }: FlattieCardProps) {
-  const balance = credit - debt
+export default function FlattieCard({ name, credit, overdue, profilePhoto, onDelete }: FlattieCardProps) {
+  const balance = credit - (overdue ?? 0)
   const balanceColor =
     balance > 0
       ? 'text-green-600'
@@ -31,12 +31,10 @@ export default function FlattieCard({ name, credit, debt, overdue, onDelete }: F
 
   return (
     <div className="rounded-xl border border-border bg-card p-4 shadow-sm transition hover:shadow-md">
+      <img src={profilePhoto ? `http://localhost:3000${profilePhoto}` : '/images/profilePhoto.png'} alt={profilePhoto ? `${name}'s profile` : 'Default avatar'} className="w-20 h-20 rounded-full object-cover mb-2" />
       <h3 className="text-lg font-semibold text-foreground">{name}</h3>
       <div className="text-sm text-muted-foreground">
         Credit: ${credit.toFixed(2)}
-      </div>
-      <div className="text-sm text-muted-foreground">
-        Debt: ${debt.toFixed(2)}
       </div>
       <div className={`mt-1 text-sm font-medium ${balanceColor}`}>
         Balance: ${balance.toFixed(2)}
@@ -64,7 +62,7 @@ export default function FlattieCard({ name, credit, debt, overdue, onDelete }: F
               ) : (
                 unpaidExpenses.map((p) => (
                   <li key={p.id}>
-                    • {p.billTitle} ({new Date(p.due_date).toLocaleDateString()}): ${p.amount.toFixed(2)}
+                    • {p.billTitle} ({new Date(p.dueDate).toLocaleDateString()}): ${p.amount.toFixed(2)}
                   </li>
                 ))
               )}

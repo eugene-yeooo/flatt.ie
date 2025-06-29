@@ -2,9 +2,14 @@ export interface Flatmate {
   id: number
   name: string
   credit: number
-  debt: number
+  debt?: number
   balance: number
   profilePhoto?: string
+}
+
+export interface FlatmateWithData extends Flatmate {
+  overdue: number
+  unpaid: number
 }
 
 export interface Expense {
