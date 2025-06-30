@@ -1,6 +1,7 @@
 import { ChangeEvent, useState } from "react"
 import { getAllPayments } from "../../apis/payments"
 import { Payment } from "models/models"
+import { usePayFromCredit } from "../../hooks/usePayment"
 
 interface FlattieCardProps {
   id: number
@@ -17,7 +18,7 @@ export default function FlattieCard({ id, name, credit, overdue, profilePhoto, o
   const [isEditing, setIsEditing] = useState(false)
   const [showOverdueList, setShowOverdueList] = useState(false)
   const [unpaidExpenses, setUnpaidExpenses] = useState<Payment[]>([])
-  const [loadingId, setLoadingId] = useState<number | null>(null)
+  const [pendingPaymentId, setPendingPaymentId] = useState<number | null>(null)
 
   const [editedName, setEditedName] = useState(name)
   const [editedCredit, setEditedCredit] = useState(credit)
@@ -30,6 +31,7 @@ export default function FlattieCard({ id, name, credit, overdue, profilePhoto, o
       : balance < 0
         ? 'text-red-600'
         : 'text-muted-foreground'
+  const { mutate: payFromCredit, isPending } = usePayFromCredit()
 
   async function fetchUnpaidExpenses() {
     const allPayments = await getAllPayments()
@@ -49,21 +51,16 @@ export default function FlattieCard({ id, name, credit, overdue, profilePhoto, o
     setShowOverdueList(!showOverdueList)
   }
 
-  async function handlePayFromCredit(paymentId: number) {
-    try {
-      setLoadingId(paymentId)
-      const res = await fetch(`/api/v1/payment/${paymentId}/pay-from-credit`, {
-        method: 'PATCH',
-      })
-    if (!res.ok) {
-      throw new Error('Payment failed')
-    }
-      await fetchUnpaidExpenses()
-    } catch (error) {
-      console.error('Pay from credit failed:', error)
-    } finally {
-      setLoadingId(null)
-    }
+function handleConfirmPay(paymentId: number) {
+       payFromCredit(paymentId, {
+      onSuccess: () => {
+        fetchUnpaidExpenses()
+        setPendingPaymentId(null)
+      },
+      onError: (err) => {
+        console.error('Pay from credit failed:', err)
+      },
+    })
   }
 
   function handleDeleteConfirm() {
@@ -167,7 +164,17 @@ export default function FlattieCard({ id, name, credit, overdue, profilePhoto, o
                     <span>
                     • {p.billTitle} ({new Date(p.dueDate).toLocaleDateString()}): ${p.amount.toFixed(2)}
                     </span>
-                    <button onClick={() => handlePayFromCredit(p.id)} disabled={loadingId === p.id} className="ml-2 rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 hover:bg-blue-200">{loadingId === p.id ? '...' : '💸'}</button>
+                    {pendingPaymentId === p.id ? (
+                      <div className="mt-1 rounded border bg-gray-50 p-2 flex flex-col gap-2 items-start w-full">
+                        <p className="text-xs text-gray-600">Credit will be reduced by ${p.amount.toFixed(2)}</p>
+                        <div className="flex gap-2 self-end">
+                        <button onClick={() => handleConfirmPay(p.id)} className="rounded bg-green-100 px-2 py-1 text-xs text-green-700 hover:bg-green-200">Confirm</button>
+                        <button onClick={() => setPendingPaymentId(null)} className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-300">Cancel</button>
+                      </div>
+                      </div>
+                    ) : (
+                      <button onClick={() => setPendingPaymentId(p.id)} disabled={isPending} className="ml-2 rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 hover:bg-blue-200">{isPending ? '...' : '💸'}</button>
+                    )}
                   </li>
                 ))
               )}
