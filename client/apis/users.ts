@@ -1,7 +1,7 @@
 import request from 'superagent'
 import { User } from '../../models/models'
 
-const rootURL = new URL(`/api/v1`, document.baseURI)
+const rootURL = new URL('/api/v1', document.baseURI)
 
 interface NewUser {
   username: string
@@ -14,15 +14,12 @@ interface AddUser {
   token: string
 }
 
-// ------- VIEW USERS ------
-
-//-------/users
+// Get all users
 export async function getAllUsers(token: string): Promise<User[] | null> {
   try {
     const res = await request
       .get(`${rootURL}/users`)
       .set('Authorization', `Bearer ${token}`)
-
     return res.body || []
   } catch (err) {
     console.error('Error fetching all users:', err)
@@ -30,13 +27,12 @@ export async function getAllUsers(token: string): Promise<User[] | null> {
   }
 }
 
-//-------/users/me
+// Get current user
 export async function getCurrentUser(token: string): Promise<User | null> {
   try {
     const res = await request
       .get(`${rootURL}/users/me`)
       .set('Authorization', `Bearer ${token}`)
-
     return res.body || null
   } catch (err) {
     console.error('Error fetching current user:', err)
@@ -44,7 +40,7 @@ export async function getCurrentUser(token: string): Promise<User | null> {
   }
 }
 
-// ------- Register user ------
+// Add new user
 export async function addUser({
   newUser,
   token,
@@ -54,7 +50,7 @@ export async function addUser({
       .post(`${rootURL}/users`)
       .set('Authorization', `Bearer ${token}`)
       .send(newUser)
-    return res.body.user || null
+    return res.body || null
   } catch (err) {
     console.error('Error adding user:', err)
     return null

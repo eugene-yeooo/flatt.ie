@@ -1,10 +1,6 @@
 import express from 'express'
 import checkJwt, { JwtRequest } from '../auth0.ts'
-import {
-  getUserWithProfileByAuth0Id,
-  getAllUsersWithProfiles,
-  addUser,
-} from 'server/db/userdata.ts'
+import { addUser, getAllUsers, getUserByAuth0Id } from 'server/db/userdata.ts'
 
 const router = express.Router()
 
@@ -14,7 +10,7 @@ const router = express.Router()
 
 router.get('/', async (_req, res) => {
   try {
-    const users = await getAllUsersWithProfiles()
+    const users = await getAllUsers()
     res.json(users)
   } catch (err) {
     console.log('error fetching users', err)
@@ -26,21 +22,13 @@ router.get('/', async (_req, res) => {
 
 router.post('/', checkJwt, async (req: JwtRequest, res) => {
   try {
-    //extract the auth0 userId from jwt token
     const auth0_id = req.auth?.sub
-    //extract additional user data from the req body
-    const { username, email } = req.body
+    const { newUser } = req.body
 
-    //check if required fields are present
-    if (!auth0_id || !username || !email) {
+    if (!newUser || !auth0_id || !newUser.username || !newUser.email) {
       return res.status(400).json({ error: 'Missing required fields' })
     }
-    //call db function to insert the new user
-    const user = await addUser({
-      auth0_id,
-      username,
-      email,
-    })
+    const user = await addUser(newUser)
     //return the newly created user in the response with 201
     res.status(201).json(user)
   } catch (err) {
@@ -60,7 +48,7 @@ router.get('/me', checkJwt, async (req: JwtRequest, res) => {
     if (!auth0_id) {
       return res.status(401).json({ error: 'Unauthorized' })
     }
-    const user = await getUserWithProfileByAuth0Id(auth0_id)
+    const user = await getUserByAuth0Id(auth0_id)
     if (!user) return res.status(404).json({ error: 'User not found' })
     res.json(user)
   } catch (err) {

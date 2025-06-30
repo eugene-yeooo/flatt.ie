@@ -7,8 +7,16 @@ export function up(knex) {
     table.increments('id').primary()
     table.string('auth0_id').notNullable().unique()
     table.string('username').notNullable()
+    table.string('name').notNullable()
     table.string('email').notNullable()
     table.string('avatar_url')
+    table
+      .enum('account_type', ['finance_manager', 'flattie', 'guest'])
+      .notNullable()
+    table.decimal('credit').defaultTo(0)
+    table.decimal('debt').defaultTo(0)
+    table.string('bio')
+    table.timestamps(true, true)
   })
 }
 

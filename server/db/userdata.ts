@@ -6,78 +6,85 @@ interface User {
   email: string
   id: string
   name: string
-  account_type: string
-  active: boolean
+  account_type: 'finance_manager' | 'flattie' | 'guest'
+  credit?: number
+  debt?: number
+  bio?: string
+}
+
+export interface NewUser {
+  auth0_id: string
+  username: string
+  email: string
+  avatar_url?: string
+  name: string
+  account_type: 'finance_manager' | 'flattie' | 'guest'
+  credit?: number
+  debt?: number
+  bio?: string
 }
 
 export async function getAllUsers(): Promise<User[]> {
-  await connection('users').select(
+  return await connection('users').select(
     'auth0_id',
     'users.id as user_id',
-    'users.username',
-    'users.email',
-    'users.avatar_url',
+    'username',
+    'email',
+    'avatar_url',
     'name',
     'account_type',
     'active',
   )
 }
 
-export async function getUserByAuth0Id(
-  auth0_id: string,
-  db = connection,
-): Promise<User | undefined> {
-  const rows = await db('users')
-    .leftJoin('profiles', 'users.id', 'profiles.user_id')
+export async function getUserByAuth0Id(auth0_id: string): Promise<User | null> {
+  const user = await connection('users')
     .select(
-      'id as user_id',
       'auth0_id',
-      'email',
+      'user_id',
       'username',
+      'email',
       'avatar_url',
-      'id as profile_id',
-      'profiles.profile_name',
-      'profiles.account_type',
-      'profiles.active',
+      'name',
+      'account_type',
+      'credit',
+      'debt',
+      'bio',
     )
-    .where('users.auth0_id', auth0_id)
+    .where('auth0_id', auth0_id)
+    .first()
 
-  if (rows.length === 0) return undefined
-
-  const user: UserWithProfiles = {
-    id: rows[0].user_id,
-    username: rows[0].username,
-    email: rows[0].email,
-    profiles: [],
-  }
-
-  rows.forEach((row) => {
-    if (row.profile_id) {
-      user.profiles.push({
-        id: row.profile_id,
-        profile_name: row.profile_name,
-        account_type: row.account_type,
-        active: row.active,
-      })
-    }
-  })
-
-  return user
+  return user || null
 }
 
 //addUser:
-export async function addUser(
-  user: NewUser,
-  db = connection,
-): Promise<UserWithProfiles> {
-  const existingUser = await db('users')
-    .where({ auth0_id: user.auth0_id })
-    .first()
-  if (existingUser) {
-    return existingUser
+export async function addUser(user: NewUser, db = connection): Promise<User> {
+  try {
+    const existingUser = await db('users')
+      .where({ auth0_id: user.auth0_id })
+      .first()
+    if (existingUser) return existingUser
+
+    const [newUser] = await db('users')
+      .insert(user)
+      .returning([
+        'id',
+        'auth0_id',
+        'username',
+        'email',
+        'avatar_url',
+        'name',
+        'account_type',
+        'credit',
+        'debt',
+        'bio',
+        'created_at',
+        'updated_at',
+      ])
+
+    return newUser
+  } catch (error) {
+    console.error('Error adding user:', error)
+    throw error
   }
-  const [newUser] = await db('users')
-    .insert(user)
-    .returning(['id', 'auth0_id', 'username', 'email', 'avatar_url'])
-  return newUser
 }

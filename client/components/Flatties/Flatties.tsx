@@ -8,21 +8,21 @@ export default function Flatties() {
 
   useEffect(() => {
     fetch('/api/v1/flatties/balance')
-    .then((res) => res.json())
-    .then((data) => setFlatmates(data))
-    .catch((err) => console.error('Failed to fetch flatmates:', err))
+      .then((res) => res.json())
+      .then((data) => setFlatmates(data))
+      .catch((err) => console.error('Failed to fetch flatmates:', err))
   }, [])
 
   // Add flatmate
   async function handleAddFlatmate(formData: FormData) {
     try {
-    await fetch('/api/v1/flatties', {
-      method: 'POST',
-      body: formData,
-    })
-    const updated = await fetch('/api/v1/flatties/balance')
-    const data = await updated.json()
-    setFlatmates(data)
+      await fetch('/api/v1/flatties', {
+        method: 'POST',
+        body: formData,
+      })
+      const updated = await fetch('/api/v1/flatties/balance')
+      const data = await updated.json()
+      setFlatmates(data)
     } catch (error) {
       console.error('Failed to add flatmate:', error)
     }
@@ -30,7 +30,7 @@ export default function Flatties() {
 
   async function handleDelete(id: number) {
     try {
-      await fetch(`/api/v1/flatties/${id}`, {method: 'DELETE'})
+      await fetch(`/api/v1/flatties/${id}`, { method: 'DELETE' })
       setFlatmates(flatmates.filter((mate) => mate.id !== id))
     } catch (err) {
       console.error('Failed to delete flatmate:', err)
@@ -38,12 +38,12 @@ export default function Flatties() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4">
-      <h1 className="text-3xl font-bold mb-6 text-center">Flatmates</h1>
+    <div className="mx-auto max-w-3xl px-4">
+      <h1 className="mb-6 text-center text-3xl font-bold">Flatmates</h1>
       <AddFlatmateForm onAdd={handleAddFlatmate} />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {flatmates.map((mate) => (
-          <FlattieCard 
+          <FlattieCard
             key={mate.id}
             name={mate.name}
             credit={mate.credit}
@@ -52,7 +52,7 @@ export default function Flatties() {
             onDelete={() => handleDelete(mate.id)}
           />
         ))}
-        </div>
       </div>
+    </div>
   )
 }
