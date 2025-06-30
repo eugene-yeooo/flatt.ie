@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react'
-import { Flatmate, UpdateBillData } from 'models/models'
-import { useUpdateBill } from '../../hooks/useBills'
+import { Flatmate } from 'models/models'
+import { useGetBillById, useUpdateBill } from '../../hooks/useBills'
 // import { useUpdatePayments } from '../../hooks/usePayment'
 import BillForm from './BillForm'
 
 type Share = { flatmateId: string; split: string; paid: boolean }
 
 export default function UpdateBill({
-  bill,
+  billId,
   onClose,
 }: {
-  bill: UpdateBillData & { payments: Share[] }
+  billId: number
   onClose: () => void
 }) {
   const [flatmates, setFlatmates] = useState<Flatmate[]>([])
   const updateBill = useUpdateBill()
-  const updatePayments = useUpdatePayments()
-
+  // const updatePayments = useUpdatePayments()
+  const { data: bill, isPending, error } = useGetBillById(billId)
+  console.log(bill)
   useEffect(() => {
     async function fetchFlatmates() {
       try {
@@ -31,6 +32,8 @@ export default function UpdateBill({
 
     fetchFlatmates()
   }, [])
+
+  if (isPending || !bill) return null
 
   function handleSubmit({
     bill: updatedBill,
@@ -57,36 +60,34 @@ export default function UpdateBill({
       },
       {
         onSuccess: () => {
-          updatePayments.mutate({
-            billId: updatedBill.id!,
-            payments: shares.map((s) => {
-              const amount = parseFloat(s.split)
-              const split = amount / updatedBill.total_amount
-              return {
-                flatmate_id: Number(s.flatmateId),
-                split,
-                paid: s.paid,
-                amount,
-              }
-            }),
-          })
+          // updatePayments.mutate({
+          //   billId: updatedBill.id,
+          //   payments: shares.map((s) => {
+          //     const amount = parseFloat(s.split)
+          //     const split = amount / updatedBill.total_amount
+          //     return {
+          //       flatmate_id: Number(s.flatmateId),
+          //       split,
+          //       paid: s.paid,
+          //       amount,
+          //     }
+          //   }),
+          // })
           onClose()
         },
       },
     )
   }
 
+  if (isPending || !bill) return null // or show a spinner/loading
+
   return (
-    <>
-      {flatmates.length > 0 && (
-        <BillForm
-          flatmates={flatmates}
-          initialData={bill}
-          onSubmit={handleSubmit}
-          onCancel={onClose}
-          submitLabel="Update Bill"
-        />
-      )}
-    </>
+    <BillForm
+      flatmates={flatmates}
+      initialData={bill}
+      onSubmit={handleSubmit}
+      onCancel={onClose}
+      submitLabel="Update Bill"
+    />
   )
 }
