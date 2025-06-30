@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 import { Flatmate, UpdateBillData } from 'models/models'
 
@@ -11,6 +11,14 @@ type Share = {
 type BillFormProps = {
   initialData?: Partial<UpdateBillData> & { payments?: Share[] }
   flatmates: Flatmate[]
+  payments?: {
+    paymentId: number
+    amount: number
+    split: number
+    paid: boolean | number
+    flatmateId: number
+    flatmateName: string
+  }[]
   onSubmit: (data: {
     bill: {
       id?: number
@@ -49,38 +57,28 @@ export default function BillForm({
   const [selectedFlatmateIds, setSelectedFlatmateIds] = useState<string[]>([])
   const [shares, setShares] = useState<Share[]>([])
 
-  const didInitialize = useRef(false)
+  const [isInitialLoad, setIsInitialLoad] = useState(true)
 
   // 1. Initialization useEffect: only once
   useEffect(() => {
-    if (didInitialize.current) return
-    didInitialize.current = true
+    if (!isInitialLoad) return
 
     if (initialData.payments && initialData.payments.length > 0) {
       const payments = initialData.payments
 
-      const isPercentMode = payments.every(
-        (p) => typeof p.split === 'number' && p.split >= 0 && p.split <= 1,
-      )
-
       setSplitType('custom')
-      setCustomSplitMode(isPercentMode ? 'percent' : 'amount')
-
+      setCustomSplitMode('amount')
       const ids = payments.map((p) => String(p.flatmateId))
       setSelectedFlatmateIds(ids)
 
       const formattedShares: Share[] = payments.map((p) => ({
         flatmateId: String(p.flatmateId),
-        split: isPercentMode
-          ? (Number(p.split) * 100).toFixed(2) // 0.05 → "5.00"
-          : Number(p.amount).toFixed(2), // 32 → "32.00"
+        split: Number(p.amount).toFixed(2),
         paid: Boolean(p.paid),
       }))
 
       setShares(formattedShares)
     } else {
-      // New bill: no initial payments
-      // Initialize with all flatmates selected and even split
       const allIds = flatmates.map((f) => String(f.id))
       setSelectedFlatmateIds(allIds)
       setSplitType('even')
@@ -92,22 +90,22 @@ export default function BillForm({
         split: evenSplit,
         paid: false,
       }))
+
       setShares(initialShares)
     }
-  }, [initialData, flatmates])
+
+    setIsInitialLoad(false) // ✅ Done initializing
+  }, [isInitialLoad, initialData, flatmates])
 
   // 2. When selected flatmates change, update shares
   useEffect(() => {
-    // Only update shares if initialized (avoid overwrite)
-    if (!didInitialize.current) return
+    if (isInitialLoad) return
 
     setShares((oldShares) => {
-      // Add new flatmates with default split, remove unselected
       const newShares: Share[] = selectedFlatmateIds.map((id) => {
         const existing = oldShares.find((s) => s.flatmateId === id)
         if (existing) return existing
 
-        // New flatmate gets default split based on splitType and mode
         const defaultSplit =
           splitType === 'even'
             ? customSplitMode === 'percent'
@@ -123,14 +121,19 @@ export default function BillForm({
           paid: false,
         }
       })
+
       return newShares
     })
-  }, [selectedFlatmateIds, splitType, customSplitMode, totalAmount])
+  }, [
+    selectedFlatmateIds,
+    splitType,
+    customSplitMode,
+    totalAmount,
+    isInitialLoad,
+  ])
 
   // 3. When splitType or customSplitMode changes, recalc splits if 'even'
   useEffect(() => {
-    if (!didInitialize.current) return
-
     if (splitType === 'even' && selectedFlatmateIds.length > 0) {
       const newSplit =
         customSplitMode === 'percent'

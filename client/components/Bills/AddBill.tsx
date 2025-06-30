@@ -51,8 +51,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
           createPayments.mutate({
             billId: newBillId,
             payments: shares.map((s) => {
-              const amount = parseFloat(s.split) // Assume AddBill always uses percent split in form,
-              // OR you can enhance BillForm to pass customSplitMode as prop or param
+              const amount = parseFloat(s.split)
 
               const split = amount / bill.total_amount
 
