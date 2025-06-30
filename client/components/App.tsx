@@ -8,9 +8,23 @@ import Flatties from './Flatties/Flatties'
 import Front from './Front'
 import { useAuth0 } from '@auth0/auth0-react'
 import Home from './Home/Home'
+import { useEffect } from 'react'
+
+// if (Authenticated?)
 
 export default function App() {
-  const { isAuthenticated } = useAuth0()
+  const { isAuthenticated, getAccessTokenSilently, user } = useAuth0()
+
+  //temporary
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await getAccessTokenSilently()
+
+      console.log(token)
+      console.log(user?.sub)
+    }
+    getToken()
+  }, [isAuthenticated])
 
   if (!isAuthenticated) {
     return <Front />

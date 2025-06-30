@@ -15,6 +15,12 @@ interface UserWithProfiles {
   profiles: Profile[] // plural and array
 }
 
+interface NewUser {
+  auth0_id: string
+  username: string
+  email: string
+  avatar_url: string
+}
 export async function getAllUsersWithProfiles(): Promise<UserWithProfiles[]> {
   const rows = await connection('users')
     .leftJoin('profiles', 'users.id', 'profiles.user_id')
@@ -95,4 +101,22 @@ export async function getUserWithProfileByAuth0Id(
   })
 
   return user
+}
+
+//addUser:
+
+export async function addUser(
+  user: NewUser,
+  db = connection,
+): Promise<UserWithProfiles> {
+  const existingUser = await db('users')
+    .where({ auth0_id: user.auth0_id })
+    .first()
+  if (existingUser) {
+    return existingUser
+  }
+  const [newUser] = await db('users')
+    .insert(user)
+    .returning(['id', 'auth0_id', 'username', 'email', 'avatar_url'])
+  return newUser
 }

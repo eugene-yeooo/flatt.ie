@@ -49,6 +49,7 @@ export default function Home() {
     }
   })
 
+  //convert recentBillMap to array, sort by latest ID (newest first), take top 5
   const recentBills = Array.from(recentBillMap.entries())
     .sort((a, b) => b[1].latestId - a[1].latestId)
     .slice(0, 5)

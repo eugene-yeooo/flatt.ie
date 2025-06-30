@@ -28,5 +28,13 @@ export async function seed(knex) {
       avatar_url:
         'https://api.dicebear.com/7.x/avataaars/svg?seed=MarmiteMansion',
     },
+    {
+      id: 5,
+      auth0_id: 'auth0|685e6690e92c77c43ee7f07b',
+      username: 'Hannah',
+      email: 'marmite.mansion@example.com',
+      avatar_url:
+        'https://api.dicebear.com/7.x/avataaars/svg?seed=MarmiteMansion',
+    },
   ])
 }

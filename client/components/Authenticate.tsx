@@ -2,6 +2,13 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { LogOut } from 'lucide-react'
 import Front from './Front'
 
+//if authenticated
+//if not authenticated
+//in profile page component
+//registering
+// link for inviting -
+//user roles - user table
+
 export default function Authenticate() {
   const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0()
 
