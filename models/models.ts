@@ -16,8 +16,10 @@ export interface Expense {
   id: number
   category: string
   frequency: 'weekly' | 'monthly' | 'one_off'
+  start_date: string | Date
+  end_date: string | Date
   default_amount: number | null
-  calc_method: 'fixed_split' | 'manual' | 'percentage_split'
+  calc_method: 'split' | 'manual'
   notes?: string
 }
 
@@ -46,8 +48,10 @@ export interface NewBill {
 export interface NewExpense {
   category: string
   frequency: 'weekly' | 'monthly' | 'one_off'
+  start_date: string | Date
+  end_date: string | Date
   default_amount: number | null
-  calc_method: 'fixed_split' | 'manual' | 'percentage_split'
+  calc_method: 'split' | 'manual'
   notes?: string
 }
 
