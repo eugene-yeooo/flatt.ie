@@ -60,13 +60,13 @@ export default function Profile() {
             <h2 className="text-2xl font-bold text-[var(--primary)]">
               {user.data.name}
             </h2>
+            <p className="ml-auto rounded-full border border-[var(--primary)] bg-[var(--primary)] px-4 py-2 text-white">
+              {user.data.account_type}
+            </p>
             <p className="text-gray-600">@{user.data.username}</p>
             <p className="text-sm text-gray-500">{user.data.email}</p>
             <p className="mt-2 text-gray-700">
               {user.data.bio || 'No bio set.'}
-            </p>
-            <p className="mt-1 text-sm italic text-gray-400">
-              Role: {user.data.account_type}
             </p>
           </div>
         </div>
