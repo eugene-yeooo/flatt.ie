@@ -81,7 +81,7 @@ export interface User {
   name: string
   email: string
   avatar_url?: string
-  account_type: 'finance_manager' | 'flattie' | 'guest'
+  account_type: 'flat_financer' | 'flattie' | 'guest'
   credit: number
   debt: number
   bio?: string

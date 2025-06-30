@@ -6,7 +6,7 @@ interface User {
   email: string
   id: string
   name: string
-  account_type: 'finance_manager' | 'flattie' | 'guest'
+  account_type: 'flat_financer' | 'flattie' | 'guest'
   credit?: number
   debt?: number
   bio?: string
@@ -18,7 +18,7 @@ export interface NewUser {
   email: string
   avatar_url?: string
   name: string
-  account_type: 'finance_manager' | 'flattie' | 'guest'
+  account_type: 'flat_financer' | 'flattie' | 'guest'
   credit?: number
   debt?: number
   bio?: string

@@ -24,7 +24,7 @@ export async function seed(knex) {
       name: 'Ara',
       email: 'ara@example.com',
       avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ara',
-      account_type: 'finance_manager',
+      account_type: 'flat_financer',
       credit: 100.5,
       debt: 20,
       bio: 'hi',

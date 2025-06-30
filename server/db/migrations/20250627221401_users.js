@@ -11,7 +11,7 @@ export function up(knex) {
     table.string('email').notNullable()
     table.string('avatar_url')
     table
-      .enum('account_type', ['finance_manager', 'flattie', 'guest'])
+      .enum('account_type', ['flat_financer', 'flattie', 'guest'])
       .notNullable()
     table.decimal('credit').defaultTo(0)
     table.decimal('debt').defaultTo(0)
