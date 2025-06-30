@@ -40,9 +40,37 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
     if (!title || !dueDate || !totalAmount) {
       alert('Please fill in required fields')
       return
+    }
+
+    // Validation 1: At least one flatmate selected
+    if (selectedFlatmateIds.length === 0) {
+      alert('Please select at least one flatmate to split the bill.')
+      return
+    }
+
+    // Validation 2: Check splits total
+    const totalSplit = shares.reduce(
+      (sum, s) => sum + (parseFloat(s.split) || 0),
+      0,
+    )
+
+    if (splitType === 'custom') {
+      if (customSplitMode === 'percent' && Math.abs(totalSplit - 100) > 0.01) {
+        alert('Total split percentages must add up to 100%.')
+        return
+      }
+
+      if (customSplitMode === 'amount') {
+        const total = parseFloat(totalAmount)
+        if (Math.abs(totalSplit - total) > 0.01) {
+          alert(`Total split amounts must add up to $${total.toFixed(2)}.`)
+          return
+        }
+      }
     }
 
     createBill.mutate(
@@ -53,10 +81,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
         expense_category: expenseCategory,
       },
       {
-        onSuccess: (data) => {
-          console.log('Bill created, id:', data)
-          console.log('Shares:', shares)
-          const newBillId = data
+        onSuccess: (newBillId) => {
           createPayments.mutate({
             billId: newBillId,
             payments: shares.map((s) => {
