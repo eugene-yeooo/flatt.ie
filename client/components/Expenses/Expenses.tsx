@@ -50,16 +50,21 @@ export default function Expensess() {
         {expenses.length === 0 ? (
           <p>No expenses found.</p>
         ) : (
-          expenses.map((expense) => (
-            <ExpenseCard
-              key={expense.id}
-              category={expense.category}
-              frequency={expense.frequency}
-              default_amount={expense.default_amount}
-              calc_method={expense.calc_method}
-              notes={expense.notes}
-            />
-          ))
+          expenses.map((expense) => {
+            console.log('start_date:', expense)
+            return (
+              <ExpenseCard
+                key={expense.id}
+                category={expense.category}
+                frequency={expense.frequency}
+                start_date={new Date(expense.start_date)}
+                end_date={new Date(expense.end_date)}
+                default_amount={expense.default_amount}
+                calc_method={expense.calc_method}
+                notes={expense.notes}
+              />
+            )
+          })
         )}
       </div>
     </div>

@@ -9,12 +9,12 @@ export default function AddExpense({
 }) {
   const [category, setCategory] = useState('')
   const [frequency, setFrequency] = useState<'weekly' | 'monthly' | 'one_off'>(
-    'weekly',
+    'one_off',
   )
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
   const [defaultAmount, setDefaultAmount] = useState('')
-  const [calcMethod, setCalcMethod] = useState<
-    'fixed_split' | 'manual' | 'percentage_split'
-  >('fixed_split')
+  const [calcMethod, setCalcMethod] = useState<'split' | 'manual'>('split')
   const [notes, setNotes] = useState('')
   const mutation = useAddExpense()
   const frequencyOptions = [
@@ -23,8 +23,7 @@ export default function AddExpense({
     { label: 'One Off', value: 'one_off' },
   ]
   const calcOptions = [
-    { label: 'Fixed Split', value: 'fixed_split' },
-    { label: 'Percentage Split', value: 'percentage_split' },
+    { label: 'Split', value: 'split' },
     { label: 'Manual', value: 'manual' },
   ]
 
@@ -38,6 +37,8 @@ export default function AddExpense({
     mutation.mutate({
       category,
       frequency,
+      start_date: startDate,
+      end_date: endDate,
       default_amount: Number(defaultAmount),
       calc_method: calcMethod,
       notes,
@@ -45,8 +46,10 @@ export default function AddExpense({
     onAddExpense()
     setCategory('')
     setFrequency('one_off')
+    setStartDate('')
+    setEndDate('')
     setDefaultAmount('')
-    setCalcMethod('fixed_split')
+    setCalcMethod('split')
     setNotes('')
   }
 
@@ -54,7 +57,7 @@ export default function AddExpense({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col justify-center rounded-md bg-white p-6 shadow-md"
+        className="flex w-[600px] flex-col justify-center rounded-md bg-white p-6 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Add New Expense</h2>
@@ -75,7 +78,7 @@ export default function AddExpense({
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
+            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
           />
         </label>
 
@@ -88,7 +91,7 @@ export default function AddExpense({
             }
             // placeholder="e.g. Rent, Power, Internet"
             required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
+            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
           >
             <option value="" disabled>
               Select payment frequency
@@ -101,6 +104,31 @@ export default function AddExpense({
           </select>
         </label>
 
+        {['weekly', 'monthly'].includes(frequency) && (
+          <>
+            <label className="mb-2 block font-medium">
+              Start Date <span className="text-red-500">*</span>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                required
+                className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
+              />
+            </label>
+            <label className="mb-2 block font-medium">
+              End Date <span className="text-red-500">*</span>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                required
+                className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
+              />
+            </label>
+          </>
+        )}
+
         <label className="mb-2 block font-medium">
           Total Amount <span className="text-red-500">*</span>
           <input
@@ -110,7 +138,7 @@ export default function AddExpense({
             value={defaultAmount}
             onChange={(e) => setDefaultAmount(e.target.value)}
             required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
+            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
           />
         </label>
 
@@ -119,13 +147,11 @@ export default function AddExpense({
           <select
             value={calcMethod}
             onChange={(e) =>
-              setCalcMethod(
-                e.target.value as 'fixed_split' | 'manual' | 'percentage_split',
-              )
+              setCalcMethod(e.target.value as 'split' | 'manual')
             }
             // placeholder="e.g. Rent, Power, Internet"
             required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
+            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
           >
             <option value="" disabled>
               Select split method
@@ -144,14 +170,13 @@ export default function AddExpense({
             type="text"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
+            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
           />
         </label>
 
         <button
           type="submit"
-          className="mt-2 rounded-lg bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-500 hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="hover:bg-primary/90 mt-2 rounded-lg bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
           Add Expense
         </button>

@@ -26,4 +26,16 @@ router.post('/', async (req, res) => {
   }
 })
 
+// Delete expense by id
+router.delete('/:id', async (req, res) => {
+  const expenseId = Number(req.params.id)
+  try {
+    await db.deleteExpense(expenseId)
+    res.status(204).send()
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to delete payment' })
+  }
+})
+
 export default router
