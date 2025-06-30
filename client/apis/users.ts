@@ -56,3 +56,24 @@ export async function addUser({
     return null
   }
 }
+
+export async function editProfile(
+  updates: Partial<{
+    name: string
+    username: string
+    avatar_url: string
+    bio: string
+  }>,
+  token: string,
+): Promise<User | null> {
+  try {
+    const res = await request
+      .patch(`${rootURL}/users/me`)
+      .set('Authorization', `Bearer ${token}`)
+      .send(updates)
+    return res.body || null
+  } catch (err) {
+    console.error('Error adding user:', err)
+    return null
+  }
+}

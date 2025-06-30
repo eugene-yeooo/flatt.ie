@@ -88,3 +88,42 @@ export async function addUser(user: NewUser, db = connection): Promise<User> {
     throw error
   }
 }
+
+//updateUser:
+export async function updateUser(
+  user: NewUser,
+  db = connection,
+): Promise<User> {
+  try {
+    const [updatedUser] = await db('users')
+      .where({ auth0_id: user.auth0_id })
+      .update(
+        {
+          name: user.name,
+          username: user.username,
+          avatar_url: user.avatar_url,
+          bio: user.bio,
+          updated_at: new Date(),
+        },
+        [
+          'id',
+          'auth0_id',
+          'username',
+          'email',
+          'avatar_url',
+          'name',
+          'account_type',
+          'credit',
+          'debt',
+          'bio',
+          'created_at',
+          'updated_at',
+        ],
+      )
+
+    return updatedUser
+  } catch (error) {
+    console.error('Error updating user:', error)
+    throw error
+  }
+}

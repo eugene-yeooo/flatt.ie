@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useUser } from '../../hooks/useUser'
+import { useEditProfile, useUser } from '../../hooks/useUser'
 
 export default function EditProfile() {
-  const { data: user, add: updateUser } = useUser()
+  const { data: user } = useUser()
+  const editProfile = useEditProfile()
+
   const [form, setForm] = useState({
     name: '',
     username: '',
@@ -11,9 +13,10 @@ export default function EditProfile() {
     avatar_url: '',
   })
   const [loading, setLoading] = useState(false)
+  const [isEditing, setIsEditing] = useState(false)
+
   const [error, setError] = useState('')
 
-  // Prefill form when user data loads
   useEffect(() => {
     if (user) {
       setForm({
@@ -36,13 +39,11 @@ export default function EditProfile() {
     e.preventDefault()
     setLoading(true)
     setError('')
+
     try {
-      // Call your update function here, assuming `updateUser.mutateAsync` accepts updated user data
-      await updateUser.mutateAsync({
-        newUser: form,
-        token: '',
-      })
+      await editProfile.mutateAsync(form)
       alert('Profile updated successfully!')
+      setIsEditing(false) // optional: hide form on success
     } catch (err) {
       setError('Failed to update profile. Please try again.')
     } finally {
@@ -53,15 +54,12 @@ export default function EditProfile() {
   if (!user) return <p>Loading user data...</p>
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mx-auto max-w-lg space-y-6 rounded bg-white p-4 shadow"
-    >
+    <form className="mx-auto max-w-lg space-y-6 rounded bg-white p-4 shadow">
       {error && <p className="text-red-600">{error}</p>}
 
       <div>
         <label htmlFor="avatar_url" className="mb-1 block font-medium">
-          Avatar URL
+          Profile Photo
         </label>
         <input
           id="avatar_url"
@@ -133,13 +131,15 @@ export default function EditProfile() {
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="hover:bg-primary-hover rounded bg-primary px-6 py-2 text-white disabled:opacity-50"
-      >
-        {loading ? 'Saving...' : 'Save Changes'}
-      </button>
+      <div className="flex">
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          className="ml-auto rounded border border-[var(--primary)] px-4 py-2 text-[var(--primary)] transition hover:bg-[var(--primary)] hover:text-white"
+        >
+          {loading ? 'Saving...' : 'Save Changes'}
+        </button>
+      </div>
     </form>
   )
 }

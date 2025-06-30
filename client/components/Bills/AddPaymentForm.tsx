@@ -25,6 +25,7 @@ export default function AddPayment({
 
   const mutation = useAddPayments()
 
+  // TODO use hook not fetch
   useEffect(() => {
     const fetchFlatmates = async () => {
       try {

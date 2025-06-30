@@ -1,6 +1,11 @@
 import express from 'express'
 import checkJwt, { JwtRequest } from '../auth0.ts'
-import { addUser, getAllUsers, getUserByAuth0Id } from 'server/db/userdata.ts'
+import {
+  addUser,
+  getAllUsers,
+  getUserByAuth0Id,
+  updateUser,
+} from 'server/db/userdata.ts'
 
 const router = express.Router()
 
@@ -55,6 +60,27 @@ router.get('/me', checkJwt, async (req: JwtRequest, res) => {
     res.json(user)
   } catch (err) {
     console.log('err fetching user:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+router.patch('/me', checkJwt, async (req: JwtRequest, res) => {
+  try {
+    const auth0_id = req.auth?.sub
+    const updates = req.body
+
+    if (!auth0_id) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
+
+    const updatedUser = await updateUser({
+      ...updates,
+      auth0_id,
+    })
+
+    res.json(updatedUser)
+  } catch (err) {
+    console.error('Error updating user:', err)
     res.status(500).json({ error: 'Internal server error' })
   }
 })
