@@ -1,20 +1,11 @@
 import { useAuth0 } from '@auth0/auth0-react'
+import { useUser } from '../../client/hooks/useUser'
 import { LogOut } from 'lucide-react'
-import Front from './Front'
 
-//if authenticated
-//if not authenticated
-//in profile page component
-//registering
-// link for inviting -
-//user roles - user table
-
-export default function Authenticate() {
-  const { loginWithRedirect, logout, user, isAuthenticated } = useAuth0()
-
-  if (!isAuthenticated) {
-    return <Front loginWithRedirect={loginWithRedirect} />
-  }
+export default function Profile() {
+  const { logout } = useAuth0()
+  const { data: user } = useUser()
+  console.log('User data:', user)
 
   return (
     <div className="flex w-full items-center justify-end px-2 py-2">
@@ -25,8 +16,9 @@ export default function Authenticate() {
             borderColor: 'var(--border)',
           }}
         >
-          {user?.name}&apos;s Flat Account
+          {user?.username}&apos;s Flat Account
         </span>
+
         <button
           onClick={() =>
             logout({

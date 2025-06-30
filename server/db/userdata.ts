@@ -1,78 +1,41 @@
 import connection from './connection'
 
-interface Profile {
+interface User {
+  auth0_id: string
+  username: string
+  email: string
   id: string
-  profile_name: string
+  name: string
   account_type: string
   active: boolean
 }
 
-interface UserWithProfiles {
-  id: string
-  username: string
-  email: string
-  avatar_url: string | null
-  profiles: Profile[] // plural and array
+export async function getAllUsers(): Promise<User[]> {
+  await connection('users').select(
+    'auth0_id',
+    'users.id as user_id',
+    'users.username',
+    'users.email',
+    'users.avatar_url',
+    'name',
+    'account_type',
+    'active',
+  )
 }
 
-interface NewUser {
-  auth0_id: string
-  username: string
-  email: string
-  avatar_url: string
-}
-export async function getAllUsersWithProfiles(): Promise<UserWithProfiles[]> {
-  const rows = await connection('users')
-    .leftJoin('profiles', 'users.id', 'profiles.user_id')
-    .select(
-      'users.id as user_id',
-      'users.username',
-      'users.email',
-      'users.avatar_url',
-      'profiles.id as profile_id',
-      'profiles.profile_name',
-      'profiles.account_type',
-      'profiles.active',
-    )
-
-  const userMap = new Map<string, UserWithProfiles>()
-
-  rows.forEach((row) => {
-    if (!userMap.has(row.user_id)) {
-      userMap.set(row.user_id, {
-        id: row.user_id,
-        username: row.username,
-        email: row.email,
-        avatar_url: row.avatar_url,
-        profiles: [],
-      })
-    }
-    if (row.profile_id) {
-      userMap.get(row.user_id)!.profiles.push({
-        id: row.profile_id,
-        profile_name: row.profile_name,
-        account_type: row.account_type,
-        active: row.active,
-      })
-    }
-  })
-
-  return Array.from(userMap.values())
-}
-
-export async function getUserWithProfileByAuth0Id(
+export async function getUserByAuth0Id(
   auth0_id: string,
   db = connection,
-): Promise<UserWithProfiles | undefined> {
+): Promise<User | undefined> {
   const rows = await db('users')
     .leftJoin('profiles', 'users.id', 'profiles.user_id')
     .select(
-      'users.id as user_id',
-      'users.auth0_id',
-      'users.email',
-      'users.username',
-      'users.avatar_url',
-      'profiles.id as profile_id',
+      'id as user_id',
+      'auth0_id',
+      'email',
+      'username',
+      'avatar_url',
+      'id as profile_id',
       'profiles.profile_name',
       'profiles.account_type',
       'profiles.active',
@@ -85,7 +48,6 @@ export async function getUserWithProfileByAuth0Id(
     id: rows[0].user_id,
     username: rows[0].username,
     email: rows[0].email,
-    avatar_url: rows[0].avatar_url,
     profiles: [],
   }
 
@@ -104,7 +66,6 @@ export async function getUserWithProfileByAuth0Id(
 }
 
 //addUser:
-
 export async function addUser(
   user: NewUser,
   db = connection,

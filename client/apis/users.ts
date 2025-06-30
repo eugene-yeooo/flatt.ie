@@ -1,13 +1,19 @@
-import { User } from '@auth0/auth0-react' // adjust import based on your types
 import request from 'superagent'
-import { User, UserData } from '../../models/users.ts'
+import { User } from '../../models/models'
 
 const rootURL = new URL(`/api/v1`, document.baseURI)
 
+interface NewUser {
+  username: string
+  email: string
+  avatar_url?: string
+}
+
 interface AddUser {
-  newUser: UserData
+  newUser: NewUser
   token: string
 }
+
 // ------- VIEW USERS ------
 
 //-------/users
@@ -44,10 +50,11 @@ export async function addUser({
   token,
 }: AddUser): Promise<User | null> {
   try {
-    return await request
+    const res = await request
       .post(`${rootURL}/users`)
       .set('Authorization', `Bearer ${token}`)
       .send(newUser)
+    return res.body.user || null
   } catch (err) {
     console.error('Error adding user:', err)
     return null

@@ -72,3 +72,36 @@ export interface UpdateBillData {
   total_amount: number
   expense_category?: string
 }
+
+// ------- AUTH0 -------
+export interface User {
+  id: number
+  auth0_id: string
+  username: string
+  email: string
+  avatar_url?: string
+}
+
+// profiles
+
+export type AccountType = 'finance_manager' | 'flattie' | 'guest'
+
+export interface Profile {
+  id: number
+  user_id: number
+  profile_name: string
+  account_type: AccountType
+  active: boolean
+  created_at: string
+  updated_at: string
+  // Profile photo
+}
+
+export interface Flat {
+  id: number
+  name: string
+  address?: string
+  description?: string
+  created_at: string
+  updated_at: string
+}

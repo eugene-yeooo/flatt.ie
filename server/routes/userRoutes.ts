@@ -29,7 +29,7 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
     //extract the auth0 userId from jwt token
     const auth0_id = req.auth?.sub
     //extract additional user data from the req body
-    const { username, email, avatar_url } = req.body
+    const { username, email } = req.body
 
     //check if required fields are present
     if (!auth0_id || !username || !email) {
@@ -40,7 +40,6 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
       auth0_id,
       username,
       email,
-      avatar_url,
     })
     //return the newly created user in the response with 201
     res.status(201).json(user)
