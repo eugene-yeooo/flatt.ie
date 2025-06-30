@@ -94,7 +94,7 @@ export default function BillForm({
       setShares(initialShares)
     }
 
-    setIsInitialLoad(false) // ✅ Done initializing
+    setIsInitialLoad(false)
   }, [isInitialLoad, initialData, flatmates])
 
   // 2. When selected flatmates change, update shares
@@ -445,9 +445,14 @@ export default function BillForm({
                     key={share.flatmateId}
                     className="flex items-center gap-2"
                   >
-                    <span className="w-20 truncate text-sm font-medium">
+                    <span
+                      className={`w-20 truncate text-sm font-medium ${
+                        share.paid ? 'text-gray-400 line-through' : ''
+                      }`}
+                    >
                       {flatmate?.name}:
                     </span>
+
                     <input
                       type="number"
                       step="0.01"
@@ -459,8 +464,20 @@ export default function BillForm({
                       }
                       value={share.split}
                       onChange={(e) => handleSplitChange(index, e.target.value)}
-                      className="w-16 rounded border border-gray-300 px-2 py-1 text-sm focus:border-orange-500 focus:ring focus:ring-orange-300"
+                      disabled={share.paid}
+                      className={`w-20 rounded border px-2 py-1 text-sm focus:ring ${
+                        share.paid
+                          ? 'cursor-not-allowed border-gray-300 bg-gray-100 text-gray-500'
+                          : 'border-gray-300 focus:border-orange-500 focus:ring-orange-300'
+                      }`}
                     />
+
+                    {share.paid && (
+                      <span className="ml-1 text-xs text-green-600">
+                        (Paid)
+                      </span>
+                    )}
+
                     {customSplitMode === 'percent' && totalAmount && (
                       <span className="w-16 text-xs text-gray-500">
                         $
