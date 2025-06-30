@@ -3,7 +3,6 @@ import { useGetAllBills } from '../../hooks/useBills'
 import AddBill from './AddBill'
 import { useState } from 'react'
 import { Button } from '@/components/components/ui/button'
-import { UpdateBillData } from 'models/models'
 import UpdateBill from './UpdateBill'
 import BillSearch from './BillSearch'
 import { Plus, X } from 'lucide-react'
@@ -12,7 +11,7 @@ export default function Bills() {
   const { data: bills, isPending, error } = useGetAllBills()
   const [showAddBill, setShowAddBill] = useState(false)
   const [showUpdateBill, setShowUpdateBill] = useState(false)
-  const [selectedBill, setSelectedBill] = useState<UpdateBillData | null>(null)
+  const [selectedBill, setSelectedBill] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [filter, setFilter] = useState('')
   const categories = Array.from(
@@ -122,7 +121,7 @@ export default function Bills() {
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="w-md text-md mt-1 block rounded border border-gray-300 px-3 py-0 leading-normal focus:border-primary focus:ring focus:ring-primary/50"
+            className="w-md text-md focus:ring-primary/50 mt-1 block rounded border border-gray-300 px-3 py-0 leading-normal focus:border-primary focus:ring"
           >
             <option value="">All</option>
             <option value="overdue">Overdue</option>
@@ -147,7 +146,10 @@ export default function Bills() {
       {showAddBill && <AddBill onAddBill={handleAddBill} />}
 
       {showUpdateBill && selectedBill && (
-        <UpdateBill setShowUpdateBill={setShowUpdateBill} bill={selectedBill} />
+        <UpdateBill
+          billId={selectedBill}
+          onClose={() => setShowUpdateBill(false)}
+        />
       )}
 
       <div

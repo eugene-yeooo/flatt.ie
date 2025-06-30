@@ -1,5 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addNewBill, deleteBill, getAllBills, updateBill } from '../apis/bills'
+import {
+  addNewBill,
+  deleteBill,
+  getAllBills,
+  getBillById,
+  updateBill,
+} from '../apis/bills'
 import { NewBill, UpdateBillData } from 'models/models'
 
 // ---------- GET BILLS ---------- //
@@ -12,6 +18,16 @@ export function useGetAllBills() {
   return {
     ...query,
   }
+}
+
+// ---------- GET SINGLE BILL ---------- //
+
+export function useGetBillById(id: number | string) {
+  return useQuery({
+    queryKey: ['bill', id],
+    queryFn: () => getBillById(id),
+    enabled: !!id, // only run if id is truthy
+  })
 }
 
 // ---------- ADD BILL ---------- //

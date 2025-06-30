@@ -16,8 +16,13 @@ export async function getAllBills(): Promise<Bill[]> {
 }
 
 export async function getBillById(id: number | string): Promise<Bill> {
-  const res = await request.get(`${billURL}/${id}`)
-  return res.body
+  try {
+    const res = await request.get(`${billURL}/${id}`)
+    return res.body as Bill
+  } catch (err) {
+    console.error('Failed to fetch bill:', err)
+    throw err
+  }
 }
 
 // ---------- ADD BILL ---------- //

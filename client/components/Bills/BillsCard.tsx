@@ -95,16 +95,16 @@ export default function BillCard({
       )}
 
       {/* Actions */}
-      <div className="mt-3 flex justify-end">
+      {/* <div className="mt-3 flex justify-end">
         <button
           onClick={() => setShowAddPaymentForm(true)}
           className="rounded-md border border-orange-500 bg-orange-50 px-3 py-1 text-sm font-medium text-orange-600 transition hover:bg-orange-100"
         >
           Add Payment
         </button>
-      </div>
+      </div> */}
 
-      {/* Payment form */}
+      {/* Payment form
       {showAddPaymentForm && (
         <AddPayment
           billId={id}
@@ -112,7 +112,7 @@ export default function BillCard({
           flatmates={{ id: 0, name: '' }}
           totalAmount={totalAmount}
         />
-      )}
+      )}*/}
     </div>
   )
 }

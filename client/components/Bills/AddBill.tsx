@@ -1,114 +1,84 @@
 import { useAddNewBill } from '../../hooks/useBills'
-import { useState } from 'react'
-import { X } from 'lucide-react'
+import { useAddPayments } from '../../hooks/usePayment'
+import { useEffect, useState } from 'react'
+import BillForm from './BillForm'
+import { Flatmate } from 'models/models'
 
 export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
-  const [title, setTitle] = useState('')
-  const [dueDate, setDueDate] = useState('')
-  const [totalAmount, setTotalAmount] = useState('')
-  const [expenseCategory, setExpenseCategory] = useState('Power')
-  const mutation = useAddNewBill()
-  const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
+  const [flatmates, setFlatmates] = useState<Flatmate[]>([])
+  const createBill = useAddNewBill()
+  const createPayments = useAddPayments()
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!title || !dueDate || !totalAmount) {
-      alert('Please fill in required fields')
-      return
+  useEffect(() => {
+    async function fetchFlatmates() {
+      try {
+        const res = await fetch('/api/v1/flatties')
+        if (!res.ok) throw new Error('Failed to fetch flatmates')
+        const data = await res.json()
+        setFlatmates(data)
+      } catch (error) {
+        console.error('Failed to fetch flatmates:', error)
+      }
     }
+    fetchFlatmates()
+  }, [])
 
-    mutation.mutate({
-      title,
-      due_date: dueDate,
-      total_amount: Number(totalAmount),
-      expense_category: expenseCategory,
-    })
-    onAddBill()
-    setTitle('')
-    setDueDate('')
-    setTotalAmount('')
-    setExpenseCategory('')
+  function handleSubmit({
+    bill,
+    shares,
+  }: {
+    bill: Omit<
+      {
+        id?: number
+        title: string
+        due_date: string
+        total_amount: number
+        expense_category: string
+      },
+      'id'
+    >
+    shares: { flatmateId: string; split: string; paid: boolean }[]
+  }) {
+    createBill.mutate(
+      {
+        title: bill.title,
+        due_date: bill.due_date,
+        total_amount: bill.total_amount,
+        expense_category: bill.expense_category,
+      },
+      {
+        onSuccess: (newBillId) => {
+          createPayments.mutate({
+            billId: newBillId,
+            payments: shares.map((s) => {
+              const amount = parseFloat(s.split)
+
+              const split = amount / bill.total_amount
+
+              return {
+                flatmate_id: Number(s.flatmateId),
+                split,
+                paid: s.paid,
+                amount,
+              }
+            }),
+          })
+          onAddBill()
+        },
+      },
+    )
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <form
-        onSubmit={handleSubmit}
-        className="flex w-[600px] flex-col justify-center rounded-md bg-white p-8 shadow-md"
-      >
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Add New Bill</h2>
-          <button
-            type="button"
-            onClick={onAddBill}
-            className="text-gray-400 hover:text-black"
-            aria-label="Close form"
-          >
-            <X />
-          </button>
-        </div>
-
-        <label className="mb-2 block font-medium">
-          Title <span className="text-red-500">*</span>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
-          />
-        </label>
-
-        <label className="mb-2 block font-medium">
-          Due Date <span className="text-red-500">*</span>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
-          />
-        </label>
-
-        <label className="mb-2 block font-medium">
-          Total Amount $ <span className="text-red-500">*</span>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={totalAmount}
-            onChange={(e) => setTotalAmount(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
-          />
-        </label>
-
-        <label className="mb-4 block font-medium">
-          Expense Category <span className="text-red-500">*</span>
-          <select
-            value={expenseCategory}
-            onChange={(e) => setExpenseCategory(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
-          >
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <button
-          type="submit"
-          className="mx-auto mt-2 w-40 rounded-lg border border-gray-300 bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-        >
-          Add Bill
-        </button>
-      </form>
-    </div>
+    <>
+      {flatmates.length > 0 && (
+        <BillForm
+          flatmates={flatmates}
+          onSubmit={handleSubmit}
+          onCancel={onAddBill}
+          submitLabel="Add Bill"
+        />
+      )}
+    </>
   )
 }

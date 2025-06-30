@@ -24,6 +24,52 @@ export async function getAllBills() {
     )
 }
 
+export async function getBillById(id: number) {
+  const rows = await connection('bill')
+    .where('bill.id', id)
+    .leftJoin('expense', 'bill.expense_category', 'expense.category')
+    .leftJoin('payment', 'bill.id', 'payment.bill_id')
+    .leftJoin('flattie', 'payment.flatmate_id', 'flattie.id')
+    .select(
+      'bill.id as billId',
+      'bill.title',
+      'bill.due_date as dueDate',
+      'bill.total_amount as totalAmount',
+      'expense.category as expenseCategory',
+      'expense.frequency',
+      'payment.id as paymentId',
+      'payment.amount as paymentAmount',
+      'payment.split',
+      'payment.paid',
+      'payment.flatmate_id as flattieId',
+      'flattie.name as flattieName',
+    )
+
+  const { billId, title, dueDate, totalAmount, expenseCategory, frequency } =
+    rows[0]
+
+  const payments = rows
+    .filter((row) => row.paymentId !== null) // handle bills with no payments yet
+    .map((row) => ({
+      paymentId: row.paymentId,
+      amount: row.paymentAmount,
+      split: row.split,
+      paid: row.paid,
+      flatmateId: row.flattieId,
+      flatmateName: row.flattieName,
+    }))
+
+  return {
+    id: billId,
+    title,
+    dueDate,
+    totalAmount,
+    expenseCategory,
+    frequency,
+    payments,
+  }
+}
+
 // ----------- ADD NEW BILL ------------- //
 
 export async function addBill(data: NewBill) {
