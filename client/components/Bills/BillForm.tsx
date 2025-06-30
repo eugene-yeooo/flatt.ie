@@ -1,6 +1,12 @@
 import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
 import { Flatmate, UpdateBillData } from 'models/models'
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from '../../../src/components/components/ui/tooltip'
 
 type Share = {
   flatmateId: string
@@ -365,7 +371,26 @@ export default function BillForm({
           <div className="flex flex-wrap gap-2">
             {flatmates.map((f) => {
               const isSelected = selectedFlatmateIds.includes(String(f.id))
-              return (
+              const share = shares.find((s) => s.flatmateId === String(f.id))
+              return share?.paid ? (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        key={f.id}
+                        type="button"
+                        disabled
+                        className="cursor-not-allowed rounded border bg-orange-500 px-4 py-1 text-sm text-white"
+                      >
+                        {f.name}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      Already paid — cannot deselect.
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
                 <button
                   key={f.id}
                   type="button"
