@@ -17,6 +17,19 @@ router.get('/', async (req, res) => {
   }
 })
 
+// GET /api/v1/bill/:id
+router.get('/:id', async (req, res) => {
+  try {
+    const billId = Number(req.params.id)
+    const bill = await db.getBillById(billId)
+    if (!bill) return res.status(404).json({ message: 'Bill not found' })
+
+    res.json(bill)
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching bill' })
+  }
+})
+
 // POST /api/v1/bill/add-bill
 router.post('/add-bill', async (req, res) => {
   try {
