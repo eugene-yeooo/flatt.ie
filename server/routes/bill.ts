@@ -57,13 +57,12 @@ router.delete('/delete-bill/:id', async (req, res) => {
 })
 
 // PATCH /api/v1/bill/update-bill
-router.patch('/update-bill', async (req, res) => {
+router.patch('/update-bill/:id', async (req, res) => {
   try {
-    const data = req.body
-    if (!data?.id) {
-      return res.status(400).json({ message: 'Bill ID is required' })
-    }
-    await db.updateBill(data)
+    const billId = Number(req.params.id)
+    const { bill, shares } = req.body
+
+    await db.updateBillAndPayments(billId, bill, shares)
     res.status(200).json({ message: 'Bill updated successfully' })
   } catch (err) {
     console.error(err)
