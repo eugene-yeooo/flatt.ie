@@ -35,6 +35,7 @@ export function deleteFlatmate(id: number, db = connection) {
   return db('flattie').where({ id }).del()
 }
 
+// Get flatmates with unpaid & overdue info (adjusted by credit)
 export async function getFlatmatesWithData() {
   const today = new Date().toISOString()
   const flatmates: FlatmateDBRow[] = await connection('flattie')
@@ -49,16 +50,19 @@ export async function getFlatmatesWithData() {
 
   return flatmates.map((f) => {
     const credit = Number(f.credit) || 0
-    const overdue = Number(f.overdueAmount) || 0
     const unpaid = Number(f.unpaidAmount) || 0
+    const overdue = Number(f.overdueAmount) || 0
+
+    const balance = credit - overdue
+
     return {
     id: f.id,
     name: f.name,
     credit,
     profilePhoto: f.profilePhoto,
-    overdue,
     unpaid,
-    balance: credit - overdue,
+    overdue: unpaid,
+    balance,
   }})
 }
 

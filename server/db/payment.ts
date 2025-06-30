@@ -9,6 +9,7 @@ export async function getAllPayments() {
       'payment.amount',
       'payment.split',
       'payment.paid',
+      'payment.flatmate_id as flattieId',
       'bill.title as billTitle',
       'bill.total_amount as billTotal',
       'bill.due_date as dueDate',
