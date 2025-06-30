@@ -2,9 +2,10 @@ import React, { useRef, useState } from 'react'
 
 interface Props {
   onAdd: (foemData: FormData) => void
+  onClose: () => void
 }
 
-export default function AddFlatmateForm({ onAdd }: Props) {
+export default function AddFlatmateForm({ onAdd, onClose }: Props) {
   const [name, setName] = useState('')
   const [credit, setCredit] = useState('')
   const [photo, setPhoto] = useState<File | null>(null)
@@ -29,6 +30,7 @@ export default function AddFlatmateForm({ onAdd }: Props) {
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
+    onClose()
   }
 
   return (
@@ -48,10 +50,13 @@ export default function AddFlatmateForm({ onAdd }: Props) {
       <div>
         <label htmlFor="profilePhoto" className='block text-sm font-medium'>Profile Photo</label>
         <input id='profilePhoto' type="file" accept='image/*' onChange={(e) => setPhoto(e.target.files?.[0] || null)}
-          className='border px-3 py-2 rounded-md w-full' />
+          ref={fileInputRef} className='border px-3 py-2 rounded-md w-full' />
       </div>
 
-      <button type='submit' className='bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600'>Add Flatmate</button>
+      <div className='mt-6 flex justify-end space-x-3'>
+        <button type='button' onClick={onClose} className='text-gray-500 hover:text-black'>Cancel</button>
+        <button type='submit' className='bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600'>Add Flatmate</button>
+      </div>
     </form>
   )
 }

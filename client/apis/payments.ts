@@ -63,3 +63,20 @@ export async function deletePayment(
     throw error
   }
 }
+
+export async function payFromCredit(paymentId: number) {
+  try {
+    const res = await request
+      .patch(`/api/v1/payment/${paymentId}/pay-from-credit`)
+      .set('Accept', 'application/json')
+      .set('Content-Type', 'application/json')
+
+    return res.body
+  } catch (error: any) {
+    if (error.response && error.response.body && error.response.body.error) {
+      throw new Error(error.response.body.error)
+    }
+    throw error
+  }
+}
+
