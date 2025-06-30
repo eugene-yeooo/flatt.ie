@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUser } from '../../hooks/useUser'
 import { IfAuthenticated, IfNotAuthenticated } from '../Authenticated'
+import Profile from '../Profile'
 
 function Register() {
   const [errorMsg, setErrorMsg] = useState('')
@@ -12,11 +13,13 @@ function Register() {
 
   // Form state for user input
   const [form, setForm] = useState({
+    name: '',
     username: auth0User?.nickname || auth0User?.name || '',
     email: auth0User?.email || '',
+    avatar_url: auth0User?.picture || '',
+    account_type: 'flattie', //default
   })
 
-  // Redirect on successful user creation
   useEffect(() => {
     if (user.data) navigate('/flattie')
   }, [user.data, navigate])
@@ -91,8 +94,7 @@ function Register() {
                 required
                 className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
               />
-            </div>
-
+            </div>{' '}
             <div>
               <label
                 htmlFor="username"
@@ -110,7 +112,6 @@ function Register() {
                 className="mt-1 w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-[var(--primary)] focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
               />
             </div>
-
             <div>
               <label
                 htmlFor="email"
@@ -129,7 +130,6 @@ function Register() {
                 readOnly
               />
             </div>
-
             <button
               type="submit"
               disabled={!form.username || !form.email}
@@ -139,6 +139,7 @@ function Register() {
             </button>
           </form>
         </div>
+        <Profile />
       </IfAuthenticated>
 
       <IfNotAuthenticated>

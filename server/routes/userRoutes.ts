@@ -28,7 +28,9 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
     if (!newUser || !auth0_id || !newUser.username || !newUser.email) {
       return res.status(400).json({ error: 'Missing required fields' })
     }
-    const user = await addUser(newUser)
+    const userToInsert = { ...newUser, auth0_id }
+
+    const user = await addUser(userToInsert)
     //return the newly created user in the response with 201
     res.status(201).json(user)
   } catch (err) {

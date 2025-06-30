@@ -49,7 +49,7 @@ export async function addUser({
     const res = await request
       .post(`${rootURL}/users`)
       .set('Authorization', `Bearer ${token}`)
-      .send(newUser)
+      .send({ newUser })
     return res.body || null
   } catch (err) {
     console.error('Error adding user:', err)

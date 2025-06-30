@@ -27,7 +27,7 @@ export interface NewUser {
 export async function getAllUsers(): Promise<User[]> {
   return await connection('users').select(
     'auth0_id',
-    'users.id as user_id',
+    'id as user_id',
     'username',
     'email',
     'avatar_url',
@@ -41,7 +41,7 @@ export async function getUserByAuth0Id(auth0_id: string): Promise<User | null> {
   const user = await connection('users')
     .select(
       'auth0_id',
-      'user_id',
+      'id as user_id',
       'username',
       'email',
       'avatar_url',

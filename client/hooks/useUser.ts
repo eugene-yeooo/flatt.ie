@@ -1,29 +1,30 @@
 import { MutationFunction, useQuery } from '@tanstack/react-query'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-
-import * as API from '../apis/users'
-
 import { useAuth0 } from '@auth0/auth0-react'
 
-export function useUser() {
-  const { user, getAccessTokenSilently } = useAuth0()
+import * as API from '../apis/users'
+import type { User } from '../../models/models'
 
-  const query = useQuery({
+// Hook to fetch current authenticated user from backend
+export function useUser() {
+  const { user: auth0User, getAccessTokenSilently } = useAuth0()
+
+  const query = useQuery<User | null>({
     queryKey: ['user'],
     queryFn: async () => {
       const token = await getAccessTokenSilently()
       return API.getCurrentUser(token)
     },
-    enabled: !!user, // Only fetch if Auth0 user is present
+    enabled: !!auth0User,
   })
 
   return {
     ...query,
-    add: useAddUser(), // Mutation hook to add user
+    add: useAddUser(), // for registering new user
   }
 }
 
-// Generic mutation hook with cache invalidation for 'user'
+// Generic mutation hook with cache invalidation
 export function useUserMutation<TData = unknown, TVariables = unknown>(
   mutationFn: MutationFunction<TData, TVariables>,
 ) {
@@ -37,7 +38,7 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
   })
 }
 
-// mutation hook to add a user
+// Mutation to add/register user
 export function useAddUser() {
   return useUserMutation(API.addUser)
 }
