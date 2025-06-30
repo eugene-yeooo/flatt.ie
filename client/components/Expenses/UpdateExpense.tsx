@@ -1,22 +1,23 @@
-import { useAddExpense } from '../../hooks/useExpense'
+import { useUpdateExpense } from '../../hooks/useExpense'
 import { useState } from 'react'
 import { X } from 'lucide-react'
+import { Expense } from 'models/models'
 
-export default function AddExpense({
-  onAddExpense,
+export default function UpdateExpense({
+  expense,
+  setShowUpdateExpense,
 }: {
-  onAddExpense: () => void
+  expense: Expense
+  setShowUpdateExpense: React.Dispatch<React.SetStateAction<boolean>>
 }) {
-  const [category, setCategory] = useState('')
-  const [frequency, setFrequency] = useState<'weekly' | 'monthly' | 'one_off'>(
-    'one_off',
-  )
-  const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
-  const [defaultAmount, setDefaultAmount] = useState('')
-  const [calcMethod, setCalcMethod] = useState<'split' | 'manual'>('split')
-  const [notes, setNotes] = useState('')
-  const mutation = useAddExpense()
+  const [category, setCategory] = useState(expense.category)
+  const [frequency, setFrequency] = useState(expense.frequency)
+  const [startDate, setStartDate] = useState(expense.start_date)
+  const [endDate, setEndDate] = useState(expense.end_date)
+  const [defaultAmount, setDefaultAmount] = useState(expense.default_amount)
+  const [calcMethod, setCalcMethod] = useState(expense.calc_method)
+  const [notes, setNotes] = useState(expense.notes)
+  const mutation = useUpdateExpense()
   const frequencyOptions = [
     { label: 'Weekly', value: 'weekly' },
     { label: 'Monthly', value: 'monthly' },
@@ -35,6 +36,7 @@ export default function AddExpense({
     }
 
     mutation.mutate({
+      id: expense.id,
       category,
       frequency,
       start_date: startDate,
@@ -43,14 +45,14 @@ export default function AddExpense({
       calc_method: calcMethod,
       notes,
     })
-    onAddExpense()
     setCategory('')
     setFrequency('one_off')
     setStartDate('')
     setEndDate('')
-    setDefaultAmount('')
+    setDefaultAmount(0)
     setCalcMethod('split')
     setNotes('')
+    setShowUpdateExpense(false)
   }
 
   return (
@@ -60,10 +62,10 @@ export default function AddExpense({
         className="flex w-[600px] flex-col justify-center rounded-md bg-white p-6 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Add New Expense</h2>
+          <h2 className="text-xl font-semibold">Update Expense</h2>
           <button
             type="button"
-            onClick={onAddExpense}
+            onClick={() => setShowUpdateExpense(false)}
             className="text-gray-400 hover:text-black"
             aria-label="Close form"
           >
@@ -72,7 +74,7 @@ export default function AddExpense({
         </div>
 
         <label className="mb-2 block font-medium">
-          Category <span className="text-red-500">*</span>
+          Title <span className="text-red-500">*</span>
           <input
             type="text"
             value={category}
@@ -135,8 +137,8 @@ export default function AddExpense({
             type="number"
             min="0"
             step="0.01"
-            value={defaultAmount}
-            onChange={(e) => setDefaultAmount(e.target.value)}
+            value={Number(defaultAmount)}
+            onChange={(e) => setDefaultAmount(Number(e.target.value))}
             required
             className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
           />

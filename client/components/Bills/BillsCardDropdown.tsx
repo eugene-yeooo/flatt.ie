@@ -5,10 +5,10 @@ import { UpdateBillData } from 'models/models'
 
 export default function BillsCardDropdown({
   id,
-  title,
-  dueDate,
-  totalAmount,
-  expenseCategory,
+  // title,
+  // dueDate,
+  // totalAmount,
+  // expenseCategory,
   setShowUpdateBill,
   setSelectedBill,
 }: {
@@ -45,13 +45,13 @@ export default function BillsCardDropdown({
         >
           <DropdownMenu.Item
             onSelect={() => {
-              setSelectedBill({
-                id,
-                title,
-                due_date: dueDate.toISOString().split('T')[0],
-                total_amount: totalAmount,
-                expense_category: expenseCategory,
-              })
+              setSelectedBill(id)
+              //   id,
+              //   title,
+              //   due_date: dueDate.toISOString().split('T')[0],
+              //   total_amount: totalAmount,
+              //   expense_category: expenseCategory,
+              // })
               setShowUpdateBill(true)
             }}
             className="flex cursor-pointer items-center px-4 py-2 text-sm hover:bg-gray-100"
