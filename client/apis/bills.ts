@@ -56,7 +56,7 @@ export async function deleteBill(id: number) {
 
 // ---------- UPDATE BILL ---------- //
 
-export async function updateBill(data: UpdateBillRequest) {
+export async function updateBillAndPayments(data: UpdateBillRequest) {
   try {
     const res = await request
       .patch(`${billURL}/update-bill/${data.bill.id}`)
