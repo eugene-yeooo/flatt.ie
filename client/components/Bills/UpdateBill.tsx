@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
-import { Flatmate } from 'models/models'
-import { useGetBillById, useUpdateBill } from '../../hooks/useBills'
-// import { useUpdatePayments } from '../../hooks/usePayment'
+import { Flatmate, Share } from 'models/models'
+import { useGetBillById, useUpdateBillAndPayments } from '../../hooks/useBills'
 import BillForm from './BillForm'
-
-type Share = { flatmateId: string; split: string; paid: boolean }
 
 export default function UpdateBill({
   billId,
@@ -14,10 +11,10 @@ export default function UpdateBill({
   onClose: () => void
 }) {
   const [flatmates, setFlatmates] = useState<Flatmate[]>([])
-  const updateBill = useUpdateBill()
-  // const updatePayments = useUpdatePayments()
+  const mutation = useUpdateBillAndPayments()
   const { data: bill, isPending, error } = useGetBillById(billId)
   console.log(bill)
+
   useEffect(() => {
     async function fetchFlatmates() {
       try {
@@ -50,31 +47,19 @@ export default function UpdateBill({
   }) {
     if (!updatedBill.id) return
 
-    updateBill.mutate(
+    mutation.mutate(
       {
-        id: updatedBill.id,
-        title: updatedBill.title,
-        dueDate: updatedBill.due_date,
-        totalAmount: updatedBill.total_amount,
-        expense_category: updatedBill.expense_category,
+        bill: {
+          id: updatedBill.id,
+          title: updatedBill.title,
+          dueDate: updatedBill.due_date,
+          totalAmount: updatedBill.total_amount,
+          expense_category: updatedBill.expense_category,
+        },
+        shares: shares,
       },
       {
-        onSuccess: () => {
-          // updatePayments.mutate({
-          //   billId: updatedBill.id,
-          //   payments: shares.map((s) => {
-          //     const amount = parseFloat(s.split)
-          //     const split = amount / updatedBill.total_amount
-          //     return {
-          //       flatmate_id: Number(s.flatmateId),
-          //       split,
-          //       paid: s.paid,
-          //       amount,
-          //     }
-          //   }),
-          // })
-          onClose()
-        },
+        onSuccess: () => onClose(),
       },
     )
   }

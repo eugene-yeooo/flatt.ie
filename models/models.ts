@@ -76,3 +76,14 @@ export interface UpdateBillData {
   totalAmount: number
   expense_category?: string
 }
+
+export interface Share {
+  flatmateId: string
+  split: string
+  paid: boolean
+}
+
+export interface UpdateBillRequest {
+  bill: UpdateBillData
+  shares: Share[]
+}
