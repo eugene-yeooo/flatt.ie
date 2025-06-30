@@ -12,6 +12,7 @@ import Register from './Register/CreateUser'
 import { useEffect } from 'react'
 import { useUser } from '../../client/hooks/useUser'
 import { useLocation } from 'react-router-dom'
+import Profile from './Profile/Profile'
 export default function App() {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0()
   const navigate = useNavigate()
@@ -100,6 +101,7 @@ export default function App() {
           <Route path="/expense" element={<Expenses />} />
           <Route path="/report" element={<Report data={sampleData} />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </main>
     </div>

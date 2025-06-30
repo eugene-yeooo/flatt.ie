@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import { useAuth0 } from '@auth0/auth0-react'
 import { useUser } from '../../hooks/useUser'
 import { IfAuthenticated, IfNotAuthenticated } from '../Authenticated'
-import Profile from '../Profile'
+import Profile from '../Profile/Profile'
 
 function Register() {
   const [errorMsg, setErrorMsg] = useState('')

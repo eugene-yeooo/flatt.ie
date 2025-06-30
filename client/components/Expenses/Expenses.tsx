@@ -3,14 +3,16 @@ import { useAllExpense } from '../../hooks/useExpense'
 import AddExpense from './AddExpense'
 import { useState } from 'react'
 import { Button } from '@/components/components/ui/button'
+import { useUser } from '../../hooks/useUser'
 
 export default function Expensess() {
   const { data: expenses, isPending, error } = useAllExpense()
   const [showAddExpense, setShowAddExpense] = useState(false)
-
+  const user = useUser()
   function toggleAddExpense() {
     setShowAddExpense((prev) => !prev)
   }
+  const hideEdits = user?.data?.account_type === 'flat_financer'
 
   if (isPending) return <p className="p-4">Loading...</p>
   if (error) return <p className="p-4 text-red-500">Error loading expenses.</p>
@@ -22,8 +24,7 @@ export default function Expensess() {
             {showAddExpense ? 'Cancel' : 'Add Expense'}
           </Button>
         </div>
-
-        {showAddExpense && <AddExpense onAddExpense={handleAddExpense} />}
+        <AddExpense onAddExpense={handleAddExpense} />
         <p>No expenses found.</p>
       </div>
     )
@@ -36,9 +37,11 @@ export default function Expensess() {
   return (
     <div className="mx-auto max-w-4xl p-4">
       <div className="flex justify-end bg-primary">
-        <Button onClick={toggleAddExpense} className="btn">
-          Add Expense
-        </Button>
+        {hideEdits && (
+          <Button onClick={toggleAddExpense} className="btn">
+            Add Expense
+          </Button>
+        )}
       </div>
 
       {showAddExpense && <AddExpense onAddExpense={handleAddExpense} />}
