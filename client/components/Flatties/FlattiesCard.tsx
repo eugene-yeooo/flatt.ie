@@ -17,6 +17,7 @@ export default function FlattieCard({ id, name, credit, overdue, profilePhoto, o
   const [isEditing, setIsEditing] = useState(false)
   const [showOverdueList, setShowOverdueList] = useState(false)
   const [unpaidExpenses, setUnpaidExpenses] = useState<Payment[]>([])
+  const [loadingId, setLoadingId] = useState<number | null>(null)
 
   const [editedName, setEditedName] = useState(name)
   const [editedCredit, setEditedCredit] = useState(credit)
@@ -30,18 +31,39 @@ export default function FlattieCard({ id, name, credit, overdue, profilePhoto, o
         ? 'text-red-600'
         : 'text-muted-foreground'
 
-  async function handleOverdueClick() {
-    if (!showOverdueList) {
-      const allPayments = await getAllPayments()
-      const today = new Date()
-      const filtered = allPayments.filter((p) => {
+  async function fetchUnpaidExpenses() {
+    const allPayments = await getAllPayments()
+    const today = new Date()
+    const filtered = allPayments.filter((p) => {
       const isUnpaid = Number(p.paid) === 0
       const isOverdue = new Date(p.dueDate) < today
       return isUnpaid && isOverdue && p.flattieId === id
     })
     setUnpaidExpenses(filtered)
+  }
+
+  async function handleOverdueClick() {
+    if (!showOverdueList) {
+      await fetchUnpaidExpenses()
     }
     setShowOverdueList(!showOverdueList)
+  }
+
+  async function handlePayFromCredit(paymentId: number) {
+    try {
+      setLoadingId(paymentId)
+      const res = await fetch(`/api/v1/payment/${paymentId}/pay-from-credit`, {
+        method: 'PATCH',
+      })
+    if (!res.ok) {
+      throw new Error('Payment failed')
+    }
+      await fetchUnpaidExpenses()
+    } catch (error) {
+      console.error('Pay from credit failed:', error)
+    } finally {
+      setLoadingId(null)
+    }
   }
 
   function handleDeleteConfirm() {
@@ -141,8 +163,11 @@ export default function FlattieCard({ id, name, credit, overdue, profilePhoto, o
                 <li>No unpaid payments</li>
               ) : (
                 unpaidExpenses.map((p) => (
-                  <li key={p.id} className="mb-1">
+                  <li key={p.id} className="mb-2 flex justify-between items-center">
+                    <span>
                     • {p.billTitle} ({new Date(p.dueDate).toLocaleDateString()}): ${p.amount.toFixed(2)}
+                    </span>
+                    <button onClick={() => handlePayFromCredit(p.id)} disabled={loadingId === p.id} className="ml-2 rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 hover:bg-blue-200">{loadingId === p.id ? '...' : '💸'}</button>
                   </li>
                 ))
               )}

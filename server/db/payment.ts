@@ -22,6 +22,20 @@ export async function updatePaymentStatus(id: number, paid: boolean) {
   return connection('payment').where({ id }).update({ paid })
 }
 
+export async function payFromCredit(paymentId: number) {
+  return connection.transaction(async (trx) => {
+    const payment = await trx('payment').where({ id: paymentId }).first()
+    if (!payment || payment.paid) throw new Error('Invalid payment')
+
+    const flattie = await trx('flattie').where({ id: payment.flatmate_id }).first()
+    if (!flattie || flattie.credit < payment.amount) throw new Error('Insufficient credit')
+
+    await trx('flattie').where({ id: payment.flatmate_id }).update({ credit: flattie.credit - payment.amount })
+    await trx('payment').where({ id: paymentId }).update({ paid: true })
+    return { success: true }
+  })
+}
+
 // ------------ GENERATE PAYMENT FOR BILL ----------
 
 export async function generatePayments(
