@@ -33,14 +33,5 @@ export async function seed(knex) {
       created_at: new Date(),
       updated_at: new Date(),
     },
-    {
-      id: 4,
-      user_id: 4,
-      profile_name: 'Hannah',
-      account_type: 'flattie',
-      active: true,
-      created_at: new Date(),
-      updated_at: new Date(),
-    },
   ])
 }

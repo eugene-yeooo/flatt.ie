@@ -1,6 +1,5 @@
 import express from 'express'
 import checkJwt, { JwtRequest } from '../auth0.ts'
-import { Jwt } from 'jsonwebtoken'
 import { getUserWithProfileByAuth0Id } from 'server/db/userdata.ts'
 import { getAllUsersWithProfiles } from 'server/db/userdata.ts'
 
@@ -10,7 +9,7 @@ const router = express.Router()
 
 //get /users route to list all users
 
-router.get('/users', async (_req, res) => {
+router.get('/', async (_req, res) => {
   try {
     const users = await getAllUsersWithProfiles()
     res.json(users)
@@ -24,7 +23,7 @@ router.get('/users', async (_req, res) => {
 
 //get users/me route for current authenticated user
 
-router.get('/users/me', checkJwt, async (req: JwtRequest, res) => {
+router.get('/me', checkJwt, async (req: JwtRequest, res) => {
   try {
     const auth0_id = req.auth?.sub
     if (!auth0_id) {

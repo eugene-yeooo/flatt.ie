@@ -15,7 +15,6 @@ server.use('/api/v1/flatties', flattiesRoutes)
 server.use('/api/v1/expense', expenseRoutes)
 server.use('/api/v1/bill', billRoutes)
 server.use('/api/v1/payment', paymentRoutes)
-
 server.use('/api/v1/users', userRoutes)
 
 if (process.env.NODE_ENV === 'production') {
