@@ -32,3 +32,10 @@ export async function addExpense(data: Expense) {
 export function deleteExpense(id: number) {
   return connection('expense').where({ id }).delete()
 }
+
+// ----------- UPDATE BILL ------------- //
+
+export function updateExpense(data: Expense) {
+  const { id, ...fieldsToUpdate } = data
+  return connection('expense').where({ id }).update(fieldsToUpdate)
+}

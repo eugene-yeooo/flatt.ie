@@ -40,3 +40,15 @@ export async function deleteExpense(id: number) {
     throw err
   }
 }
+
+// ---------- UPDATE Expense ---------- //
+
+export async function updateExpense(data: Expense) {
+  try {
+    const res = await request.patch(`${expensesURL}/:id`).send(data)
+    return res.body
+  } catch (err) {
+    console.error('Failed to update expense', err)
+    throw err
+  }
+}

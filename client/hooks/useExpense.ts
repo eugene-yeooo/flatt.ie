@@ -1,6 +1,11 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { getAllExpenses, addExpense, deleteExpense } from '../apis/expenses.ts'
-import { NewExpense } from 'models/models.ts'
+import {
+  getAllExpenses,
+  addExpense,
+  deleteExpense,
+  updateExpense,
+} from '../apis/expenses.ts'
+import { Expense, NewExpense } from 'models/models.ts'
 
 // ---------- GET EXPENSE ---------- //
 export function useAllExpense() {
@@ -38,6 +43,21 @@ export function useDeleteExpense() {
     },
     onError: (err) => {
       console.error('Failed to delete expense', err)
+    },
+  })
+}
+
+// ---------- UPDATE EXPENSE ---------- //
+
+export function useUpdateExpense() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (data: Expense) => updateExpense(data),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['expense'] })
+    },
+    onError: (err) => {
+      console.error('Failed to update bill', err)
     },
   })
 }
