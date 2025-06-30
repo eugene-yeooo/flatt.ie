@@ -38,6 +38,18 @@ router.patch('/:id', async (req, res) => {
   }
 })
 
+router.patch('/:id/pay-from-credit', async (req, res) => {
+  const id = Number(req.params.id)
+  try {
+    const result = await db.payFromCredit(id)
+    res.json(result)
+  } catch (err: unknown) {
+    const error = err as Error
+    console.error('Pay from credit failed:', error)
+    res.status(400).json({ error: error.message || 'Payment failed' })
+  }
+})
+
 // POST /api/v1/payment
 router.post('/', async (req, res) => {
   const { billId, payments } = req.body

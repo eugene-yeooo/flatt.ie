@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { addPayments, deletePayment, getAllPayments } from '../apis/payments.ts'
 import { updatePaymentStatus } from '../apis/payments.ts'
 import { Payment } from 'models/models.ts'
+import { payFromCredit } from '../apis/payments'
 
 export function useAllPayment() {
   const query = useQuery({
@@ -55,3 +56,20 @@ export function useDeletePayment() {
     },
   })
 }
+
+export function usePayFromCredit() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (paymentId: number) => payFromCredit(paymentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['payments'] })
+      queryClient.invalidateQueries({ queryKey: ['flatties'] }) 
+    },
+    onError: (err) => {
+      console.error('Failed to pay from credit:', err)
+    },
+  })
+}
+
+
