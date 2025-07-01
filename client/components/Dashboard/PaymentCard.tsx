@@ -1,7 +1,7 @@
 import { Payment } from 'models/models'
 import '../../styles/main.css'
 import { useDeletePayment } from '../../hooks/usePayment'
-import { useUser } from '../../hooks/useUser'
+import useCanEdit from '../../hooks/useCanEdit'
 
 type PaymentCardProps = {
   billAmount: number
@@ -23,8 +23,7 @@ export default function PaymentCard({
     .filter((payment) => payment.paid)
     .reduce((sum, payment) => sum + payment.amount, 0)
   const deleteMutation = useDeletePayment()
-  const user = useUser()
-  const hideEdits = user?.data?.account_type === 'flat_financer'
+  const canEdit = useCanEdit()
 
   const getDaysOverdue = (dueDate: string | Date): number => {
     const due =
@@ -47,7 +46,7 @@ export default function PaymentCard({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     return diffDays > 0 ? diffDays : 0
   }
-  const isOverdue = (dueDate: string | undefined, paid: boolean) => {
+  const isOverdue = (dueDate: string | Date, paid: boolean) => {
     if (!dueDate || paid) return false
     return new Date(dueDate) < new Date()
   }
@@ -91,7 +90,7 @@ export default function PaymentCard({
               </span>
             </div>
             {/* MARK UNPAID/PAID */}
-            {hideEdits && (
+            {canEdit && (
               <div className="ml-auto flex items-center gap-2">
                 {!payment.paid && isOverdue(billDueDate, payment.paid) && (
                   <span className="ml-2 rounded-lg bg-red-300 px-3 py-1.5 text-xs font-semibold text-white shadow-sm">

@@ -61,7 +61,6 @@ export default function Flatties() {
             credit={mate.credit}
             overdue={mate.debt}
             avatar_url={mate.avatar_url}
-            balance={mate.credit - mate.debt}
             // onUpdate={handleUpdate}
           />
         ))}

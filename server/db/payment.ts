@@ -13,7 +13,7 @@ export async function getAllPayments() {
       'bill.title as billTitle',
       'bill.total_amount as billTotal',
       'bill.due_date as dueDate',
-      'users.name as usersName',
+      'users.name as userName',
       'users.avatar_url',
     )
 }

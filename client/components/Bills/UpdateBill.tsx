@@ -37,12 +37,11 @@ export default function UpdateBill({
 
   function handleSubmit({
     bill: updatedBill,
-    shares,
   }: {
     bill: {
       id?: number
       title: string
-      due_date: string
+      due_date: string | Date
       total_amount: number
       expense_category: string
     }
@@ -50,29 +49,21 @@ export default function UpdateBill({
   }) {
     if (!updatedBill.id) return
 
+    const normalizedDueDate =
+      typeof updatedBill.due_date === 'string'
+        ? updatedBill.due_date
+        : updatedBill.due_date.toISOString().split('T')[0] // e.g. "2025-07-01"
+
     updateBill.mutate(
       {
         id: updatedBill.id,
         title: updatedBill.title,
-        dueDate: updatedBill.due_date,
+        dueDate: normalizedDueDate,
         totalAmount: updatedBill.total_amount,
         expense_category: updatedBill.expense_category,
       },
       {
         onSuccess: () => {
-          // updatePayments.mutate({
-          //   billId: updatedBill.id,
-          //   payments: shares.map((s) => {
-          //     const amount = parseFloat(s.split)
-          //     const split = amount / updatedBill.total_amount
-          //     return {
-          //       flatmate_id: Number(s.flatmateId),
-          //       split,
-          //       paid: s.paid,
-          //       amount,
-          //     }
-          //   }),
-          // })
           onClose()
         },
       },

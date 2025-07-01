@@ -35,14 +35,6 @@ export default function FlattieCard({
   const [editedCredit, setEditedCredit] = useState(credit)
   const [newPhoto, setNewPhoto] = useState<File | null>(null)
 
-  const balance = credit - (overdue ?? 0)
-  const balanceColor =
-    balance > 0
-      ? 'text-green-600'
-      : balance < 0
-        ? 'text-red-600'
-        : 'text-muted-foreground'
-
   const { mutate: payFromCredit, isPending } = usePayFromCredit()
 
   async function fetchUnpaidExpenses() {
@@ -157,9 +149,6 @@ export default function FlattieCard({
           </h3>
           <p className="text-center text-sm text-gray-500">
             Credit: ${credit.toFixed(2)}
-          </p>
-          <p className={`mt-1 text-center text-sm font-medium ${balanceColor}`}>
-            Balance: ${balance.toFixed(2)}
           </p>
         </>
       )}
