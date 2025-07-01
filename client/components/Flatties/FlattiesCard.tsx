@@ -78,14 +78,16 @@ export default function FlattieCard({
   return (
     <div className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
       {/* Edit menu */}
-      <div className="absolute right-2 top-1">
-        <button
-          onClick={() => setShowActions(!showActions)}
-          className="text-gray-400 hover:text-gray-600"
-        >
-          ✏️
-        </button>
-      </div>
+      {canEdit && (
+        <div className="absolute right-2 top-1">
+          <button
+            onClick={() => setShowActions(!showActions)}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            ✏️
+          </button>
+        </div>
+      )}
       {/* Profile Photo */}
       <div className="mb-3 flex justify-center">
         <img
@@ -106,14 +108,11 @@ export default function FlattieCard({
         </div>
       ) : (
         <>
-          <h3 className="font-semebold text-center text-base text-gray-900">
+          <h3 className="text-center text-base font-semibold text-gray-900">
             {name}
           </h3>
           <p className="text-center text-sm text-gray-500">
             Credit: ${credit.toFixed(2)}
-          </p>
-          <p className={`mt-1 text-center text-sm font-medium ${balanceColor}`}>
-            Balance: ${balance.toFixed(2)}
           </p>
         </>
       )}

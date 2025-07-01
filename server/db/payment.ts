@@ -3,18 +3,18 @@ import connection from './connection.ts'
 export async function getAllPayments() {
   return connection('payment')
     .join('bill', 'payment.bill_id', 'bill.id')
-    .join('flattie', 'payment.flatmate_id', 'flattie.id')
+    .join('users', 'payment.user_id', 'users.id')
     .select(
       'payment.id',
       'payment.amount',
       'payment.split',
       'payment.paid',
-      'payment.flatmate_id as flattieId',
+      'payment.user_id as userId',
       'bill.title as billTitle',
       'bill.total_amount as billTotal',
       'bill.due_date as dueDate',
-      'flattie.name as flattieName',
-      'flattie.profile_photo as profilePhoto',
+      'users.name as userName',
+      'users.avatar_url',
     )
 }
 
@@ -27,10 +27,13 @@ export async function payFromCredit(paymentId: number) {
     const payment = await trx('payment').where({ id: paymentId }).first()
     if (!payment || payment.paid) throw new Error('Invalid payment')
 
-    const flattie = await trx('flattie').where({ id: payment.flatmate_id }).first()
-    if (!flattie || flattie.credit < payment.amount) throw new Error('Insufficient credit')
+    const user = await trx('users').where({ id: payment.user_id }).first()
+    if (!user || user.credit < payment.amount)
+      throw new Error('Insufficient credit')
 
-    await trx('flattie').where({ id: payment.flatmate_id }).update({ credit: flattie.credit - payment.amount })
+    await trx('users')
+      .where({ id: payment.user_id })
+      .update({ credit: user.credit - payment.amount })
     await trx('payment').where({ id: paymentId }).update({ paid: true })
     return { success: true }
   })
@@ -46,7 +49,7 @@ export async function generatePayments(
 
   const payments = await connection('payment')
     .join('bill', 'payment.bill_id', 'bill.id')
-    .join('flattie', 'payment.flatmate_id', 'flattie.id')
+    .join('users', 'payment.user_id', 'users.id')
     .select(
       'payment.id',
       'payment.split',
@@ -55,8 +58,8 @@ export async function generatePayments(
       'bill.title as billTitle',
       'bill.due_date as dueDate',
       'bill.total_amount as billTotal',
-      'flattie.name as flattieName',
-      'flattie.profile_photo as profilePhoto',
+      'users.name as usersName',
+      'users.profile_photo as profilePhoto',
     )
     .where('payment.bill_id', billId)
 

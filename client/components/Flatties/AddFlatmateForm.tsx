@@ -34,28 +34,63 @@ export default function AddFlatmateForm({ onAdd, onClose }: Props) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className='space-y-4 mb-8'>
+    <form onSubmit={handleSubmit} className="mb-8 space-y-4">
       <div>
-        <label htmlFor="name" className='block text-sm font-medium'>Name</label>
-        <input id='name' type="text" value={name} onChange={(e) => setName(e.target.value)}
-          className='border px-3 py-2 rounded-md w-full' required />
+        <label htmlFor="name" className="block text-sm font-medium">
+          Name
+        </label>
+        <input
+          id="name"
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="w-full rounded-md border px-3 py-2"
+          required
+        />
       </div>
 
       <div>
-        <label htmlFor="credit" className='block text-sm font-medium'>Credit</label>
-        <input id='credit' type="number" value={credit} onChange={(e) => setCredit(e.target.value)}
-          className='border px-3 py-2 rounded-md w-full' required />
+        <label htmlFor="credit" className="block text-sm font-medium">
+          Credit
+        </label>
+        <input
+          id="credit"
+          type="number"
+          value={credit}
+          onChange={(e) => setCredit(e.target.value)}
+          className="w-full rounded-md border px-3 py-2"
+          required
+        />
       </div>
 
       <div>
-        <label htmlFor="profilePhoto" className='block text-sm font-medium'>Profile Photo</label>
-        <input id='profilePhoto' type="file" accept='image/*' onChange={(e) => setPhoto(e.target.files?.[0] || null)}
-          ref={fileInputRef} className='border px-3 py-2 rounded-md w-full' />
+        <label htmlFor="profilePhoto" className="block text-sm font-medium">
+          Profile Photo
+        </label>
+        <input
+          id="profilePhoto"
+          type="file"
+          accept="image/*"
+          onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+          ref={fileInputRef}
+          className="w-full rounded-md border px-3 py-2"
+        />
       </div>
 
-      <div className='mt-6 flex justify-end space-x-3'>
-        <button type='button' onClick={onClose} className='text-gray-500 hover:text-black'>Cancel</button>
-        <button type='submit' className='bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600'>Add Flatmate</button>
+      <div className="mt-6 flex justify-end space-x-3">
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-gray-500 hover:text-black"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="rounded-md bg-orange-500 px-4 py-2 text-white hover:bg-orange-600"
+        >
+          Add Flatmate
+        </button>
       </div>
     </form>
   )

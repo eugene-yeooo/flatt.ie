@@ -7,6 +7,7 @@ export function up(knex) {
     table.increments('id').primary()
     table.string('auth0_id').notNullable().unique()
     table.string('username').notNullable()
+    table.string('name').notNullable()
     table.string('email').notNullable()
     table.string('avatar_url')
     table
