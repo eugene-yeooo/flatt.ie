@@ -105,7 +105,7 @@ export interface Flat {
 export interface Share {
   userId: string
   amount: number
-  split: number
+  split: string
   paid: boolean
 }
 

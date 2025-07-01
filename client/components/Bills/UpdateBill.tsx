@@ -18,7 +18,7 @@ export default function UpdateBill({
   useEffect(() => {
     async function fetchFlatmates() {
       try {
-        const res = await fetch('/api/v1/flatties')
+        const res = await fetch('/api/v1/users')
         if (!res.ok) throw new Error('Failed to fetch flatmates')
         const data = await res.json()
         setFlatmates(data)
@@ -52,7 +52,7 @@ export default function UpdateBill({
         bill: {
           id: updatedBill.id,
           title: updatedBill.title,
-          dueDate: updatedBill.due_date,
+          dueDate: updatedBill.dueDate,
           totalAmount: updatedBill.totalAmount,
           expenseCategory: updatedBill.expenseCategory,
         },

@@ -16,16 +16,16 @@ type BillFormProps = {
     amount: number
     split: number
     paid: boolean | number
-    flatmateId: number
-    flatmateName: string
+    userId: number
+    userName: string
   }[]
   onSubmit: (data: {
     bill: {
       id?: number
       title: string
-      due_date: string | Date
-      total_amount: number
-      expense_category: string
+      dueDate: string | Date
+      totalAmount: number
+      expenseCategory: string
     }
     shares: Share[]
   }) => void
@@ -48,7 +48,7 @@ export default function BillForm({
     initialData.totalAmount?.toString() || '',
   )
   const [expenseCategory, setExpenseCategory] = useState(
-    initialData.expense_category || 'Power',
+    initialData.expenseCategory || 'Power',
   )
   const [splitType, setSplitType] = useState<'even' | 'custom'>('even')
   const [customSplitMode, setCustomSplitMode] = useState<'percent' | 'amount'>(
@@ -68,11 +68,11 @@ export default function BillForm({
 
       setSplitType('custom')
       setCustomSplitMode('amount')
-      const ids = payments.map((p) => String(p.flatmateId))
+      const ids = payments.map((p) => String(p.userId))
       setSelectedFlatmateIds(ids)
 
       const formattedShares: Share[] = payments.map((p) => ({
-        flatmateId: String(p.flatmateId),
+        userId: String(p.userId),
         split: Number(p.amount).toFixed(2),
         paid: Boolean(p.paid),
       }))
@@ -103,7 +103,7 @@ export default function BillForm({
 
     setShares((oldShares) => {
       const newShares: Share[] = selectedFlatmateIds.map((id) => {
-        const existing = oldShares.find((s) => s.flatmateId === id)
+        const existing = oldShares.find((s) => s.userId === id)
         if (existing) return existing
 
         const defaultSplit =
@@ -116,7 +116,7 @@ export default function BillForm({
             : '0'
 
         return {
-          flatmateId: id,
+          userId: id,
           split: defaultSplit,
           paid: false,
         }
@@ -200,9 +200,9 @@ export default function BillForm({
       bill: {
         id: initialData.id,
         title,
-        due_date: dueDate,
-        total_amount: Number(totalAmount),
-        expense_category: expenseCategory,
+        dueDate: dueDate,
+        totalAmount: Number(totalAmount),
+        expenseCategory: expenseCategory,
       },
       shares: shares.map((s) => {
         const splitValue = parseFloat(s.split) || 0
@@ -219,9 +219,9 @@ export default function BillForm({
             : ((splitValue / total) * 100).toFixed(2)
 
         return {
-          flatmateId: s.flatmateId,
-          amount,
-          split: percent,
+          userId: s.userId,
+          amount: Number(amount),
+          split: Number(percent),
           paid: s.paid,
         }
       }),
@@ -264,7 +264,7 @@ export default function BillForm({
           Due Date <span className="text-red-500">*</span>
           <input
             type="date"
-            value={dueDate}
+            value={dueDate as string}
             onChange={(e) => setDueDate(e.target.value)}
             required
             className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
@@ -376,7 +376,7 @@ export default function BillForm({
           <div className="flex flex-wrap gap-2">
             {flatmates.map((f) => {
               const isSelected = selectedFlatmateIds.includes(String(f.id))
-              const share = shares.find((s) => s.flatmateId === String(f.id))
+              const share = shares.find((s) => s.userId === String(f.id))
               return share?.paid ? (
                 <TooltipProvider key={f.id}>
                   <Tooltip>
@@ -467,13 +467,10 @@ export default function BillForm({
             <div className="grid grid-cols-2 gap-x-6 gap-y-3">
               {shares.map((share, index) => {
                 const flatmate = flatmates.find(
-                  (f) => String(f.id) === share.flatmateId,
+                  (f) => String(f.id) === share.userId,
                 )
                 return (
-                  <div
-                    key={share.flatmateId}
-                    className="flex items-center gap-2"
-                  >
+                  <div key={share.userId} className="flex items-center gap-2">
                     <span
                       className={`w-20 truncate text-sm font-medium ${
                         share.paid ? 'text-gray-400 line-through' : ''
