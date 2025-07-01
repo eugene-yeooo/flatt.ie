@@ -60,8 +60,12 @@ export default function FlattieCard({
   }
 
   function handleConfirmPay(paymentId: number) {
+    const payment = unpaidExpenses.find((p) => p.id === paymentId)
+    if (!payment) return
+
     payFromCredit(paymentId, {
       onSuccess: () => {
+        setEditedCredit((prev) => prev - payment.amount)
         fetchUnpaidExpenses()
         setPendingPaymentId(null)
       },
