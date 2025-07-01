@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react'
 import { getAllPayments } from '../../apis/payments'
+import { updateCredit } from '../../apis/users'
 import { Payment } from 'models/models'
 import { usePayFromCredit } from '../../hooks/usePayment'
 import useCanEdit from '../../hooks/useCanEdit'
 import { Pencil } from 'lucide-react'
+import { useAuth0 } from '@auth0/auth0-react'
 
 export type FlattieCardProps = {
   id: number
@@ -26,7 +28,7 @@ export default function FlattieCard({
   const [pendingPaymentId, setPendingPaymentId] = useState<number | null>(null)
   const canEdit = useCanEdit()
   const { mutate: payFromCredit, isPending } = usePayFromCredit()
-
+  const { getAccessTokenSilently } = useAuth0()
   async function fetchUnpaidExpenses() {
     const allPayments = await getAllPayments()
     const today = new Date()
@@ -71,10 +73,25 @@ export default function FlattieCard({
   function handleCancel() {
     setIsEditing(false)
     setShowActions(false)
-    // setEditedName(name)
     setEditedCredit(credit)
   }
 
+  async function handleSaveCredit() {
+    try {
+      const token = await getAccessTokenSilently()
+      const updated = await updateCredit(editedCredit, token)
+
+      if (updated) {
+        setIsEditing(false)
+        setShowActions(false)
+      } else {
+        alert('Failed to update credit.')
+      }
+    } catch (error) {
+      console.error('Error saving credit:', error)
+      alert('Something went wrong while saving credit.')
+    }
+  }
   return (
     <div className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
       {/* Edit menu */}
@@ -84,7 +101,7 @@ export default function FlattieCard({
             onClick={() => setShowActions(!showActions)}
             className="text-gray-400 hover:text-gray-600"
           >
-            <Pencil />
+            <Pencil size={18} />
           </button>
         </div>
       )}
@@ -99,6 +116,7 @@ export default function FlattieCard({
       {/* Info */}
       {isEditing ? (
         <div className="flex flex-col gap-2 text-sm text-gray-700">
+          <label className="text-gray-600">Credit:</label>
           <input
             type="number"
             className="rounded border p-1"
@@ -119,6 +137,12 @@ export default function FlattieCard({
       {/* Buttons */}
       {isEditing ? (
         <div className="mt-3 flex justify-center gap-2">
+          <button
+            onClick={handleSaveCredit}
+            className="rounded-md border border-green-500 bg-green-50 px-3 py-1 text-sm font-medium text-green-700 hover:bg-green-100"
+          >
+            Done
+          </button>
           <button
             onClick={handleCancel}
             className="rounded-md border border-gray-400 bg-gray-50 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100"
