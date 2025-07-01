@@ -1,5 +1,4 @@
 import { Router } from 'express'
-// import checkJwt, { JwtRequest } from '../auth0.ts'
 
 import * as db from '../db/payment.ts'
 
@@ -72,7 +71,7 @@ router.post('/', async (req, res) => {
   }
 })
 
-// Delete payment by id
+// DELTE payment by id
 router.delete('/:id', async (req, res) => {
   const paymentId = Number(req.params.id)
   try {
