@@ -65,6 +65,10 @@ export default function Profile() {
             </p>
             <p className="text-gray-600">@{user.data.username}</p>
             <p className="text-sm text-gray-500">{user.data.email}</p>
+            <p className="text-sm text-gray-500">
+              flat member of *insert flats here*
+            </p>
+
             <p className="mt-2 text-gray-700">
               {user.data.bio || 'No bio set.'}
             </p>

@@ -8,6 +8,7 @@ export async function up(knex) {
     table.string('name').notNullable().unique()
     table.string('address')
     table.text('description')
+    table.string('invite_code').unique().notNullable()
     table.timestamp('created_at').defaultTo(knex.fn.now())
     table.timestamp('updated_at').defaultTo(knex.fn.now())
   })
