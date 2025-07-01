@@ -2,6 +2,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { useDeleteExpense } from '../../hooks/useExpense'
 import { Pencil, Edit3, Trash2 } from 'lucide-react'
 import { Expense } from 'models/models'
+import useCanEdit from '../../hooks/useCanEdit'
 
 export default function ExpenseCardDropdown({
   id,
@@ -27,7 +28,7 @@ export default function ExpenseCardDropdown({
   setSelectedExpense: React.Dispatch<React.SetStateAction<Expense | null>>
 }) {
   const deleteExpense = useDeleteExpense()
-
+  const canEdit = useCanEdit()
   function handleDelete() {
     deleteExpense.mutate(id)
   }
@@ -35,12 +36,14 @@ export default function ExpenseCardDropdown({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button
-          className="absolute right-4 top-4 text-gray-300 hover:text-black"
-          aria-label="edit expense"
-        >
-          <Pencil size={18} />
-        </button>
+        {canEdit && (
+          <button
+            className="absolute right-4 top-4 text-gray-300 hover:text-black"
+            aria-label="edit expense"
+          >
+            <Pencil size={18} />
+          </button>
+        )}
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>

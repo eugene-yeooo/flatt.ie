@@ -2,6 +2,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { useDeleteBill } from '../../hooks/useBills'
 import { Pencil, Edit3, Trash2 } from 'lucide-react'
 import { UpdateBillData } from 'models/models'
+import useCanEdit from '../../hooks/useCanEdit'
 
 export default function BillsCardDropdown({
   id,
@@ -21,7 +22,7 @@ export default function BillsCardDropdown({
   setSelectedBill: React.Dispatch<React.SetStateAction<UpdateBillData | null>>
 }) {
   const deleteBill = useDeleteBill()
-
+  const canEdit = useCanEdit()
   function handleDelete() {
     deleteBill.mutate(id)
   }
@@ -29,12 +30,14 @@ export default function BillsCardDropdown({
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
-        <button
-          className="absolute right-4 top-4 text-gray-300 hover:text-black"
-          aria-label="edit bill"
-        >
-          <Pencil size={18} />
-        </button>
+        {canEdit && (
+          <button
+            className="absolute right-4 top-4 text-gray-300 hover:text-black"
+            aria-label="edit bill"
+          >
+            <Pencil size={18} />
+          </button>
+        )}
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>

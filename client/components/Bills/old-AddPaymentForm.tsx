@@ -25,10 +25,11 @@ export default function AddPayment({
 
   const mutation = useAddPayments()
 
+  // TODO use hook not fetch
   useEffect(() => {
     const fetchFlatmates = async () => {
       try {
-        const res = await fetch('/api/v1/flatties')
+        const res = await fetch('/api/v1/users')
         if (!res.ok) throw new Error('Failed to fetch flatmates')
         const data = await res.json()
         setFlatmates(data)
