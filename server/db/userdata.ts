@@ -34,7 +34,6 @@ export async function getAllUsers(): Promise<User[]> {
     'name',
     'account_type',
     'credit',
-    'debt',
     'bio',
   )
 }
@@ -50,7 +49,6 @@ export async function getUserByAuth0Id(auth0_id: string): Promise<User | null> {
       'name',
       'account_type',
       'credit',
-      'debt',
       'bio',
     )
     .where('auth0_id', auth0_id)
@@ -78,7 +76,6 @@ export async function addUser(user: NewUser, db = connection): Promise<User> {
         'name',
         'account_type',
         'credit',
-        'debt',
         'bio',
         'created_at',
         'updated_at',
@@ -116,7 +113,6 @@ export async function updateUser(
           'name',
           'account_type',
           'credit',
-          'debt',
           'bio',
           'created_at',
           'updated_at',

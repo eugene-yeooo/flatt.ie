@@ -79,6 +79,7 @@ export interface UpdateBillData {
 
 // ------- User -------
 export interface User {
+  user_id: number
   id: number
   auth0_id: string
   username: string
@@ -87,7 +88,6 @@ export interface User {
   avatar_url?: string
   account_type: 'flat_financer' | 'flattie' | 'guest'
   credit: number
-  debt: number
   bio?: string
   created_at?: string
   updated_at?: string

@@ -1,36 +1,28 @@
-import { ChangeEvent, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { getAllPayments } from '../../apis/payments'
 import { Payment } from 'models/models'
 import { usePayFromCredit } from '../../hooks/usePayment'
 import useCanEdit from '../../hooks/useCanEdit'
 
-interface FlattieCardProps {
-  userId: number
+export type FlattieCardProps = {
+  id: number
   name: string
   credit: number
-  overdue?: number
   avatar_url?: string
-  onDelete?: () => void
-  onUpdate?: (id: number, updated: { credit: number }) => void
 }
-
 export default function FlattieCard({
-  userId,
+  id,
   name,
   credit,
-  overdue,
   avatar_url,
-  onDelete,
-  onUpdate,
 }: FlattieCardProps) {
-  console.log('Component user id:', userId)
-  const [newPhoto, setNewPhoto] = useState<File | null>(null)
   const canEdit = useCanEdit()
   const [showActions, setShowActions] = useState(false)
   const [editedCredit, setEditedCredit] = useState(credit)
   const [isEditing, setIsEditing] = useState(false)
   const [showOverdueList, setShowOverdueList] = useState(false)
   const [unpaidExpenses, setUnpaidExpenses] = useState<Payment[]>([])
+  const [overdueAmount, setOverdueAmount] = useState(0)
   const [pendingPaymentId, setPendingPaymentId] = useState<number | null>(null)
 
   const { mutate: payFromCredit, isPending } = usePayFromCredit()
@@ -41,21 +33,21 @@ export default function FlattieCard({
 
     const filtered = allPayments.filter((p) => {
       const isUnpaid = Number(p.paid) === 0
-      const dueDate = new Date(p.dueDate)
-      const isOverdue = dueDate.getTime() < today.getTime()
+      const isOverdue = new Date(p.dueDate) < today
       const userMatch = Number(p.userId) === Number(id)
-
-      console.log(
-        `Checking payment id=${p.id} paid=${p.paid} dueDate=${p.dueDate} userId=${p.userId} => unpaid=${isUnpaid}, overdue=${isOverdue}, userMatch=${userMatch}`,
-      )
-
       return isUnpaid && isOverdue && userMatch
     })
 
-    console.log('Filtered unpaid overdue payments:', filtered)
-
     setUnpaidExpenses(filtered)
+
+    const total = filtered.reduce((sum, p) => sum + Number(p.amount), 0)
+    setOverdueAmount(total)
   }
+
+  // Fetch overdue data on mount
+  useEffect(() => {
+    fetchUnpaidExpenses()
+  }, [])
 
   async function handleOverdueClick() {
     if (!showOverdueList) {
@@ -76,34 +68,11 @@ export default function FlattieCard({
     })
   }
 
-  function handleDeleteConfirm() {
-    const confirmed = confirm(`Are you sure you want to delete ${name}?`)
-    if (confirmed && onDelete) {
-      onDelete()
-    }
-  }
-
-  function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
-    if (e.target.files && e.target.files[0]) {
-      setNewPhoto(e.target.files[0])
-    }
-  }
-  function handleSave() {
-    if (onUpdate) {
-      onUpdate(id, {
-        credit: editedCredit,
-      })
-    }
-    setIsEditing(false)
-    setShowActions(false)
-  }
-
   function handleCancel() {
     setIsEditing(false)
     setShowActions(false)
     // setEditedName(name)
     setEditedCredit(credit)
-    setNewPhoto(null)
   }
 
   return (
@@ -121,29 +90,15 @@ export default function FlattieCard({
       )}
       {/* Profile Photo */}
       <div className="mb-3 flex justify-center">
-        {isEditing ? (
-          <div className="flex flex-col items-center">
-            <input type="file" accept="image/*" onChange={handlePhotoChange} />
-            {newPhoto && (
-              <p className="mt-1 text-xs text-gray-500">{newPhoto.name}</p>
-            )}
-          </div>
-        ) : (
-          <img
-            src={avatar_url ? avatar_url : '/images/profilePhoto.png'}
-            alt={avatar_url ? `${name}'s profile` : 'Default avatar'}
-            className="mb-2 h-20 w-20 rounded-full object-cover"
-          />
-        )}
+        <img
+          src={avatar_url ? avatar_url : '/images/profilePhoto.png'}
+          alt={avatar_url ? `${name}'s profile` : 'Default avatar'}
+          className="mb-2 h-20 w-20 rounded-full object-cover"
+        />
       </div>
       {/* Info */}
       {isEditing ? (
         <div className="flex flex-col gap-2 text-sm text-gray-700">
-          {/* <input
-            className="rounded border p-1"
-            value={editedName}
-            onChange={(e) => setEditedName(e.target.value)}
-          /> */}
           <input
             type="number"
             className="rounded border p-1"
@@ -165,12 +120,6 @@ export default function FlattieCard({
       {isEditing ? (
         <div className="mt-3 flex justify-center gap-2">
           <button
-            onClick={handleSave}
-            className="rounded-md border border-green-500 bg-green-50 px-3 py-1 text-sm font-medium text-green-600 hover:bg-green-100"
-          >
-            Save
-          </button>
-          <button
             onClick={handleCancel}
             className="rounded-md border border-gray-400 bg-gray-50 px-3 py-1 text-sm font-medium text-gray-700 hover:bg-gray-100"
           >
@@ -186,28 +135,16 @@ export default function FlattieCard({
             >
               Edit
             </button>
-            <button
-              onClick={handleDeleteConfirm}
-              className="rounded-md border border-red-500 bg-red-50 px-3 py-1 text-sm font-medium text-red-600 hover:bg-red-100"
-            >
-              Delete
-            </button>
           </div>
         )
       )}
-      {/* Overdue */}
-      {typeof overdue === 'number' && overdue > 0 && (
+      {overdueAmount > 0 && (
         <div className="mt-3">
           <button
             onClick={handleOverdueClick}
-            disabled={!overdue || overdue <= 0}
-            className={`w-full rounded-md border border-orange-500 bg-orange-50 px-3 py-1 text-sm font-medium ${
-              overdue && overdue > 0
-                ? 'border-orange-500 bg-orange-50 text-orange-600 hover:bg-orange-100'
-                : 'cursor-not-allowed border-gray-300 bg-gray-100 text-gray-400'
-            }`}
+            className="w-full rounded-md border border-orange-500 bg-orange-50 px-3 py-1 text-sm font-medium text-orange-600 hover:bg-orange-100"
           >
-            Overdue: ${overdue.toFixed(2)}
+            Overdue: ${overdueAmount.toFixed(2)}
           </button>
 
           {showOverdueList && (

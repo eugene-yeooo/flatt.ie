@@ -1,17 +1,12 @@
 import FlattieCard from './FlattiesCard'
 // import { Dialog } from '@headlessui/react'
 import { useAllUsers } from '../../hooks/useUser'
-import { useEffect } from 'react'
 
 export default function Flatties() {
   const { data: users, isLoading, isError } = useAllUsers()
   console.log('users data:', users)
-  users?.forEach((u) => console.log('user id:', u.id, 'name:', u.name))
-  useEffect(() => {
-    console.log('Loading:', isLoading)
-    console.log('Error:', isError)
-    console.log('Users data:', users)
-  }, [users, isLoading, isError])
+  users?.forEach((u) => console.log('user id:', u.user_id, 'name:', u.username))
+
   return (
     <div className="mx-auto max-w-3xl px-4">
       <h1 className="mb-6 text-center text-3xl font-bold">Flatmates</h1>
@@ -44,11 +39,10 @@ export default function Flatties() {
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {users?.map((mate) => (
           <FlattieCard
-            key={mate.id}
-            id={mate.id}
-            name={mate.name}
+            key={mate.user_id}
+            id={mate.user_id}
+            name={mate.username}
             credit={mate.credit}
-            overdue={mate.debt}
             avatar_url={mate.avatar_url}
           />
         ))}

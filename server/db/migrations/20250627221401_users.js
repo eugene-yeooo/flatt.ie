@@ -14,7 +14,6 @@ export function up(knex) {
       .enum('account_type', ['flat_financer', 'flattie', 'guest'])
       .notNullable()
     table.decimal('credit').defaultTo(0)
-    table.decimal('debt').defaultTo(0)
     table.string('bio')
     table.timestamps(true, true)
   })
