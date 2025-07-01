@@ -106,9 +106,10 @@ export default function PaymentCard({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     return diffDays > 0 ? diffDays : 0
   }
-  const isOverdue = (dueDate: string | undefined, paid: boolean) => {
+  const isOverdue = (dueDate: string | Date | undefined, paid: boolean) => {
     if (!dueDate || paid) return false
-    return new Date(dueDate) < new Date()
+    const due = dueDate instanceof Date ? dueDate : new Date(dueDate)
+    return due < new Date()
   }
   const handleDelete = (id: number) => {
     if (confirm('Are you sure you want to delete this payment?')) {
@@ -143,7 +144,7 @@ export default function PaymentCard({
             }`}
           >
             <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:gap-2 sm:text-base">
-              <span className="font-semibold">{payment.flattieName}</span>
+              <span className="font-semibold">{payment.userName}</span>
               <span>{payment.paid ? 'has paid' : "hasn't paid"}</span>
               <span className="font-bold">
                 ${payment.amount?.toFixed(2) ?? '0.00'}

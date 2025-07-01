@@ -1,26 +1,60 @@
-import { FlatmateWithData } from 'models/models'
 import { useEffect, useState } from 'react'
+import { useAllUsers } from '../../hooks/useUser'
+import { getAllPayments } from '../../apis/payments'
 
-interface OverdueFlattie {
+interface OverdueUsers {
   id: number
   name: string
   overdue: number
 }
 
 export default function OverdueList() {
-  const [overdueList, setOverdueList] = useState<OverdueFlattie[]>([])
+  const {
+    data: users,
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useAllUsers()
+  const [overdueList, setOverdueList] = useState<OverdueUsers[]>([])
+  const [paymentsLoading, setPaymentsLoading] = useState(false)
+  const [paymentsError, setPaymentsError] = useState<Error | null>(null)
 
   useEffect(() => {
-    fetch('/api/v1/flatties/data')
-      .then((res) => res.json())
-      .then((rawData) => {
-        const data = rawData as FlatmateWithData[]
-        const filtered = data.filter((f) => f.overdue > 0)
-        setOverdueList(filtered)
-      })
-      .catch((err) => console.error('Failed to fetch overdue list:', err))
-  }, [])
+    async function calculateOverdue() {
+      if (!users) return
+      try {
+        setPaymentsLoading(true)
+        const payments = await getAllPayments()
+        setPaymentsLoading(false)
 
+        const today = new Date()
+
+        const calculated = users.map((user) => {
+          const overdue = payments
+            .filter(
+              (p) =>
+                p.userId === user.id &&
+                Number(p.paid) === 0 &&
+                new Date(p.dueDate) < today,
+            )
+            .reduce((sum, p) => sum + p.amount, 0)
+
+          return { id: user.id, name: user.name, overdue }
+        })
+
+        setOverdueList(calculated.filter((f) => f.overdue > 0))
+      } catch (err) {
+        setPaymentsLoading(false)
+        setPaymentsError(err as Error)
+        console.error('Failed to fetch payments or calculate overdue:', err)
+      }
+    }
+
+    calculateOverdue()
+  }, [users])
+
+  if (usersLoading || paymentsLoading) return <p>Loading overdue payments...</p>
+  if (usersError) return <p>Error loading users.</p>
+  if (paymentsError) return <p>Error loading payments.</p>
   if (overdueList.length === 0) return null
 
   return (
