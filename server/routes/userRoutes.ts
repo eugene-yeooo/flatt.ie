@@ -7,7 +7,24 @@ import {
   updateUser,
 } from 'server/db/userdata.ts'
 
+import multer from 'multer'
+import path from 'path'
+
 const router = express.Router()
+
+const storage = multer.diskStorage({
+  destination: 'server/public/uploads',
+  filename: (
+    req,
+    file,
+    cb: (error: Error | null, filename: string) => void,
+  ) => {
+    const ext = path.extname(file.originalname)
+    cb(null, `${Date.now()}${ext}`)
+  },
+})
+
+const upload = multer({ storage })
 
 // ---------- /users ----------
 
