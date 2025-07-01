@@ -5,16 +5,12 @@ import { useState } from 'react'
 import { Button } from '@/components/components/ui/button'
 import { Expense } from 'models/models'
 import UpdateExpense from './UpdateExpense'
-import useCanEdit from '../../hooks/useCanEdit'
 
 export default function Expenses() {
   const { data: expenses, isPending, error } = useAllExpense()
   const [showAddExpense, setShowAddExpense] = useState(false)
   const [showUpdateExpense, setShowUpdateExpense] = useState(false)
   const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null)
-
-  const canEdit = useCanEdit()
-
   function toggleAddExpense() {
     setShowAddExpense((prev) => !prev)
   }
@@ -29,7 +25,8 @@ export default function Expenses() {
             {showAddExpense ? 'Cancel' : 'Add Expense'}
           </Button>
         </div>
-        <AddExpense onAddExpense={handleAddExpense} />
+
+        {showAddExpense && <AddExpense onAddExpense={handleAddExpense} />}
         <p>No expenses found.</p>
       </div>
     )
@@ -42,11 +39,9 @@ export default function Expenses() {
   return (
     <div className="mx-auto max-w-4xl p-4">
       <div className="flex justify-end bg-primary">
-        {canEdit && (
-          <Button onClick={toggleAddExpense} className="btn">
-            Add Expense
-          </Button>
-        )}
+        <Button onClick={toggleAddExpense} className="btn">
+          Add Expense
+        </Button>
       </div>
 
       {showAddExpense && <AddExpense onAddExpense={handleAddExpense} />}

@@ -5,7 +5,7 @@
 export async function up(knex) {
   return knex.schema.createTable('payment', (table) => {
     table.increments('id').primary()
-    table.integer('user_id')
+    table.integer('flatmate_id')
     table.string('bill_id')
     table.decimal('amount')
     table.decimal('split').notNullable()
