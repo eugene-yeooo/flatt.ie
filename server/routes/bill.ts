@@ -17,6 +17,19 @@ router.get('/', async (req, res) => {
   }
 })
 
+// GET /api/v1/bill/:id
+router.get('/:id', async (req, res) => {
+  try {
+    const billId = Number(req.params.id)
+    const bill = await db.getBillById(billId)
+    if (!bill) return res.status(404).json({ message: 'Bill not found' })
+
+    res.json(bill)
+  } catch (err) {
+    res.status(500).json({ message: 'Error fetching bill' })
+  }
+})
+
 // POST /api/v1/bill/add-bill
 router.post('/add-bill', async (req, res) => {
   try {
@@ -44,13 +57,12 @@ router.delete('/delete-bill/:id', async (req, res) => {
 })
 
 // PATCH /api/v1/bill/update-bill
-router.patch('/update-bill', async (req, res) => {
+router.patch('/update-bill/:id', async (req, res) => {
   try {
-    const data = req.body
-    if (!data?.id) {
-      return res.status(400).json({ message: 'Bill ID is required' })
-    }
-    await db.updateBill(data)
+    const billId = Number(req.params.id)
+    const { bill, shares } = req.body
+
+    await db.updateBillAndPayments(billId, bill, shares)
     res.status(200).json({ message: 'Bill updated successfully' })
   } catch (err) {
     console.error(err)

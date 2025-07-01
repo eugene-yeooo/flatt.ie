@@ -1,23 +1,36 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 
 interface Props {
-  onAdd: (newMate: { name: string; credit: number; debt: number }) => void
+  onAdd: (foemData: FormData) => void
+  onClose: () => void
 }
 
-export default function AddFlatmateForm({ onAdd }: Props) {
+export default function AddFlatmateForm({ onAdd, onClose }: Props) {
   const [name, setName] = useState('')
   const [credit, setCredit] = useState('')
-  const [debt, setDebt] = useState('')
+  const [photo, setPhoto] = useState<File | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!name.trim()) return
 
-    onAdd({ name, credit: Number(credit), debt: Number(debt) })
+    const formData = new FormData()
+    formData.append('name', name)
+    formData.append('credit', credit)
+    if (photo) {
+      formData.append('profilePhoto', photo)
+    }
+
+    onAdd(formData)
 
     setName('')
     setCredit('')
-    setDebt('')
+    setPhoto(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+    onClose()
   }
 
   return (
@@ -35,12 +48,15 @@ export default function AddFlatmateForm({ onAdd }: Props) {
       </div>
 
       <div>
-        <label htmlFor="debt" className='block text-sm font-medium'>Debt</label>
-        <input id='debt' type="number" value={debt} onChange={(e) => setDebt(e.target.value)}
-          className='border px-3 py-2 rounded-md w-full' required />
+        <label htmlFor="profilePhoto" className='block text-sm font-medium'>Profile Photo</label>
+        <input id='profilePhoto' type="file" accept='image/*' onChange={(e) => setPhoto(e.target.files?.[0] || null)}
+          ref={fileInputRef} className='border px-3 py-2 rounded-md w-full' />
       </div>
 
-      <button type='submit' className='bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600'>Add Flatmate</button>
+      <div className='mt-6 flex justify-end space-x-3'>
+        <button type='button' onClick={onClose} className='text-gray-500 hover:text-black'>Cancel</button>
+        <button type='submit' className='bg-orange-500 text-white px-4 py-2 rounded-md hover:bg-orange-600'>Add Flatmate</button>
+      </div>
     </form>
   )
 }

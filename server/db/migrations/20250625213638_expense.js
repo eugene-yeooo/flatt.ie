@@ -7,6 +7,8 @@ export async function up(knex) {
     table.increments('id')
     table.string('category').notNullable()
     table.enu('frequency', ['monthly', 'weekly', 'one_off']).notNullable()
+    table.date('start_date')
+    table.date('end_date')
     table.decimal('default_amount')
     table.string('calc_method')
     table.text('notes')

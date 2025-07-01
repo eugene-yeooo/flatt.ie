@@ -2,17 +2,24 @@ export interface Flatmate {
   id: number
   name: string
   credit: number
-  debt: number
+  debt?: number
   balance: number
   profilePhoto?: string
+}
+
+export interface FlatmateWithData extends Flatmate {
+  overdue: number
+  unpaid: number
 }
 
 export interface Expense {
   id: number
   category: string
   frequency: 'weekly' | 'monthly' | 'one_off'
+  start_date: string | Date
+  end_date: string | Date
   default_amount: number | null
-  calc_method: 'fixed_split' | 'manual' | 'percentage_split'
+  calc_method: 'split' | 'manual'
   notes?: string
 }
 
@@ -26,8 +33,9 @@ export interface Bill {
   paymentId: number
   paymentAmount: number
   split: number
-  paid: boolean
+  paid: number
   flattieId: number
+  flattieName: string
 }
 
 export interface NewBill {
@@ -40,8 +48,10 @@ export interface NewBill {
 export interface NewExpense {
   category: string
   frequency: 'weekly' | 'monthly' | 'one_off'
+  start_date: string | Date
+  end_date: string | Date
   default_amount: number | null
-  calc_method: 'fixed_split' | 'manual' | 'percentage_split'
+  calc_method: 'split' | 'manual'
   notes?: string
 }
 
@@ -65,4 +75,16 @@ export interface UpdateBillData {
   due_date: string | Date
   total_amount: number
   expense_category?: string
+}
+
+export interface Share {
+  flatmateId: string
+  amount: number
+  split: number
+  paid: boolean
+}
+
+export interface UpdateBillRequest {
+  bill: UpdateBillData
+  shares: Share[]
 }

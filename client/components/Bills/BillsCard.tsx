@@ -11,6 +11,8 @@ interface BillCardProps {
   dueDate: Date
   totalAmount: number
   expenseCategory?: string
+  paid: boolean
+  unpaidFlatties: string[]
   setShowUpdateBill: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedBill: React.Dispatch<React.SetStateAction<UpdateBillData | null>>
 }
@@ -28,6 +30,8 @@ export default function BillCard({
   dueDate,
   totalAmount,
   expenseCategory,
+  paid,
+  unpaidFlatties,
   setShowUpdateBill,
   setSelectedBill,
 }: BillCardProps) {
@@ -53,39 +57,54 @@ export default function BillCard({
         />
       </div>
 
-      {/* Category badge */}
-      {expenseCategory && (
-        <Badge
-          variant="outline"
-          className={clsx(
-            'mb-1 w-fit rounded border px-2 py-0.5 text-xs font-semibold uppercase',
-            badgeClass,
-          )}
-        >
-          {expenseCategory}
-        </Badge>
-      )}
+      {/* Category and unpaid badge */}
+      <div className="flex gap-2">
+        {expenseCategory && (
+          <Badge
+            variant="outline"
+            className={clsx(
+              'mb-1 w-fit rounded border px-2 py-0.5 text-xs font-semibold uppercase',
+              badgeClass,
+            )}
+          >
+            {expenseCategory}
+          </Badge>
+        )}
+        {!paid && (
+          <Badge
+            variant="outline"
+            className="mb-1 w-fit rounded border border-red-500 bg-red-100 px-2 py-0.5 text-xs font-semibold uppercase text-red-500"
+          >
+            UNPAID
+          </Badge>
+        )}
+      </div>
 
       {/* Bill content */}
       <h3 className="mb-0.5 text-base font-semibold text-gray-900">{title}</h3>
-      <p className="text-xs text-gray-500">
+      <p className="text-sm text-gray-500">
         Due: {dueDate.toLocaleDateString()}
       </p>
       <p className="mt-0.5 text-sm font-medium text-gray-700">
         Total: ${totalAmount.toFixed(2)}
       </p>
+      {unpaidFlatties.length > 0 && (
+        <p className="mt-1 text-sm font-semibold text-red-500">
+          Unpaid by: {unpaidFlatties.join(', ')}
+        </p>
+      )}
 
       {/* Actions */}
-      <div className="mt-3 flex justify-end">
+      {/* <div className="mt-3 flex justify-end">
         <button
           onClick={() => setShowAddPaymentForm(true)}
           className="rounded-md border border-orange-500 bg-orange-50 px-3 py-1 text-sm font-medium text-orange-600 transition hover:bg-orange-100"
         >
           Add Payment
         </button>
-      </div>
+      </div> */}
 
-      {/* Payment form */}
+      {/* Payment form
       {showAddPaymentForm && (
         <AddPayment
           billId={id}
@@ -93,7 +112,7 @@ export default function BillCard({
           flatmates={{ id: 0, name: '' }}
           totalAmount={totalAmount}
         />
-      )}
+      )}*/}
     </div>
   )
 }

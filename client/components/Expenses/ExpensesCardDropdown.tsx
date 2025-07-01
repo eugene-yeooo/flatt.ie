@@ -1,29 +1,35 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
-import { useDeleteBill } from '../../hooks/useBills'
+import { useDeleteExpense } from '../../hooks/useExpense'
 import { Pencil, Edit3, Trash2 } from 'lucide-react'
-import { UpdateBillData } from 'models/models'
+import { Expense } from 'models/models'
 
-export default function BillsCardDropdown({
+export default function ExpenseCardDropdown({
   id,
-  // title,
-  // dueDate,
-  // totalAmount,
-  // expenseCategory,
-  setShowUpdateBill,
-  setSelectedBill,
+  category,
+  frequency,
+  start_date,
+  end_date,
+  default_amount,
+  calc_method,
+  notes,
+  setShowUpdateExpense,
+  setSelectedExpense,
 }: {
   id: number
-  title: string
-  dueDate: Date
-  totalAmount: number
-  expenseCategory?: string
-  setShowUpdateBill: React.Dispatch<React.SetStateAction<boolean>>
-  setSelectedBill: React.Dispatch<React.SetStateAction<UpdateBillData | null>>
+  category: string
+  frequency: 'weekly' | 'monthly' | 'one_off'
+  start_date: Date
+  end_date: Date
+  default_amount: number
+  calc_method: 'split' | 'manual'
+  notes: string
+  setShowUpdateExpense: React.Dispatch<React.SetStateAction<boolean>>
+  setSelectedExpense: React.Dispatch<React.SetStateAction<Expense | null>>
 }) {
-  const deleteBill = useDeleteBill()
+  const deleteExpense = useDeleteExpense()
 
   function handleDelete() {
-    deleteBill.mutate(id)
+    deleteExpense.mutate(id)
   }
 
   return (
@@ -31,7 +37,7 @@ export default function BillsCardDropdown({
       <DropdownMenu.Trigger asChild>
         <button
           className="absolute right-4 top-4 text-gray-300 hover:text-black"
-          aria-label="edit bill"
+          aria-label="edit expense"
         >
           <Pencil size={18} />
         </button>
@@ -45,14 +51,17 @@ export default function BillsCardDropdown({
         >
           <DropdownMenu.Item
             onSelect={() => {
-              setSelectedBill(id)
-              //   id,
-              //   title,
-              //   due_date: dueDate.toISOString().split('T')[0],
-              //   total_amount: totalAmount,
-              //   expense_category: expenseCategory,
-              // })
-              setShowUpdateBill(true)
+              setSelectedExpense({
+                id,
+                category,
+                frequency,
+                start_date: start_date.toISOString().split('T')[0],
+                end_date: end_date.toISOString().split('T')[0],
+                default_amount: default_amount,
+                calc_method,
+                notes,
+              })
+              setShowUpdateExpense(true)
             }}
             className="flex cursor-pointer items-center px-4 py-2 text-sm hover:bg-gray-100"
           >

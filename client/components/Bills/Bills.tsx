@@ -3,17 +3,42 @@ import { useGetAllBills } from '../../hooks/useBills'
 import AddBill from './AddBill'
 import { useState } from 'react'
 import { Button } from '@/components/components/ui/button'
-import { UpdateBillData } from 'models/models'
 import UpdateBill from './UpdateBill'
 import BillSearch from './BillSearch'
-import { Plus } from 'lucide-react'
+import { Plus, X } from 'lucide-react'
 
 export default function Bills() {
   const { data: bills, isPending, error } = useGetAllBills()
   const [showAddBill, setShowAddBill] = useState(false)
   const [showUpdateBill, setShowUpdateBill] = useState(false)
-  const [selectedBill, setSelectedBill] = useState<UpdateBillData | null>(null)
+  const [selectedBill, setSelectedBill] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
+  const [filter, setFilter] = useState('')
+  const categories = Array.from(
+    new Set(bills?.map((b) => b.expenseCategory).filter(Boolean)),
+  )
+
+  // Map paid status
+  const billStatusMap = new Map<
+    number,
+    { isUnpaid: boolean; unpaidFlatties: string[] }
+  >()
+
+  bills?.forEach((bill) => {
+    const current = billStatusMap.get(bill.id) ?? {
+      isUnpaid: false,
+      unpaidFlatties: [],
+    }
+
+    if (bill.paid === 0) {
+      current.isUnpaid = true
+      if (bill.flattieId) {
+        current.unpaidFlatties.push(bill.flattieName)
+      }
+    }
+
+    billStatusMap.set(bill.id, current)
+  })
 
   // Remove duplicate bills by ID, and then sort by due date (showing most recent bills first)
   const uniqueBills = bills
@@ -24,16 +49,30 @@ export default function Bills() {
       (a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime(),
     )
 
-  // Logic for search query
+  // Logic for search query and filtering
   const filteredBills = uniqueBills?.filter((bill) => {
     const query = searchQuery.toLowerCase()
+    const now = new Date()
+    const due = new Date(bill.dueDate)
 
-    return (
+    const status = billStatusMap.get(bill.id)
+    const isUnpaid = status?.isUnpaid ?? false
+    const isOverdue = due < now && isUnpaid
+    const isUpcoming = due >= now && isUnpaid
+
+    const matchesSearch =
       bill.title.toLowerCase().includes(query) ||
       bill.expenseCategory?.toLowerCase().includes(query) ||
       bill.totalAmount.toString().includes(query) ||
       bill.dueDate.toString().includes(query)
-    )
+
+    const matchesFilter =
+      filter === '' ||
+      bill.expenseCategory === filter ||
+      (filter === 'overdue' && isOverdue) ||
+      (filter === 'upcoming' && isUpcoming)
+
+    return matchesSearch && matchesFilter
   })
 
   function toggleAddBill() {
@@ -71,6 +110,28 @@ export default function Bills() {
           {filteredBills?.length !== 1 && 's'}
         </p>
         <div className="flex h-10 justify-end gap-3 bg-primary">
+          {filter !== '' && (
+            <button
+              onClick={() => setFilter('')}
+              className="flex flex-shrink-0 translate-y-0.5 items-center text-sm italic text-gray-400"
+            >
+              <X size={16} className="translate-y-0 pr-1" /> clear filter
+            </button>
+          )}
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value)}
+            className="w-md text-md focus:ring-primary/50 mt-1 block rounded border border-gray-300 px-3 py-0 leading-normal focus:border-primary focus:ring"
+          >
+            <option value="">All</option>
+            <option value="overdue">Overdue</option>
+            <option value="upcoming">Upcoming</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
           <BillSearch onSearch={setSearchQuery} />
           <Button
             onClick={toggleAddBill}
@@ -85,7 +146,10 @@ export default function Bills() {
       {showAddBill && <AddBill onAddBill={handleAddBill} />}
 
       {showUpdateBill && selectedBill && (
-        <UpdateBill setShowUpdateBill={setShowUpdateBill} bill={selectedBill} />
+        <UpdateBill
+          billId={selectedBill}
+          onClose={() => setShowUpdateBill(false)}
+        />
       )}
 
       <div
@@ -104,6 +168,8 @@ export default function Bills() {
               totalAmount={bill.totalAmount}
               expenseCategory={bill.expenseCategory}
               setShowUpdateBill={setShowUpdateBill}
+              paid={!billStatusMap.get(bill.id)?.isUnpaid}
+              unpaidFlatties={billStatusMap.get(bill.id)?.unpaidFlatties || []}
               setSelectedBill={setSelectedBill}
             />
           ))

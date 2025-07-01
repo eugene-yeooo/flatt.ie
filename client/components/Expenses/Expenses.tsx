@@ -3,11 +3,14 @@ import { useAllExpense } from '../../hooks/useExpense'
 import AddExpense from './AddExpense'
 import { useState } from 'react'
 import { Button } from '@/components/components/ui/button'
+import { Expense } from 'models/models'
+import UpdateExpense from './UpdateExpense'
 
-export default function Expensess() {
+export default function Expenses() {
   const { data: expenses, isPending, error } = useAllExpense()
   const [showAddExpense, setShowAddExpense] = useState(false)
-
+  const [showUpdateExpense, setShowUpdateExpense] = useState(false)
+  const [selectedExpense, setSelectedExpense] = useState<Expense | null>(null)
   function toggleAddExpense() {
     setShowAddExpense((prev) => !prev)
   }
@@ -43,6 +46,13 @@ export default function Expensess() {
 
       {showAddExpense && <AddExpense onAddExpense={handleAddExpense} />}
 
+      {showUpdateExpense && selectedExpense && (
+        <UpdateExpense
+          setShowUpdateExpense={setShowUpdateExpense}
+          expense={selectedExpense}
+        />
+      )}
+
       <div
         className="mt-4 grid gap-6"
         style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))' }}
@@ -50,16 +60,24 @@ export default function Expensess() {
         {expenses.length === 0 ? (
           <p>No expenses found.</p>
         ) : (
-          expenses.map((expense) => (
-            <ExpenseCard
-              key={expense.id}
-              category={expense.category}
-              frequency={expense.frequency}
-              default_amount={expense.default_amount}
-              calc_method={expense.calc_method}
-              notes={expense.notes}
-            />
-          ))
+          expenses.map((expense) => {
+            console.log('start_date:', expense)
+            return (
+              <ExpenseCard
+                key={expense.id}
+                id={expense.id}
+                category={expense.category}
+                frequency={expense.frequency}
+                start_date={new Date(expense.start_date)}
+                end_date={new Date(expense.end_date)}
+                default_amount={expense.default_amount}
+                calc_method={expense.calc_method}
+                notes={expense.notes}
+                setShowUpdateExpense={setShowUpdateExpense}
+                setSelectedExpense={setSelectedExpense}
+              />
+            )
+          })
         )}
       </div>
     </div>

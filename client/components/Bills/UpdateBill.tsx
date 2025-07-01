@@ -1,120 +1,78 @@
-import { useUpdateBill } from '../../hooks/useBills'
-import { useState } from 'react'
-import { X } from 'lucide-react'
-import { UpdateBillData } from 'models/models'
+import { useEffect, useState } from 'react'
+import { Flatmate, Share } from 'models/models'
+import { useGetBillById, useUpdateBillAndPayments } from '../../hooks/useBills'
+import BillForm from './BillForm'
 
 export default function UpdateBill({
-  bill,
-  setShowUpdateBill,
+  billId,
+  onClose,
 }: {
-  bill: UpdateBillData
-  setShowUpdateBill: React.Dispatch<React.SetStateAction<boolean>>
+  billId: number
+  onClose: () => void
 }) {
-  const [title, setTitle] = useState(bill.title)
-  const [dueDate, setDueDate] = useState(bill.due_date)
-  const [totalAmount, setTotalAmount] = useState(bill.total_amount)
-  const [expenseCategory, setExpenseCategory] = useState(bill.expense_category)
-  const mutation = useUpdateBill()
-  const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
+  const [flatmates, setFlatmates] = useState<Flatmate[]>([])
+  const mutation = useUpdateBillAndPayments()
+  const { data: bill, isPending, error } = useGetBillById(billId)
+  console.log(bill)
 
-  // console.log(bill)
-
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    if (!title || !dueDate || !totalAmount) {
-      alert('Please fill in required fields')
-      return
+  useEffect(() => {
+    async function fetchFlatmates() {
+      try {
+        const res = await fetch('/api/v1/flatties')
+        if (!res.ok) throw new Error('Failed to fetch flatmates')
+        const data = await res.json()
+        setFlatmates(data)
+      } catch (error) {
+        console.error('Error fetching flatmates:', error)
+      }
     }
 
-    mutation.mutate({
-      id: bill.id,
-      title,
-      due_date: dueDate,
-      total_amount: Number(totalAmount),
-      expense_category: expenseCategory,
-    })
-    setShowUpdateBill(false)
+    fetchFlatmates()
+  }, [])
+
+  if (isPending || !bill) return null
+
+  function handleSubmit({
+    bill: updatedBill,
+    shares,
+  }: {
+    bill: {
+      id?: number
+      title: string
+      due_date: string
+      total_amount: number
+      expense_category: string
+    }
+    shares: Share[]
+  }) {
+    if (!updatedBill.id) return
+
+    mutation.mutate(
+      {
+        bill: {
+          id: updatedBill.id,
+          title: updatedBill.title,
+          due_date: updatedBill.due_date,
+          total_amount: updatedBill.total_amount,
+          expense_category: updatedBill.expense_category,
+        },
+        shares: shares,
+      },
+      {
+        onSuccess: () => onClose(),
+      },
+    )
   }
 
+  if (isPending || !bill) return null
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <form
-        onSubmit={handleSubmit}
-        className="flex w-[600px] flex-col justify-center rounded-md bg-white p-6 shadow-md"
-      >
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Update Bill</h2>
-          <button
-            type="button"
-            onClick={() => setShowUpdateBill(false)}
-            className="text-gray-400 hover:text-black"
-            aria-label="Close form"
-          >
-            <X />
-          </button>
-        </div>
-
-        <label className="mb-2 block font-medium">
-          Title <span className="text-red-500">*</span>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
-          />
-        </label>
-
-        <label className="mb-2 block font-medium">
-          Due Date <span className="text-red-500">*</span>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
-          />
-        </label>
-
-        <label className="mb-2 block font-medium">
-          Total Amount $ <span className="text-red-500">*</span>
-          <input
-            type="number"
-            min="0"
-            step="0.01"
-            value={totalAmount}
-            onChange={(e) => setTotalAmount(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
-          />
-        </label>
-
-        <label className="mb-4 block font-medium">
-          Expense Category <span className="text-red-500">*</span>
-          <select
-            value={expenseCategory}
-            onChange={(e) => setExpenseCategory(e.target.value)}
-            required
-            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
-          >
-            <option value="" disabled>
-              Select a category
-            </option>
-            {categories.map((category) => (
-              <option key={category} value={category}>
-                {category}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <button
-          type="submit"
-          className="mx-auto mt-2 w-40 rounded-lg border border-gray-300 bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-        >
-          Update Bill
-        </button>
-      </form>
-    </div>
+    <BillForm
+      flatmates={flatmates}
+      initialData={bill}
+      onSubmit={handleSubmit}
+      onCancel={onClose}
+      submitLabel="Update Bill"
+    />
   )
 }

@@ -1,5 +1,10 @@
 import request from 'superagent'
-import { Bill, NewBill, UpdateBillData } from '../../models/models'
+import {
+  Bill,
+  NewBill,
+  UpdateBillData,
+  UpdateBillRequest,
+} from '../../models/models'
 
 const billURL = '/api/v1/bill'
 
@@ -16,8 +21,13 @@ export async function getAllBills(): Promise<Bill[]> {
 }
 
 export async function getBillById(id: number | string): Promise<Bill> {
-  const res = await request.get(`${billURL}/${id}`)
-  return res.body
+  try {
+    const res = await request.get(`${billURL}/${id}`)
+    return res.body as Bill
+  } catch (err) {
+    console.error('Failed to fetch bill:', err)
+    throw err
+  }
 }
 
 // ---------- ADD BILL ---------- //
@@ -46,9 +56,11 @@ export async function deleteBill(id: number) {
 
 // ---------- UPDATE BILL ---------- //
 
-export async function updateBill(data: UpdateBillData) {
+export async function updateBillAndPayments(data: UpdateBillRequest) {
   try {
-    const res = await request.patch(`${billURL}/update-bill`).send(data)
+    const res = await request
+      .patch(`${billURL}/update-bill/${data.bill.id}`)
+      .send(data)
     return res.body
   } catch (err) {
     console.error('Failed to update bill', err)

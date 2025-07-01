@@ -1,6 +1,13 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { addNewBill, deleteBill, getAllBills, updateBill } from '../apis/bills'
-import { NewBill, UpdateBillData } from 'models/models'
+import {
+  addNewBill,
+  deleteBill,
+  getAllBills,
+  getBillById,
+  updateBill,
+  updateBillAndPayments,
+} from '../apis/bills'
+import { NewBill, UpdateBillData, UpdateBillRequest } from 'models/models'
 
 // ---------- GET BILLS ---------- //
 
@@ -12,6 +19,16 @@ export function useGetAllBills() {
   return {
     ...query,
   }
+}
+
+// ---------- GET SINGLE BILL ---------- //
+
+export function useGetBillById(id: number | string) {
+  return useQuery({
+    queryKey: ['bill', id],
+    queryFn: () => getBillById(id),
+    enabled: !!id, // only run if id is truthy
+  })
 }
 
 // ---------- ADD BILL ---------- //
@@ -46,10 +63,11 @@ export function useDeleteBill() {
 
 // ---------- UPDATE BILL ---------- //
 
-export function useUpdateBill() {
+export function useUpdateBillAndPayments() {
   const qc = useQueryClient()
+
   return useMutation({
-    mutationFn: (data: UpdateBillData) => updateBill(data),
+    mutationFn: (data: UpdateBillRequest) => updateBillAndPayments(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['bills'] })
     },
