@@ -8,11 +8,11 @@ interface FlattieCardProps {
   name: string
   credit: number
   overdue?: number
-  profilePhoto?: string
+  avatar_url?: string
   onDelete?: () => void
   onUpdate?: (
     id: number,
-    updated: { name: string; credit: number; profilePhoto?: File | null },
+    updated: { name: string; credit: number; profilePhotoFile?: File | null },
   ) => void
 }
 
@@ -21,7 +21,7 @@ export default function FlattieCard({
   name,
   credit,
   overdue,
-  profilePhoto,
+  avatar_url,
   onDelete,
   onUpdate,
 }: FlattieCardProps) {
@@ -42,6 +42,7 @@ export default function FlattieCard({
       : balance < 0
         ? 'text-red-600'
         : 'text-muted-foreground'
+
   const { mutate: payFromCredit, isPending } = usePayFromCredit()
 
   async function fetchUnpaidExpenses() {
@@ -50,7 +51,7 @@ export default function FlattieCard({
     const filtered = allPayments.filter((p) => {
       const isUnpaid = Number(p.paid) === 0
       const isOverdue = new Date(p.dueDate) < today
-      return isUnpaid && isOverdue && p.flattieId === id
+      return isUnpaid && isOverdue && p.userId === id
     })
     setUnpaidExpenses(filtered)
   }
@@ -86,13 +87,12 @@ export default function FlattieCard({
       setNewPhoto(e.target.files[0])
     }
   }
-
   function handleSave() {
     if (onUpdate) {
       onUpdate(id, {
         name: editedName,
         credit: editedCredit,
-        profilePhoto: newPhoto,
+        profilePhotoFile: newPhoto,
       })
     }
     setIsEditing(false)
@@ -129,12 +129,8 @@ export default function FlattieCard({
           </div>
         ) : (
           <img
-            src={
-              profilePhoto
-                ? `http://localhost:3000${profilePhoto}`
-                : '/images/profilePhoto.png'
-            }
-            alt={profilePhoto ? `${name}'s profile` : 'Default avatar'}
+            src={avatar_url ? avatar_url : '/images/profilePhoto.png'}
+            alt={avatar_url ? `${name}'s profile` : 'Default avatar'}
             className="mb-2 h-20 w-20 rounded-full object-cover"
           />
         )}
@@ -156,7 +152,7 @@ export default function FlattieCard({
         </div>
       ) : (
         <>
-          <h3 className="font-semebold text-center text-base text-gray-900">
+          <h3 className="text-center text-base font-semibold text-gray-900">
             {name}
           </h3>
           <p className="text-center text-sm text-gray-500">

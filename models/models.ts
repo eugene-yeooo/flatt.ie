@@ -34,8 +34,8 @@ export interface Bill {
   paymentAmount: number
   split: number
   paid: number
-  flattieId: number
-  flattieName: string
+  userId: number
+  userName: string
 }
 
 export interface NewBill {
@@ -58,14 +58,14 @@ export interface NewExpense {
 export interface Payment {
   id: number
   billId: number
-  flattieId: number
+  userId: number
   amount: number
   split: number
   paid: boolean
   billTitle: string
   billTotal: number
   dueDate: string | Date
-  flattieName: string
+  userName: string
   profilePhoto?: string
 }
 

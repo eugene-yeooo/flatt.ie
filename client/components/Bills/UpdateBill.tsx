@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Flatmate } from 'models/models'
+import { User } from 'models/models'
 import { useGetBillById, useUpdateBill } from '../../hooks/useBills'
 // import { useUpdatePayments } from '../../hooks/usePayment'
 import BillForm from './BillForm'
 
-type Share = { flatmateId: string; split: string; paid: boolean }
+type Share = { userId: string; split: string; paid: boolean }
 
 export default function UpdateBill({
   billId,
@@ -13,7 +13,7 @@ export default function UpdateBill({
   billId: number
   onClose: () => void
 }) {
-  const [flatmates, setFlatmates] = useState<Flatmate[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const updateBill = useUpdateBill()
   // const updatePayments = useUpdatePayments()
   const { data: bill, isPending, error } = useGetBillById(billId)
@@ -21,10 +21,10 @@ export default function UpdateBill({
   useEffect(() => {
     async function fetchFlatmates() {
       try {
-        const res = await fetch('/api/v1/flatties')
+        const res = await fetch('/api/v1/users')
         if (!res.ok) throw new Error('Failed to fetch flatmates')
         const data = await res.json()
-        setFlatmates(data)
+        setUsers(data)
       } catch (error) {
         console.error('Error fetching flatmates:', error)
       }
@@ -83,7 +83,7 @@ export default function UpdateBill({
 
   return (
     <BillForm
-      flatmates={flatmates}
+      users={users}
       initialData={bill}
       onSubmit={handleSubmit}
       onCancel={onClose}

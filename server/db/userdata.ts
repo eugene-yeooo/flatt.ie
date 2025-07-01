@@ -33,7 +33,9 @@ export async function getAllUsers(): Promise<User[]> {
     'avatar_url',
     'name',
     'account_type',
-    'active',
+    'credit',
+    'debt',
+    'bio',
   )
 }
 

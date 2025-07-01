@@ -51,7 +51,7 @@ export default function Expenses() {
 
       {showAddExpense && <AddExpense onAddExpense={handleAddExpense} />}
 
-      {canEdit && showUpdateExpense && selectedExpense && (
+      {showUpdateExpense && selectedExpense && (
         <UpdateExpense
           setShowUpdateExpense={setShowUpdateExpense}
           expense={selectedExpense}

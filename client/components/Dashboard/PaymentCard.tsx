@@ -84,7 +84,7 @@ export default function PaymentCard({
             }`}
           >
             <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:gap-2 sm:text-base">
-              <span className="font-semibold">{payment.flattieName}</span>
+              <span className="font-semibold">{payment.userName}</span>
               <span>{payment.paid ? 'has paid' : "hasn't paid"}</span>
               <span className="font-bold">
                 ${payment.amount?.toFixed(2) ?? '0.00'}

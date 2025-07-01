@@ -34,8 +34,8 @@ export default function Bills() {
 
     if (bill.paid === 0) {
       current.isUnpaid = true
-      if (bill.flattieId) {
-        current.unpaidFlatties.push(bill.flattieName)
+      if (bill.userId) {
+        current.unpaidFlatties.push(bill.userName)
       }
     }
 
@@ -165,7 +165,7 @@ export default function Bills() {
         ) : (
           filteredBills?.map((bill) => (
             <BillCard
-              key={`${bill.id}-${bill.flattieId ?? 'all'}`}
+              key={`${bill.id}-${bill.userId ?? 'all'}`}
               id={bill.id}
               title={bill.title}
               dueDate={new Date(bill.dueDate)}

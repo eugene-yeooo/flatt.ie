@@ -1,8 +1,4 @@
-import {
-  MutationFunction,
-  UseMutationOptions,
-  useQuery,
-} from '@tanstack/react-query'
+import { MutationFunction, useQuery } from '@tanstack/react-query'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuth0 } from '@auth0/auth0-react'
 
@@ -60,5 +56,20 @@ export function useEditProfile() {
   return useMutation<User | null, Error, Partial<User>>({
     mutationFn,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user'] }),
+  })
+}
+
+//Get all users
+export function useAllUsers() {
+  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+
+  return useQuery<User[] | null, Error>({
+    queryKey: ['users'],
+    queryFn: async () => {
+      const token = await getAccessTokenSilently()
+      return API.getAllUsers(token)
+    },
+    enabled: isAuthenticated,
+    retry: false,
   })
 }
