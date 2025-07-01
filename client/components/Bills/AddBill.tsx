@@ -12,7 +12,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
   useEffect(() => {
     async function fetchFlatmates() {
       try {
-        const res = await fetch('/api/v1/users')
+        const res = await fetch('/api/v1/flatties')
         if (!res.ok) throw new Error('Failed to fetch flatmates')
         const data = await res.json()
         setFlatmates(data)

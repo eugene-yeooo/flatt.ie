@@ -6,7 +6,6 @@ import { Button } from '@/components/components/ui/button'
 import UpdateBill from './UpdateBill'
 import BillSearch from './BillSearch'
 import { Plus, X } from 'lucide-react'
-import useCanEdit from '../../hooks/useCanEdit'
 
 export default function Bills() {
   const { data: bills, isPending, error } = useGetAllBills()
@@ -15,7 +14,6 @@ export default function Bills() {
   const [selectedBill, setSelectedBill] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [filter, setFilter] = useState('')
-  const canEdit = useCanEdit()
   const categories = Array.from(
     new Set(bills?.map((b) => b.expenseCategory).filter(Boolean)),
   )
@@ -34,8 +32,8 @@ export default function Bills() {
 
     if (bill.paid === 0) {
       current.isUnpaid = true
-      if (bill.userId) {
-        current.unpaidFlatties.push(bill.userName)
+      if (bill.flattieId) {
+        current.unpaidFlatties.push(bill.flattieName)
       }
     }
 
@@ -135,15 +133,13 @@ export default function Bills() {
             ))}
           </select>
           <BillSearch onSearch={setSearchQuery} />
-          {canEdit && (
-            <Button
-              onClick={toggleAddBill}
-              className="flex min-w-fit items-center gap-1 border border-gray-300 bg-white px-3 py-2 hover:bg-orange-400"
-            >
-              <Plus size={16} />
-              Add Bill
-            </Button>
-          )}
+          <Button
+            onClick={toggleAddBill}
+            className="flex min-w-fit items-center gap-1 border border-gray-300 bg-white px-3 py-2 hover:bg-orange-400"
+          >
+            <Plus size={16} />
+            Add Bill
+          </Button>
         </div>
       </div>
 
@@ -165,7 +161,7 @@ export default function Bills() {
         ) : (
           filteredBills?.map((bill) => (
             <BillCard
-              key={`${bill.id}-${bill.userId ?? 'all'}`}
+              key={`${bill.id}-${bill.flattieId ?? 'all'}`}
               id={bill.id}
               title={bill.title}
               dueDate={new Date(bill.dueDate)}
