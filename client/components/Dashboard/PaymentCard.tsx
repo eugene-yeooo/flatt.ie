@@ -1,6 +1,19 @@
 import { Payment } from 'models/models'
 import '../../styles/main.css'
 import { useDeletePayment } from '../../hooks/usePayment'
+import confetti from 'canvas-confetti'
+
+function fireConfettiFromElement(element: HTMLElement) {
+  const rect = element.getBoundingClientRect()
+  confetti({
+    particleCount: 100,
+    spread: 70,
+    origin: {
+      x: (rect.left + rect.width / 2) / window.innerWidth,
+      y: (rect.top + rect.height / 2) / window.innerHeight,
+    },
+  })
+}
 
 type PaymentCardProps = {
   billAmount: number
@@ -106,7 +119,12 @@ export default function PaymentCard({
               </div>
               <button
                 disabled={isUpdating}
-                onClick={() => onTogglePaid(payment.id, !payment.paid)}
+                onClick={(e) => {
+                  onTogglePaid(payment.id, !payment.paid)
+                  if (!payment.paid) {
+                    fireConfettiFromElement(e.currentTarget)
+                  }
+                }}
                 className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
                   payment.paid
                     ? 'bg-green-500 text-white hover:bg-green-600'
