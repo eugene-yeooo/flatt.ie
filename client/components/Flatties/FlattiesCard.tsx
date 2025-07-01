@@ -3,6 +3,7 @@ import { getAllPayments } from '../../apis/payments'
 import { Payment } from 'models/models'
 import { usePayFromCredit } from '../../hooks/usePayment'
 import useCanEdit from '../../hooks/useCanEdit'
+import { Pencil } from 'lucide-react'
 
 export type FlattieCardProps = {
   id: number
@@ -16,7 +17,6 @@ export default function FlattieCard({
   credit,
   avatar_url,
 }: FlattieCardProps) {
-  const canEdit = useCanEdit()
   const [showActions, setShowActions] = useState(false)
   const [editedCredit, setEditedCredit] = useState(credit)
   const [isEditing, setIsEditing] = useState(false)
@@ -24,7 +24,7 @@ export default function FlattieCard({
   const [unpaidExpenses, setUnpaidExpenses] = useState<Payment[]>([])
   const [overdueAmount, setOverdueAmount] = useState(0)
   const [pendingPaymentId, setPendingPaymentId] = useState<number | null>(null)
-
+  const canEdit = useCanEdit()
   const { mutate: payFromCredit, isPending } = usePayFromCredit()
 
   async function fetchUnpaidExpenses() {
@@ -84,7 +84,7 @@ export default function FlattieCard({
             onClick={() => setShowActions(!showActions)}
             className="text-gray-400 hover:text-gray-600"
           >
-            ✏️
+            <Pencil />
           </button>
         </div>
       )}
@@ -183,13 +183,15 @@ export default function FlattieCard({
                         </div>
                       </div>
                     ) : (
-                      <button
-                        onClick={() => setPendingPaymentId(p.id)}
-                        disabled={isPending}
-                        className="ml-2 rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 hover:bg-blue-200"
-                      >
-                        {isPending ? '...' : '💸'}
-                      </button>
+                      canEdit && (
+                        <button
+                          onClick={() => setPendingPaymentId(p.id)}
+                          disabled={isPending}
+                          className="ml-2 rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 hover:bg-blue-200"
+                        >
+                          {isPending ? '...' : 'Pay with Credit'}
+                        </button>
+                      )
                     )}
                   </li>
                 ))
