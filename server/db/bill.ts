@@ -92,7 +92,7 @@ export async function updateBillAndPayments(
 ) {
   await connection('bill').where({ id: billId }).update(billData)
 
-  const existingPayments = await connection('payment').where({ billId })
+  const existingPayments = await connection('payment').where('bill_id', billId)
 
   const incomingIds = shares.map((s) => String(s.flatmateId))
 
@@ -117,15 +117,17 @@ export async function updateBillAndPayments(
       await connection('payment')
         .where({ id: match.id })
         .update({
-          amount: Number(share.split),
+          amount: Number(share.amount),
+          split: Number(share.split),
           paid: share.paid,
         })
     } else {
       // insert
       await connection('payment').insert({
-        billId,
-        flatmateId: share.flatmateId,
-        amount: Number(share.split),
+        bill_id: billId,
+        flatmate_id: share.flatmateId,
+        amount: Number(share.amount),
+        split: Number(share.split),
         paid: share.paid,
       })
     }

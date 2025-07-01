@@ -52,8 +52,8 @@ export default function UpdateBill({
         bill: {
           id: updatedBill.id,
           title: updatedBill.title,
-          dueDate: updatedBill.due_date,
-          totalAmount: updatedBill.total_amount,
+          due_date: updatedBill.due_date,
+          total_amount: updatedBill.total_amount,
           expense_category: updatedBill.expense_category,
         },
         shares: shares,

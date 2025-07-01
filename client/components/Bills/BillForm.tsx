@@ -204,16 +204,27 @@ export default function BillForm({
         total_amount: Number(totalAmount),
         expense_category: expenseCategory,
       },
-      shares: shares.map((s) => ({
-        ...s,
-        split:
+      shares: shares.map((s) => {
+        const splitValue = parseFloat(s.split) || 0
+        const total = parseFloat(totalAmount || '0')
+
+        const amount =
           customSplitMode === 'percent'
-            ? (
-                ((parseFloat(s.split) || 0) / 100) *
-                parseFloat(totalAmount || '0')
-              ).toFixed(2)
-            : parseFloat(s.split).toFixed(2),
-      })),
+            ? ((splitValue / 100) * total).toFixed(2)
+            : splitValue.toFixed(2)
+
+        const percent =
+          customSplitMode === 'percent'
+            ? splitValue.toFixed(2)
+            : ((splitValue / total) * 100).toFixed(2)
+
+        return {
+          flatmateId: s.flatmateId,
+          amount,
+          split: percent,
+          paid: s.paid,
+        }
+      }),
     })
   }
 

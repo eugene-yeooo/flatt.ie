@@ -2,7 +2,7 @@ import { useAddNewBill } from '../../hooks/useBills'
 import { useAddPayments } from '../../hooks/usePayment'
 import { useEffect, useState } from 'react'
 import BillForm from './BillForm'
-import { Flatmate } from 'models/models'
+import { Flatmate, Share } from 'models/models'
 
 export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
   const [flatmates, setFlatmates] = useState<Flatmate[]>([])
@@ -37,7 +37,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
       },
       'id'
     >
-    shares: { flatmateId: string; split: string; paid: boolean }[]
+    shares: Share[]
   }) {
     createBill.mutate(
       {
