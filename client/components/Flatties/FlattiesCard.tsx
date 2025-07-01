@@ -5,20 +5,17 @@ import { usePayFromCredit } from '../../hooks/usePayment'
 import useCanEdit from '../../hooks/useCanEdit'
 
 interface FlattieCardProps {
-  id: number
+  userId: number
   name: string
   credit: number
   overdue?: number
   avatar_url?: string
   onDelete?: () => void
-  onUpdate?: (
-    id: number,
-    updated: { name: string; credit: number; profilePhotoFile?: File | null },
-  ) => void
+  onUpdate?: (id: number, updated: { credit: number }) => void
 }
 
 export default function FlattieCard({
-  id,
+  userId,
   name,
   credit,
   overdue,
@@ -26,26 +23,37 @@ export default function FlattieCard({
   onDelete,
   onUpdate,
 }: FlattieCardProps) {
+  console.log('Component user id:', userId)
+  const [newPhoto, setNewPhoto] = useState<File | null>(null)
+  const canEdit = useCanEdit()
   const [showActions, setShowActions] = useState(false)
+  const [editedCredit, setEditedCredit] = useState(credit)
   const [isEditing, setIsEditing] = useState(false)
   const [showOverdueList, setShowOverdueList] = useState(false)
   const [unpaidExpenses, setUnpaidExpenses] = useState<Payment[]>([])
   const [pendingPaymentId, setPendingPaymentId] = useState<number | null>(null)
-  const canEdit = useCanEdit()
-  const [editedName, setEditedName] = useState(name)
-  const [editedCredit, setEditedCredit] = useState(credit)
-  const [newPhoto, setNewPhoto] = useState<File | null>(null)
 
   const { mutate: payFromCredit, isPending } = usePayFromCredit()
 
   async function fetchUnpaidExpenses() {
     const allPayments = await getAllPayments()
     const today = new Date()
+
     const filtered = allPayments.filter((p) => {
       const isUnpaid = Number(p.paid) === 0
-      const isOverdue = new Date(p.dueDate) < today
-      return isUnpaid && isOverdue && p.userId === id
+      const dueDate = new Date(p.dueDate)
+      const isOverdue = dueDate.getTime() < today.getTime()
+      const userMatch = Number(p.userId) === Number(id)
+
+      console.log(
+        `Checking payment id=${p.id} paid=${p.paid} dueDate=${p.dueDate} userId=${p.userId} => unpaid=${isUnpaid}, overdue=${isOverdue}, userMatch=${userMatch}`,
+      )
+
+      return isUnpaid && isOverdue && userMatch
     })
+
+    console.log('Filtered unpaid overdue payments:', filtered)
+
     setUnpaidExpenses(filtered)
   }
 
@@ -83,9 +91,7 @@ export default function FlattieCard({
   function handleSave() {
     if (onUpdate) {
       onUpdate(id, {
-        name: editedName,
         credit: editedCredit,
-        profilePhotoFile: newPhoto,
       })
     }
     setIsEditing(false)
@@ -95,7 +101,7 @@ export default function FlattieCard({
   function handleCancel() {
     setIsEditing(false)
     setShowActions(false)
-    setEditedName(name)
+    // setEditedName(name)
     setEditedCredit(credit)
     setNewPhoto(null)
   }
@@ -133,11 +139,11 @@ export default function FlattieCard({
       {/* Info */}
       {isEditing ? (
         <div className="flex flex-col gap-2 text-sm text-gray-700">
-          <input
+          {/* <input
             className="rounded border p-1"
             value={editedName}
             onChange={(e) => setEditedName(e.target.value)}
-          />
+          /> */}
           <input
             type="number"
             className="rounded border p-1"
@@ -201,9 +207,9 @@ export default function FlattieCard({
                 : 'cursor-not-allowed border-gray-300 bg-gray-100 text-gray-400'
             }`}
           >
-            Overdue: ${overdue.toFixed(2) ?? '0.00'}
+            Overdue: ${overdue.toFixed(2)}
           </button>
-          {/*Dropdown unpaid list*/}
+
           {showOverdueList && (
             <ul className="mt-2 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow">
               {unpaidExpenses.length === 0 ? (

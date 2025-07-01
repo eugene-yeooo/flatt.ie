@@ -1,29 +1,23 @@
-import { useState } from 'react'
 import FlattieCard from './FlattiesCard'
-// import AddFlatmateForm from './AddFlatmateForm'
 // import { Dialog } from '@headlessui/react'
 import { useAllUsers } from '../../hooks/useUser'
+import { useEffect } from 'react'
 
 export default function Flatties() {
-  // const [isOpen, setIsOpen] = useState(false)
   const { data: users, isLoading, isError } = useAllUsers()
-
-  // function openModal() {
-  //   setIsOpen(true)
-  // }
-  // function closeModal() {
-  //   setIsOpen(false)
-  // }
-
+  console.log('users data:', users)
+  users?.forEach((u) => console.log('user id:', u.id, 'name:', u.name))
+  useEffect(() => {
+    console.log('Loading:', isLoading)
+    console.log('Error:', isError)
+    console.log('Users data:', users)
+  }, [users, isLoading, isError])
   return (
     <div className="mx-auto max-w-3xl px-4">
       <h1 className="mb-6 text-center text-3xl font-bold">Flatmates</h1>
 
       <div className="mb-4 text-center">
-        <button
-          // onClick={openModal}
-          className="rounded bg-orange-400 px-4 py-2 font-semibold text-white hover:bg-orange-500"
-        >
+        <button className="rounded bg-orange-400 px-4 py-2 font-semibold text-white hover:bg-orange-500">
           + Add Flatmate
         </button>
       </div>
