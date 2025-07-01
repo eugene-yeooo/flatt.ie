@@ -12,7 +12,7 @@ export default function UpdateBill({
 }) {
   const [flatmates, setFlatmates] = useState<Flatmate[]>([])
   const mutation = useUpdateBillAndPayments()
-  const { data: bill, isPending, error } = useGetBillById(billId)
+  const { data: bill, isPending } = useGetBillById(billId)
   console.log(bill)
 
   useEffect(() => {
@@ -39,9 +39,9 @@ export default function UpdateBill({
     bill: {
       id?: number
       title: string
-      due_date: string
-      total_amount: number
-      expense_category: string
+      dueDate: string
+      totalAmount: number
+      expenseCategory: string
     }
     shares: Share[]
   }) {
@@ -52,9 +52,9 @@ export default function UpdateBill({
         bill: {
           id: updatedBill.id,
           title: updatedBill.title,
-          due_date: updatedBill.due_date,
-          total_amount: updatedBill.total_amount,
-          expense_category: updatedBill.expense_category,
+          dueDate: updatedBill.due_date,
+          totalAmount: updatedBill.totalAmount,
+          expenseCategory: updatedBill.expenseCategory,
         },
         shares: shares,
       },

@@ -74,7 +74,7 @@ export interface UpdateBillData {
   title: string
   dueDate: string | Date
   totalAmount: number
-  expense_category?: string
+  expenseCategory?: string
 }
 
 // ------- User -------
@@ -100,4 +100,16 @@ export interface Flat {
   description?: string
   created_at: string
   updated_at: string
+}
+
+export interface Share {
+  userId: string
+  amount: number
+  split: number
+  paid: boolean
+}
+
+export interface UpdateBillRequest {
+  bill: UpdateBillData
+  shares: Share[]
 }
