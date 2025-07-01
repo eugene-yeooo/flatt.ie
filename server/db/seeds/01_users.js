@@ -34,7 +34,7 @@ export async function seed(knex) {
       name: 'Eugene',
       email: 'eugeneyeoooo@gmail.com',
       avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Eugene',
-      account_type: 'guest',
+      account_type: 'flat_financer',
       credit: 100.5,
       bio: 'hi',
     },
