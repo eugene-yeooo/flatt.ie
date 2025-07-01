@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useEditProfile, useUser } from '../../hooks/useUser'
 import UploadPhoto from './PhotoUpload'
-// import { ChangeEvent } from 'react'
+import { ChangeEvent } from 'react'
 
 export default function EditProfile() {
   const { data: user } = useUser()
