@@ -2,6 +2,7 @@ import { Payment } from 'models/models'
 import '../../styles/main.css'
 import { useDeletePayment } from '../../hooks/usePayment'
 import confetti from 'canvas-confetti'
+import { animate } from 'animejs'
 
 function fireConfettiFromElement(element: HTMLElement) {
   const rect = element.getBoundingClientRect()
@@ -13,6 +14,54 @@ function fireConfettiFromElement(element: HTMLElement) {
       y: (rect.top + rect.height / 2) / window.innerHeight,
     },
   })
+}
+
+export function fireSadRain() {
+  for (let i = 0; i < 15; i++) {
+    const emoji = document.createElement('div')
+    emoji.textContent = '🙃'
+    emoji.style.position = 'fixed'
+    emoji.style.left = `${Math.random() * 100}vw`
+    emoji.style.top = `-50px`
+    emoji.style.fontSize = `${24 + Math.random() * 16}px`
+    emoji.style.pointerEvents = 'none'
+    emoji.style.zIndex = '9999'
+    emoji.style.opacity = '0'
+
+    document.body.appendChild(emoji)
+
+    animate(emoji, {
+      top: '100vh',
+      opacity: [0.3, 1],
+      duration: 3000,
+      delay: i * 100,
+      easing: 'easeOutQuad',
+    })
+  }
+}
+
+export function fireMoney() {
+  for (let i = 0; i < 15; i++) {
+    const emoji = document.createElement('div')
+    emoji.textContent = '💸'
+    emoji.style.position = 'fixed'
+    emoji.style.left = `${Math.random() * 100}vw`
+    emoji.style.top = `-50px`
+    emoji.style.fontSize = `${24 + Math.random() * 20}px`
+    emoji.style.pointerEvents = 'none'
+    emoji.style.zIndex = '9999'
+    emoji.style.opacity = '0'
+
+    document.body.appendChild(emoji)
+
+    animate(emoji, {
+      top: '100vh',
+      opacity: [0.3, 1],
+      duration: 3000,
+      delay: i * 100,
+      easing: 'easeOutQuad',
+    })
+  }
 }
 
 type PaymentCardProps = {
@@ -121,8 +170,11 @@ export default function PaymentCard({
                 disabled={isUpdating}
                 onClick={(e) => {
                   onTogglePaid(payment.id, !payment.paid)
-                  if (!payment.paid) {
+                  if (payment.paid) {
+                    fireSadRain()
+                  } else {
                     fireConfettiFromElement(e.currentTarget)
+                    fireMoney()
                   }
                 }}
                 className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
@@ -133,6 +185,12 @@ export default function PaymentCard({
               >
                 {payment.paid ? 'Mark Unpaid' : 'Mark Paid'}
               </button>
+              <span
+                id={`sad-label-${payment.id}`}
+                className="absolute right-4 text-2xl opacity-0"
+              >
+                😢
+              </span>
               {/* Delete X */}
               <button
                 disabled={isUpdating || deleteMutation.isPending}
@@ -159,6 +217,10 @@ export default function PaymentCard({
           </strong>
         )}
       </div>
+      <div
+        id="sad-rain-container"
+        className="pointer-events-none fixed inset-0 z-50 overflow-hidden"
+      ></div>
     </section>
   )
 }
