@@ -72,7 +72,19 @@ export interface Payment {
 export interface UpdateBillData {
   id: number
   title: string
-  dueDate: string | Date
-  totalAmount: number
+  due_date: string | Date
+  total_amount: number
   expense_category?: string
+}
+
+export interface Share {
+  flatmateId: string
+  amount: number
+  split: number
+  paid: boolean
+}
+
+export interface UpdateBillRequest {
+  bill: UpdateBillData
+  shares: Share[]
 }

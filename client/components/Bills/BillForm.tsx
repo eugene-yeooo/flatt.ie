@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
-import { Flatmate, UpdateBillData } from 'models/models'
-
-type Share = {
-  flatmateId: string
-  split: string
-  paid: boolean
-}
+import { Flatmate, Share, UpdateBillData } from 'models/models'
+import {
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+  TooltipProvider,
+} from '../../../src/components/components/ui/tooltip'
 
 type BillFormProps = {
   initialData?: Partial<UpdateBillData> & { payments?: Share[] }
@@ -204,16 +204,27 @@ export default function BillForm({
         total_amount: Number(totalAmount),
         expense_category: expenseCategory,
       },
-      shares: shares.map((s) => ({
-        ...s,
-        split:
+      shares: shares.map((s) => {
+        const splitValue = parseFloat(s.split) || 0
+        const total = parseFloat(totalAmount || '0')
+
+        const amount =
           customSplitMode === 'percent'
-            ? (
-                ((parseFloat(s.split) || 0) / 100) *
-                parseFloat(totalAmount || '0')
-              ).toFixed(2)
-            : parseFloat(s.split).toFixed(2),
-      })),
+            ? ((splitValue / 100) * total).toFixed(2)
+            : splitValue.toFixed(2)
+
+        const percent =
+          customSplitMode === 'percent'
+            ? splitValue.toFixed(2)
+            : ((splitValue / total) * 100).toFixed(2)
+
+        return {
+          flatmateId: s.flatmateId,
+          amount,
+          split: percent,
+          paid: s.paid,
+        }
+      }),
     })
   }
 
@@ -365,7 +376,25 @@ export default function BillForm({
           <div className="flex flex-wrap gap-2">
             {flatmates.map((f) => {
               const isSelected = selectedFlatmateIds.includes(String(f.id))
-              return (
+              const share = shares.find((s) => s.flatmateId === String(f.id))
+              return share?.paid ? (
+                <TooltipProvider key={f.id}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        type="button"
+                        disabled
+                        className="cursor-not-allowed rounded border bg-orange-500 px-4 py-1 text-sm text-white"
+                      >
+                        {f.name}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">
+                      Already paid — cannot deselect.
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ) : (
                 <button
                   key={f.id}
                   type="button"
