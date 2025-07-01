@@ -172,7 +172,15 @@ export default function PaymentCard({
                 </div>
                 <button
                   disabled={isUpdating}
-                  onClick={() => onTogglePaid(payment.id, !payment.paid)}
+                  onClick={(e) => {
+                    onTogglePaid(payment.id, !payment.paid)
+                    if (payment.paid) {
+                      fireSadRain()
+                    } else {
+                      fireConfettiFromElement(e.currentTarget)
+                      fireMoney()
+                    }
+                  }}
                   className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
                     payment.paid
                       ? 'bg-green-500 text-white hover:bg-green-600'
