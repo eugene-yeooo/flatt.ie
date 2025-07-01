@@ -34,8 +34,8 @@ export interface Bill {
   paymentAmount: number
   split: number
   paid: number
-  flattieId: number
-  flattieName: string
+  userId: number
+  userName: string
 }
 
 export interface NewBill {
@@ -58,14 +58,14 @@ export interface NewExpense {
 export interface Payment {
   id: number
   billId: number
-  flattieId: number
+  userId: number
   amount: number
   split: number
   paid: boolean
   billTitle: string
   billTotal: number
   dueDate: string | Date
-  flattieName: string
+  userName: string
   profilePhoto?: string
 }
 
@@ -75,6 +75,31 @@ export interface UpdateBillData {
   due_date: string | Date
   total_amount: number
   expense_category?: string
+}
+
+// ------- User -------
+export interface User {
+  id: number
+  auth0_id: string
+  username: string
+  name: string
+  email: string
+  avatar_url?: string
+  account_type: 'flat_financer' | 'flattie' | 'guest'
+  credit: number
+  debt: number
+  bio?: string
+  created_at?: string
+  updated_at?: string
+}
+
+export interface Flat {
+  id: number
+  name: string
+  address?: string
+  description?: string
+  created_at: string
+  updated_at: string
 }
 
 export interface Share {

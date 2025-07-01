@@ -7,7 +7,7 @@ export async function getAllBills() {
   return connection('bill')
     .leftJoin('expense', 'bill.expense_category', 'expense.category')
     .leftJoin('payment', 'bill.id', 'payment.bill_id')
-    .leftJoin('flattie', 'payment.flatmate_id', 'flattie.id')
+    .leftJoin('users', 'payment.user_id', 'users.id')
     .select(
       'bill.id',
       'bill.title',
@@ -19,8 +19,8 @@ export async function getAllBills() {
       'payment.amount as paymentAmount',
       'payment.split',
       'payment.paid',
-      'payment.flatmate_id as flattieId',
-      'flattie.name as flattieName',
+      'payment.user_id as userId',
+      'users.name as userName',
     )
 }
 
@@ -29,7 +29,7 @@ export async function getBillById(id: number) {
     .where('bill.id', id)
     .leftJoin('expense', 'bill.expense_category', 'expense.category')
     .leftJoin('payment', 'bill.id', 'payment.bill_id')
-    .leftJoin('flattie', 'payment.flatmate_id', 'flattie.id')
+    .leftJoin('users', 'payment.user_id', 'users.id')
     .select(
       'bill.id as billId',
       'bill.title',
@@ -41,8 +41,8 @@ export async function getBillById(id: number) {
       'payment.amount as paymentAmount',
       'payment.split',
       'payment.paid',
-      'payment.flatmate_id as flattieId',
-      'flattie.name as flattieName',
+      'payment.user_id as usersId',
+      'users.name as usersName',
     )
 
   const { billId, title, dueDate, totalAmount, expenseCategory, frequency } =
@@ -55,8 +55,8 @@ export async function getBillById(id: number) {
       amount: row.paymentAmount,
       split: row.split,
       paid: row.paid,
-      flatmateId: row.flattieId,
-      flatmateName: row.flattieName,
+      userId: row.usersId,
+      userName: row.usersName,
     }))
 
   return {
