@@ -5,6 +5,7 @@ import {
   getAllUsers,
   getUserByAuth0Id,
   updateUser,
+  updateUserCredit,
 } from 'server/db/userdata.ts'
 
 import multer from 'multer'
@@ -59,6 +60,29 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
     //handle error
     console.log('Error adding user:', err)
     res.status(500).json({ error: 'Failed to add user' })
+  }
+})
+
+//Patch
+router.patch('/', checkJwt, async (req: JwtRequest, res) => {
+  try {
+    const auth0_id = req.auth?.sub
+    const { credit } = req.body
+
+    if (!auth0_id || typeof credit !== 'number') {
+      return res.status(400).json({ error: 'Missing or invalid credit value' })
+    }
+
+    const updatedUser = await updateUserCredit(auth0_id, credit)
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+
+    res.status(200).json(updatedUser)
+  } catch (err) {
+    console.error('Error updating credit:', err)
+    res.status(500).json({ error: 'Failed to update credit' })
   }
 })
 
