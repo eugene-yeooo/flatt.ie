@@ -48,7 +48,7 @@ export async function seed(knex) {
       name: 'Hannah',
       email: 'hchristinasmith@gmail.com',
       avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Hannah',
-      account_type: 'flattie',
+      account_type: 'flat_financer',
       credit: 100.5,
       debt: 20,
       bio: 'hi',

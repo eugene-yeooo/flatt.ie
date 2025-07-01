@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from 'react'
 import { getAllPayments } from '../../apis/payments'
 import { Payment } from 'models/models'
 import { usePayFromCredit } from '../../hooks/usePayment'
+import useCanEdit from '../../hooks/useCanEdit'
 
 interface FlattieCardProps {
   id: number
@@ -30,7 +31,7 @@ export default function FlattieCard({
   const [showOverdueList, setShowOverdueList] = useState(false)
   const [unpaidExpenses, setUnpaidExpenses] = useState<Payment[]>([])
   const [pendingPaymentId, setPendingPaymentId] = useState<number | null>(null)
-
+  const canEdit = useCanEdit()
   const [editedName, setEditedName] = useState(name)
   const [editedCredit, setEditedCredit] = useState(credit)
   const [newPhoto, setNewPhoto] = useState<File | null>(null)
@@ -102,14 +103,16 @@ export default function FlattieCard({
   return (
     <div className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
       {/* Edit menu */}
-      <div className="absolute right-2 top-1">
-        <button
-          onClick={() => setShowActions(!showActions)}
-          className="text-gray-400 hover:text-gray-600"
-        >
-          ✏️
-        </button>
-      </div>
+      {canEdit && (
+        <div className="absolute right-2 top-1">
+          <button
+            onClick={() => setShowActions(!showActions)}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            ✏️
+          </button>
+        </div>
+      )}
       {/* Profile Photo */}
       <div className="mb-3 flex justify-center">
         {isEditing ? (

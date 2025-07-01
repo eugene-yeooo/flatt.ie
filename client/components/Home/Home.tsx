@@ -8,8 +8,8 @@ export default function Home() {
   if (isLoading) return <p>Loading summary...</p>
   if (isError) return <p>Failed to load summary.</p>
 
-  //count num of flatities by flattiename for each payment
-  const numOfFlatties = new Set(payments.map((p) => p.flattieName)).size
+  //count num of flatities by userName for each payment
+  const numOfFlatties = new Set(payments.map((p) => p.userName)).size
 
   //date related constants
   const today = new Date()

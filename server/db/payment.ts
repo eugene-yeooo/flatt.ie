@@ -27,12 +27,12 @@ export async function payFromCredit(paymentId: number) {
     const payment = await trx('payment').where({ id: paymentId }).first()
     if (!payment || payment.paid) throw new Error('Invalid payment')
 
-    const user = await trx('users').where({ id: payment.flatmate_id }).first()
+    const user = await trx('users').where({ id: payment.user_id }).first()
     if (!user || user.credit < payment.amount)
       throw new Error('Insufficient credit')
 
     await trx('users')
-      .where({ id: payment.flatmate_id })
+      .where({ id: payment.user_id })
       .update({ credit: user.credit - payment.amount })
     await trx('payment').where({ id: paymentId }).update({ paid: true })
     return { success: true }
@@ -49,7 +49,7 @@ export async function generatePayments(
 
   const payments = await connection('payment')
     .join('bill', 'payment.bill_id', 'bill.id')
-    .join('users', 'payment.flatmate_id', 'users.id')
+    .join('users', 'payment.user_id', 'users.id')
     .select(
       'payment.id',
       'payment.split',
