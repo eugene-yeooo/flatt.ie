@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useEditProfile, useUser } from '../../hooks/useUser'
 import { ChangeEvent } from 'react'
+import UploadPhoto from './PhotoUpload'
 
 export default function EditProfile() {
   const { data: user } = useUser()
@@ -54,12 +55,6 @@ export default function EditProfile() {
 
   if (!user) return <p>Loading user data...</p>
 
-  const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setNewPhoto(e.target.files[0])
-    }
-  }
-
   return (
     <form className="mx-auto max-w-lg space-y-6 rounded bg-white p-4 shadow">
       {error && <p className="text-red-600">{error}</p>}
@@ -68,6 +63,20 @@ export default function EditProfile() {
         <label htmlFor="avatar_url" className="mb-1 block font-medium">
           Profile Photo
         </label>
+        {isEditing ? (
+          <UploadPhoto newPhoto={newPhoto} onChange={setNewPhoto} />
+        ) : (
+          <img
+            src={
+              avatar_url
+                ? `http://localhost:3000${avatar_url}`
+                : '/images/profilePhoto.png'
+            }
+            alt={avatar_url ? `${name}'s profile` : 'Default avatar'}
+            className="mb-2 h-20 w-20 rounded-full object-cover"
+          />
+        )}
+
         <input
           id="avatar_url"
           name="avatar_url"
