@@ -9,7 +9,7 @@ export async function seed(knex) {
     // Payments for May 2025 Power Bill (bill_id: 4)
     {
       id: 5,
-      user_id: 1,
+      flatmate_id: 1,
       bill_id: 4,
       amount: 39.69,
       split: 0.2425,
@@ -17,7 +17,7 @@ export async function seed(knex) {
     },
     {
       id: 6,
-      user_id: 2,
+      flatmate_id: 2,
       bill_id: 4,
       amount: 39.69,
       split: 0.2425,
@@ -25,7 +25,7 @@ export async function seed(knex) {
     },
     {
       id: 7,
-      user_id: 3,
+      flatmate_id: 3,
       bill_id: 4,
       amount: 39.69,
       split: 0.2425,
@@ -33,17 +33,17 @@ export async function seed(knex) {
     },
     {
       id: 8,
-      user_id: 4,
+      flatmate_id: 4,
       bill_id: 4,
       amount: 44.17,
       split: 0.2725,
       paid: true,
     },
 
-    { id: 9, user_id: 1, bill_id: 10, amount: 21.25, split: 1, paid: true },
+    { id: 9, flatmate_id: 1, bill_id: 10, amount: 21.25, split: 1, paid: true },
     {
       id: 10,
-      user_id: 2,
+      flatmate_id: 2,
       bill_id: 10,
       amount: 21.25,
       split: 1,
@@ -51,7 +51,7 @@ export async function seed(knex) {
     },
     {
       id: 11,
-      user_id: 3,
+      flatmate_id: 3,
       bill_id: 10,
       amount: 21.25,
       split: 1,
@@ -59,7 +59,7 @@ export async function seed(knex) {
     },
     {
       id: 12,
-      user_id: 4,
+      flatmate_id: 4,
       bill_id: 10,
       amount: 21.25,
       split: 1,

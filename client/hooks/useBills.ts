@@ -5,8 +5,9 @@ import {
   getAllBills,
   getBillById,
   updateBill,
+  updateBillAndPayments,
 } from '../apis/bills'
-import { NewBill, UpdateBillData } from 'models/models'
+import { NewBill, UpdateBillData, UpdateBillRequest } from 'models/models'
 
 // ---------- GET BILLS ---------- //
 
@@ -62,10 +63,11 @@ export function useDeleteBill() {
 
 // ---------- UPDATE BILL ---------- //
 
-export function useUpdateBill() {
+export function useUpdateBillAndPayments() {
   const qc = useQueryClient()
+
   return useMutation({
-    mutationFn: (data: UpdateBillData) => updateBill(data),
+    mutationFn: (data: UpdateBillRequest) => updateBillAndPayments(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['bills'] })
     },

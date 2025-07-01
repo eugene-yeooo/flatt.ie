@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
-import { User } from 'models/models'
-import { useGetBillById, useUpdateBill } from '../../hooks/useBills'
-// import { useUpdatePayments } from '../../hooks/usePayment'
+import { Flatmate, Share } from 'models/models'
+import { useGetBillById, useUpdateBillAndPayments } from '../../hooks/useBills'
 import BillForm from './BillForm'
-
-type Share = { userId: string; split: string; paid: boolean }
 
 export default function UpdateBill({
   billId,
@@ -13,18 +10,18 @@ export default function UpdateBill({
   billId: number
   onClose: () => void
 }) {
-  const [users, setUsers] = useState<User[]>([])
-  const updateBill = useUpdateBill()
-  // const updatePayments = useUpdatePayments()
+  const [flatmates, setFlatmates] = useState<Flatmate[]>([])
+  const mutation = useUpdateBillAndPayments()
   const { data: bill, isPending, error } = useGetBillById(billId)
   console.log(bill)
+
   useEffect(() => {
     async function fetchFlatmates() {
       try {
-        const res = await fetch('/api/v1/users')
+        const res = await fetch('/api/v1/flatties')
         if (!res.ok) throw new Error('Failed to fetch flatmates')
         const data = await res.json()
-        setUsers(data)
+        setFlatmates(data)
       } catch (error) {
         console.error('Error fetching flatmates:', error)
       }
@@ -37,11 +34,12 @@ export default function UpdateBill({
 
   function handleSubmit({
     bill: updatedBill,
+    shares,
   }: {
     bill: {
       id?: number
       title: string
-      due_date: string | Date
+      due_date: string
       total_amount: number
       expense_category: string
     }
@@ -49,23 +47,19 @@ export default function UpdateBill({
   }) {
     if (!updatedBill.id) return
 
-    const normalizedDueDate =
-      typeof updatedBill.due_date === 'string'
-        ? updatedBill.due_date
-        : updatedBill.due_date.toISOString().split('T')[0] // e.g. "2025-07-01"
-
-    updateBill.mutate(
+    mutation.mutate(
       {
-        id: updatedBill.id,
-        title: updatedBill.title,
-        dueDate: normalizedDueDate,
-        totalAmount: updatedBill.total_amount,
-        expense_category: updatedBill.expense_category,
+        bill: {
+          id: updatedBill.id,
+          title: updatedBill.title,
+          due_date: updatedBill.due_date,
+          total_amount: updatedBill.total_amount,
+          expense_category: updatedBill.expense_category,
+        },
+        shares: shares,
       },
       {
-        onSuccess: () => {
-          onClose()
-        },
+        onSuccess: () => onClose(),
       },
     )
   }
@@ -74,7 +68,7 @@ export default function UpdateBill({
 
   return (
     <BillForm
-      users={users}
+      flatmates={flatmates}
       initialData={bill}
       onSubmit={handleSubmit}
       onCancel={onClose}

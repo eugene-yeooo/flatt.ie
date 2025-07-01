@@ -1,6 +1,7 @@
 import FlattieCard from './FlattiesCard'
 // import { Dialog } from '@headlessui/react'
 import { useAllUsers } from '../../hooks/useUser'
+import { useEffect } from 'react'
 
 export default function Flatties() {
   const { data: users, isLoading, isError } = useAllUsers()

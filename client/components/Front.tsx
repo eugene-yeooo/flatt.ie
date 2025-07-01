@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react'
+import { useEffect, useState } from 'react'
 
 const buttonStyle = {
   borderRadius: '0.5rem',
@@ -12,6 +13,11 @@ const buttonStyle = {
 
 export default function Front() {
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0()
+  const [logoAnimated, setLogoAnimated] = useState(false)
+
+  useEffect(() => {
+    setLogoAnimated(true)
+  }, [])
 
   if (isLoading) {
     return (
@@ -47,6 +53,7 @@ export default function Front() {
         }}
       >
         <div
+          className={`logo ${logoAnimated ? 'animate' : ''}`}
           style={{
             fontSize: '4rem',
             fontWeight: 'bold',
@@ -63,13 +70,7 @@ export default function Front() {
             Login
           </button>
           <button
-            onClick={() => {
-              loginWithRedirect({
-                authorizationParams: {
-                  redirectUri: `${window.location.origin}/register`,
-                },
-              })
-            }}
+            onClick={() => loginWithRedirect({ screen_hint: 'signup' })}
             style={{
               ...buttonStyle,
               backgroundColor: 'var(--secondary)',

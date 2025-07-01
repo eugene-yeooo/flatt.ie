@@ -1,167 +1,42 @@
+import { useAddNewBill } from '../../hooks/useBills'
+import { useAddPayments } from '../../hooks/usePayment'
 import { useEffect, useState } from 'react'
 import { X } from 'lucide-react'
-import { Flatmate, Share, UpdateBillData } from 'models/models'
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-  TooltipProvider,
-} from '../../../src/components/components/ui/tooltip'
+import { Flatmate } from 'models/models'
 
-type BillFormProps = {
-  initialData?: Partial<UpdateBillData> & { payments?: Share[] }
-  flatmates: Flatmate[]
-  payments?: {
-    paymentId: number
-    amount: number
-    split: number
-    paid: boolean | number
-    flatmateId: number
-    flatmateName: string
-  }[]
-  onSubmit: (data: {
-    bill: {
-      id?: number
-      title: string
-      due_date: string | Date
-      total_amount: number
-      expense_category: string
-    }
-    shares: Share[]
-  }) => void
-  onCancel: () => void
-  submitLabel: string
-}
-
-export default function BillForm({
-  initialData = {},
-  flatmates,
-  onSubmit,
-  onCancel,
-  submitLabel,
-}: BillFormProps) {
-  const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
-
-  const [title, setTitle] = useState(initialData.title || '')
-  const [dueDate, setDueDate] = useState(initialData.dueDate || '')
-  const [totalAmount, setTotalAmount] = useState(
-    initialData.totalAmount?.toString() || '',
-  )
-  const [expenseCategory, setExpenseCategory] = useState(
-    initialData.expense_category || 'Power',
-  )
+export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
+  const [title, setTitle] = useState('')
+  const [dueDate, setDueDate] = useState('')
+  const [totalAmount, setTotalAmount] = useState('')
+  const [expenseCategory, setExpenseCategory] = useState('Power')
   const [splitType, setSplitType] = useState<'even' | 'custom'>('even')
   const [customSplitMode, setCustomSplitMode] = useState<'percent' | 'amount'>(
     'percent',
   )
+  const [shares, setShares] = useState<
+    { flatmateId: string; split: string; paid: boolean }[]
+  >([])
+  const [flatmates, setFlatmates] = useState<Flatmate[]>([])
   const [selectedFlatmateIds, setSelectedFlatmateIds] = useState<string[]>([])
-  const [shares, setShares] = useState<Share[]>([])
 
-  const [isInitialLoad, setIsInitialLoad] = useState(true)
+  const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
+  const createBill = useAddNewBill()
+  const createPayments = useAddPayments()
 
-  // 1. Initialization useEffect: only once
   useEffect(() => {
-    if (!isInitialLoad) return
-
-    if (initialData.payments && initialData.payments.length > 0) {
-      const payments = initialData.payments
-
-      setSplitType('custom')
-      setCustomSplitMode('amount')
-      const ids = payments.map((p) => String(p.flatmateId))
-      setSelectedFlatmateIds(ids)
-
-      const formattedShares: Share[] = payments.map((p) => ({
-        flatmateId: String(p.flatmateId),
-        split: Number(p.amount).toFixed(2),
-        paid: Boolean(p.paid),
-      }))
-
-      setShares(formattedShares)
-    } else {
-      const allIds = flatmates.map((f) => String(f.id))
-      setSelectedFlatmateIds(allIds)
-      setSplitType('even')
-      setCustomSplitMode('percent')
-
-      const evenSplit = (100 / allIds.length).toFixed(2)
-      const initialShares = allIds.map((id) => ({
-        flatmateId: id,
-        split: evenSplit,
-        paid: false,
-      }))
-
-      setShares(initialShares)
+    const fetchFlatmates = async () => {
+      try {
+        const res = await fetch('/api/v1/flatties')
+        if (!res.ok) throw new Error('Failed to fetch flatmates')
+        const data = await res.json()
+        setFlatmates(data)
+      } catch (error) {
+        console.error('Failed to fetch flatmates:', error)
+      }
     }
 
-    setIsInitialLoad(false)
-  }, [isInitialLoad, initialData, flatmates])
-
-  // 2. When selected flatmates change, update shares
-  useEffect(() => {
-    if (isInitialLoad) return
-
-    setShares((oldShares) => {
-      const newShares: Share[] = selectedFlatmateIds.map((id) => {
-        const existing = oldShares.find((s) => s.flatmateId === id)
-        if (existing) return existing
-
-        const defaultSplit =
-          splitType === 'even'
-            ? customSplitMode === 'percent'
-              ? (100 / selectedFlatmateIds.length).toFixed(2)
-              : (
-                  (parseFloat(totalAmount) || 0) / selectedFlatmateIds.length
-                ).toFixed(2)
-            : '0'
-
-        return {
-          flatmateId: id,
-          split: defaultSplit,
-          paid: false,
-        }
-      })
-
-      return newShares
-    })
-  }, [
-    selectedFlatmateIds,
-    splitType,
-    customSplitMode,
-    totalAmount,
-    isInitialLoad,
-  ])
-
-  // 3. When splitType or customSplitMode changes, recalc splits if 'even'
-  useEffect(() => {
-    if (splitType === 'even' && selectedFlatmateIds.length > 0) {
-      const newSplit =
-        customSplitMode === 'percent'
-          ? (100 / selectedFlatmateIds.length).toFixed(2)
-          : (
-              (parseFloat(totalAmount) || 0) / selectedFlatmateIds.length
-            ).toFixed(2)
-
-      setShares((oldShares) =>
-        oldShares.map((s) => ({ ...s, split: newSplit })),
-      )
-    }
-  }, [splitType, customSplitMode, selectedFlatmateIds, totalAmount])
-
-  // Handlers
-  function handleFlatmateToggle(id: string) {
-    setSelectedFlatmateIds((old) =>
-      old.includes(id) ? old.filter((fId) => fId !== id) : [...old, id],
-    )
-  }
-
-  function handleSplitChange(index: number, value: string) {
-    setShares((oldShares) => {
-      const updated = [...oldShares]
-      updated[index] = { ...updated[index], split: value }
-      return updated
-    })
-  }
+    fetchFlatmates()
+  }, [])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -171,11 +46,13 @@ export default function BillForm({
       return
     }
 
+    // Validation 1: At least one flatmate selected
     if (selectedFlatmateIds.length === 0) {
       alert('Please select at least one flatmate to split the bill.')
       return
     }
 
+    // Validation 2: Check splits total
     const totalSplit = shares.reduce(
       (sum, s) => sum + (parseFloat(s.split) || 0),
       0,
@@ -196,39 +73,42 @@ export default function BillForm({
       }
     }
 
-    onSubmit({
-      bill: {
-        id: initialData.id,
+    createBill.mutate(
+      {
         title,
         due_date: dueDate,
         total_amount: Number(totalAmount),
         expense_category: expenseCategory,
       },
-      shares: shares.map((s) => {
-        const splitValue = parseFloat(s.split) || 0
-        const total = parseFloat(totalAmount || '0')
+      {
+        onSuccess: (newBillId) => {
+          createPayments.mutate({
+            billId: newBillId,
+            payments: shares.map((s) => {
+              const amount =
+                customSplitMode === 'amount'
+                  ? parseFloat(s.split)
+                  : (parseFloat(s.split) / 100) * parseFloat(totalAmount)
 
-        const amount =
-          customSplitMode === 'percent'
-            ? ((splitValue / 100) * total).toFixed(2)
-            : splitValue.toFixed(2)
+              const split =
+                customSplitMode === 'amount'
+                  ? amount / parseFloat(totalAmount)
+                  : parseFloat(s.split) / 100
 
-        const percent =
-          customSplitMode === 'percent'
-            ? splitValue.toFixed(2)
-            : ((splitValue / total) * 100).toFixed(2)
-
-        return {
-          flatmateId: s.flatmateId,
-          amount,
-          split: percent,
-          paid: s.paid,
-        }
-      }),
-    })
+              return {
+                flatmate_id: Number(s.flatmateId),
+                split,
+                paid: s.paid,
+                amount,
+              }
+            }),
+          })
+          onAddBill()
+        },
+      },
+    )
   }
 
-  // Render
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <form
@@ -236,10 +116,10 @@ export default function BillForm({
         className="flex max-h-[90vh] w-[600px] flex-col overflow-y-auto rounded-md bg-white p-8 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">{submitLabel}</h2>
+          <h2 className="text-xl font-semibold">Add New Bill</h2>
           <button
             type="button"
-            onClick={onCancel}
+            onClick={onAddBill}
             className="text-gray-400 hover:text-black"
             aria-label="Close form"
           >
@@ -247,7 +127,6 @@ export default function BillForm({
           </button>
         </div>
 
-        {/* Title */}
         <label className="mb-2 block font-medium">
           Title <span className="text-red-500">*</span>
           <input
@@ -255,11 +134,10 @@ export default function BillForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
+            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
           />
         </label>
 
-        {/* Due Date */}
         <label className="mb-2 block font-medium">
           Due Date <span className="text-red-500">*</span>
           <input
@@ -267,11 +145,10 @@ export default function BillForm({
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
             required
-            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
+            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
           />
         </label>
 
-        {/* Total Amount */}
         <label className="mb-2 block font-medium">
           Total Amount $ <span className="text-red-500">*</span>
           <input
@@ -281,18 +158,17 @@ export default function BillForm({
             value={totalAmount}
             onChange={(e) => setTotalAmount(e.target.value)}
             required
-            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
+            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
           />
         </label>
 
-        {/* Expense Category */}
         <label className="mb-4 block font-medium">
           Expense Category <span className="text-red-500">*</span>
           <select
             value={expenseCategory}
             onChange={(e) => setExpenseCategory(e.target.value)}
             required
-            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
+            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring focus:ring-primary/50"
           >
             <option value="" disabled>
               Select a category
@@ -305,15 +181,28 @@ export default function BillForm({
           </select>
         </label>
 
-        {/* SPLIT TYPE */}
+        {/* SPLIT */}
+
         <div className="mb-4 mt-0">
           <div className="flex gap-10">
+            {/* Split Type column */}
             <div className="flex flex-col">
               <h4 className="text-md mb-2 font-medium">Split Type</h4>
               <div className="flex gap-2">
                 <button
                   type="button"
-                  onClick={() => setSplitType('even')}
+                  onClick={() => {
+                    setSplitType('even')
+                    const evenSplit = (
+                      100 / selectedFlatmateIds.length
+                    ).toFixed(2)
+                    const updatedShares = selectedFlatmateIds.map((id) => ({
+                      flatmateId: id,
+                      split: evenSplit,
+                      paid: false,
+                    }))
+                    setShares(updatedShares)
+                  }}
                   className={`rounded px-4 py-2 text-sm font-medium ${
                     splitType === 'even'
                       ? 'bg-orange-500 text-white'
@@ -322,6 +211,7 @@ export default function BillForm({
                 >
                   Split Evenly
                 </button>
+
                 <button
                   type="button"
                   onClick={() => setSplitType('custom')}
@@ -336,6 +226,7 @@ export default function BillForm({
               </div>
             </div>
 
+            {/* Custom Split Mode column (only when custom selected) */}
             {splitType === 'custom' && (
               <div className="flex flex-col">
                 <h4 className="text-md mb-2 font-medium">Custom Split Mode</h4>
@@ -368,7 +259,8 @@ export default function BillForm({
           </div>
         </div>
 
-        {/* SELECT FLATMATES */}
+        {/* SELECT FLATTIES TO SPLIT */}
+
         <div>
           <h4 className="mb-2 text-sm font-medium">
             Select Flatties to Include
@@ -376,29 +268,40 @@ export default function BillForm({
           <div className="flex flex-wrap gap-2">
             {flatmates.map((f) => {
               const isSelected = selectedFlatmateIds.includes(String(f.id))
-              const share = shares.find((s) => s.flatmateId === String(f.id))
-              return share?.paid ? (
-                <TooltipProvider key={f.id}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        disabled
-                        className="cursor-not-allowed rounded border bg-orange-500 px-4 py-1 text-sm text-white"
-                      >
-                        {f.name}
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="top">
-                      Already paid — cannot deselect.
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ) : (
+              return (
                 <button
                   key={f.id}
                   type="button"
-                  onClick={() => handleFlatmateToggle(String(f.id))}
+                  onClick={() => {
+                    const updated = isSelected
+                      ? selectedFlatmateIds.filter((id) => id !== String(f.id))
+                      : [...selectedFlatmateIds, String(f.id)]
+
+                    setSelectedFlatmateIds(updated)
+
+                    const updatedShares = updated.map((id) => {
+                      const existing = shares.find((s) => s.flatmateId === id)
+                      return (
+                        existing || {
+                          flatmateId: id,
+                          split: '0',
+                          paid: false,
+                        }
+                      )
+                    })
+
+                    // Calculate and assign even split if mode is even
+                    if (splitType === 'even') {
+                      const evenSplit = (100 / updated.length).toFixed(2)
+                      const evenedShares = updatedShares.map((s) => ({
+                        ...s,
+                        split: evenSplit,
+                      }))
+                      setShares(evenedShares)
+                    } else {
+                      setShares(updatedShares)
+                    }
+                  }}
                   className={`rounded border px-4 py-1 text-sm ${
                     isSelected
                       ? 'bg-orange-500 text-white'
@@ -412,7 +315,8 @@ export default function BillForm({
           </div>
         </div>
 
-        {/* SPLIT INPUTS */}
+        {/* SPLIT INPUT */}
+
         {splitType === 'custom' && selectedFlatmateIds.length > 0 && (
           <div className="mt-4 space-y-4">
             <div className="mb-2 flex items-center gap-4 text-sm font-medium">
@@ -474,17 +378,12 @@ export default function BillForm({
                     key={share.flatmateId}
                     className="flex items-center gap-2"
                   >
-                    <span
-                      className={`w-20 truncate text-sm font-medium ${
-                        share.paid ? 'text-gray-400 line-through' : ''
-                      }`}
-                    >
+                    <span className="w-20 truncate text-sm font-medium">
                       {flatmate?.name}:
                     </span>
-
                     <input
                       type="number"
-                      step="0.01"
+                      step={customSplitMode === 'percent' ? '1' : '0.01'}
                       min="0"
                       placeholder={
                         customSplitMode === 'percent'
@@ -492,21 +391,13 @@ export default function BillForm({
                           : '$ e.g. 45.50'
                       }
                       value={share.split}
-                      onChange={(e) => handleSplitChange(index, e.target.value)}
-                      disabled={share.paid}
-                      className={`w-20 rounded border px-2 py-1 text-sm focus:ring ${
-                        share.paid
-                          ? 'cursor-not-allowed border-gray-300 bg-gray-100 text-gray-500'
-                          : 'border-gray-300 focus:border-orange-500 focus:ring-orange-300'
-                      }`}
+                      onChange={(e) => {
+                        const updated = [...shares]
+                        updated[index].split = e.target.value
+                        setShares(updated)
+                      }}
+                      className="w-16 rounded border border-gray-300 px-2 py-1 text-sm focus:border-orange-500 focus:ring focus:ring-orange-300"
                     />
-
-                    {share.paid && (
-                      <span className="ml-1 text-xs text-green-600">
-                        (Paid)
-                      </span>
-                    )}
-
                     {customSplitMode === 'percent' && totalAmount && (
                       <span className="w-16 text-xs text-gray-500">
                         $
@@ -527,7 +418,7 @@ export default function BillForm({
           type="submit"
           className="mx-auto mt-8 w-40 rounded-lg border border-gray-300 bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
-          {submitLabel}
+          Add Bill
         </button>
       </form>
     </div>

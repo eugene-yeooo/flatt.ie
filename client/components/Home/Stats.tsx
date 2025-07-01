@@ -48,7 +48,7 @@ export default function SummaryStats({
       valueStyle: {
         fontSize: '1.5rem',
         fontWeight: '700',
-        color: 'var(--destructive)',
+        color: 'var(--destructive)', // dark burnt color for overdue
       },
       cardStyle: {
         backgroundColor: 'var(--card)',

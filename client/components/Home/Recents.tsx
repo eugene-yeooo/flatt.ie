@@ -27,13 +27,13 @@ export default function RecentBills({ bills }: RecentBillsListProps) {
 
           if (isPaid) {
             statusText = 'Paid'
-            statusClass = 'text-green-700'
+            statusClass = 'text-green-700' // Consider using your --accent or --primary if you want to customize
           } else if (due < today) {
             statusText = 'Overdue'
             statusClass = 'text-red-500'
           } else {
             statusText = 'Upcoming'
-            statusClass = 'text-orange-500'
+            statusClass = 'text-orange-500' // your --secondary var, again, replace as needed
           }
 
           return (
