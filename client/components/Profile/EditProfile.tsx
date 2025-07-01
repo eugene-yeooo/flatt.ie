@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useEditProfile, useUser } from '../../hooks/useUser'
-import { ChangeEvent } from 'react'
 import UploadPhoto from './PhotoUpload'
 
 export default function EditProfile() {
   const { data: user } = useUser()
   const editProfile = useEditProfile()
-
+  const [newPhoto, setNewPhoto] = useState<File | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
   const [form, setForm] = useState({
     name: '',
     username: '',
@@ -63,17 +63,12 @@ export default function EditProfile() {
         <label htmlFor="avatar_url" className="mb-1 block font-medium">
           Profile Photo
         </label>
-        {isEditing ? (
-          <UploadPhoto newPhoto={newPhoto} onChange={setNewPhoto} />
-        ) : (
-          <img
-            src={
-              avatar_url
-                ? `http://localhost:3000${avatar_url}`
-                : '/images/profilePhoto.png'
-            }
-            alt={avatar_url ? `${name}'s profile` : 'Default avatar'}
-            className="mb-2 h-20 w-20 rounded-full object-cover"
+
+        {isEditing && (
+          <UploadPhoto
+            newPhoto={newPhoto}
+            onChange={setNewPhoto}
+            fileInputRef={fileInputRef}
           />
         )}
 
