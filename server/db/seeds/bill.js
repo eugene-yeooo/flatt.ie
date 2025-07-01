@@ -36,7 +36,6 @@ export async function seed(knex) {
       due_date: '2025-05-31',
       total_amount: 158.75,
     },
-
     {
       id: 5,
       title: 'May 2025 Internet',
@@ -44,7 +43,6 @@ export async function seed(knex) {
       due_date: '2025-05-31',
       total_amount: 85.0,
     },
-
     {
       id: 6,
       title: 'May 2025 Rubbish',
@@ -52,7 +50,6 @@ export async function seed(knex) {
       due_date: '2025-05-31',
       total_amount: 65.6,
     },
-
     {
       id: 7,
       title: 'Week of 23 June Rent',
@@ -67,7 +64,6 @@ export async function seed(knex) {
       due_date: '2025-06-30',
       total_amount: 620.0,
     },
-
     {
       id: 9,
       title: 'June 2025 Power Bill',
@@ -75,7 +71,6 @@ export async function seed(knex) {
       due_date: '2025-06-30',
       total_amount: 163.24,
     },
-
     {
       id: 10,
       title: 'June 2025 Internet',
@@ -83,7 +78,6 @@ export async function seed(knex) {
       due_date: '2025-06-30',
       total_amount: 85.0,
     },
-
     {
       id: 11,
       title: 'June 2025 Rubbish',

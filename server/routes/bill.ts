@@ -13,6 +13,7 @@ router.get('/', async (req, res) => {
 
     res.json(bills)
   } catch (err) {
+    console.error(err)
     res.status(500).json({ message: 'Error fetching bills' })
   }
 })

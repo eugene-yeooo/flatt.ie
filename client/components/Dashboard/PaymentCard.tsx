@@ -3,6 +3,7 @@ import '../../styles/main.css'
 import { useDeletePayment } from '../../hooks/usePayment'
 import confetti from 'canvas-confetti'
 import { animate } from 'animejs'
+import useCanEdit from '../../hooks/useCanEdit'
 
 function fireConfettiFromElement(element: HTMLElement) {
   const rect = element.getBoundingClientRect()
@@ -84,6 +85,7 @@ export default function PaymentCard({
     .filter((payment) => payment.paid)
     .reduce((sum, payment) => sum + payment.amount, 0)
   const deleteMutation = useDeletePayment()
+  const canEdit = useCanEdit()
 
   const getDaysOverdue = (dueDate: string | Date): number => {
     const due =
@@ -106,9 +108,10 @@ export default function PaymentCard({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     return diffDays > 0 ? diffDays : 0
   }
-  const isOverdue = (dueDate: string | undefined, paid: boolean) => {
+  const isOverdue = (dueDate: string | Date | undefined, paid: boolean) => {
     if (!dueDate || paid) return false
-    return new Date(dueDate) < new Date()
+    const due = dueDate instanceof Date ? dueDate : new Date(dueDate)
+    return due < new Date()
   }
   const handleDelete = (id: number) => {
     if (confirm('Are you sure you want to delete this payment?')) {
@@ -143,65 +146,53 @@ export default function PaymentCard({
             }`}
           >
             <div className="flex flex-col gap-1 text-sm sm:flex-row sm:items-center sm:gap-2 sm:text-base">
-              <span className="font-semibold">{payment.flattieName}</span>
+              <span className="font-semibold">{payment.userName}</span>
               <span>{payment.paid ? 'has paid' : "hasn't paid"}</span>
               <span className="font-bold">
                 ${payment.amount?.toFixed(2) ?? '0.00'}
               </span>
             </div>
             {/* MARK UNPAID/PAID */}
-            <div className="ml-auto flex items-center gap-2">
-              {!payment.paid && isOverdue(billDueDate, payment.paid) && (
-                <span className="ml-2 rounded-lg bg-red-300 px-3 py-1.5 text-xs font-semibold text-white shadow-sm">
-                  {getDaysOverdue(billDueDate)} day
-                  {getDaysOverdue(billDueDate) !== 1 ? 's' : ''} overdue
-                </span>
-              )}
+            {canEdit && (
               <div className="ml-auto flex items-center gap-2">
-                {!payment.paid && !isOverdue(billDueDate, payment.paid) && (
-                  <span className="rounded-lg bg-green-300 px-3 py-1.5 text-xs font-semibold text-green-900 shadow-sm">
-                    Due in {getDaysUntilDue(billDueDate)} day
-                    {getDaysUntilDue(billDueDate) !== 1 ? 's' : ''}
+                {!payment.paid && isOverdue(billDueDate, payment.paid) && (
+                  <span className="ml-2 rounded-lg bg-red-300 px-3 py-1.5 text-xs font-semibold text-white shadow-sm">
+                    {getDaysOverdue(billDueDate)} day
+                    {getDaysOverdue(billDueDate) !== 1 ? 's' : ''} overdue
                   </span>
                 )}
-                {/* Other buttons like Mark Paid/Unpaid, Delete */}
+                <div className="ml-auto flex items-center gap-2">
+                  {!payment.paid && !isOverdue(billDueDate, payment.paid) && (
+                    <span className="rounded-lg bg-green-300 px-3 py-1.5 text-xs font-semibold text-green-900 shadow-sm">
+                      Due in {getDaysUntilDue(billDueDate)} day
+                      {getDaysUntilDue(billDueDate) !== 1 ? 's' : ''}
+                    </span>
+                  )}
+                  {/* Other buttons like Mark Paid/Unpaid, Delete */}
+                </div>
+                <button
+                  disabled={isUpdating}
+                  onClick={() => onTogglePaid(payment.id, !payment.paid)}
+                  className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
+                    payment.paid
+                      ? 'bg-green-500 text-white hover:bg-green-600'
+                      : 'bg-red-500 text-white hover:bg-red-600'
+                  } disabled:cursor-not-allowed disabled:opacity-50`}
+                >
+                  {payment.paid ? 'Mark Unpaid' : 'Mark Paid'}
+                </button>
+                {/* Delete X */}
+                <button
+                  disabled={isUpdating || deleteMutation.isPending}
+                  onClick={() => handleDelete(payment.id)}
+                  aria-label="Delete payment"
+                  className="rounded-full px-2 py-1.5 text-sm font-bold transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+                  style={{ color: 'var(--primary)' }}
+                >
+                  x
+                </button>
               </div>
-              <button
-                disabled={isUpdating}
-                onClick={(e) => {
-                  onTogglePaid(payment.id, !payment.paid)
-                  if (payment.paid) {
-                    fireSadRain()
-                  } else {
-                    fireConfettiFromElement(e.currentTarget)
-                    fireMoney()
-                  }
-                }}
-                className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
-                  payment.paid
-                    ? 'bg-green-500 text-white hover:bg-green-600'
-                    : 'bg-red-500 text-white hover:bg-red-600'
-                } disabled:cursor-not-allowed disabled:opacity-50`}
-              >
-                {payment.paid ? 'Mark Unpaid' : 'Mark Paid'}
-              </button>
-              <span
-                id={`sad-label-${payment.id}`}
-                className="absolute right-4 text-2xl opacity-0"
-              >
-                😢
-              </span>
-              {/* Delete X */}
-              <button
-                disabled={isUpdating || deleteMutation.isPending}
-                onClick={() => handleDelete(payment.id)}
-                aria-label="Delete payment"
-                className="rounded-full px-2 py-1.5 text-sm font-bold transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
-                style={{ color: 'var(--primary)' }}
-              >
-                x
-              </button>
-            </div>
+            )}
           </li>
         ))}
       </ul>

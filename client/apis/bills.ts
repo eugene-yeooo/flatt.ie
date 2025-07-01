@@ -2,7 +2,7 @@ import request from 'superagent'
 import {
   Bill,
   NewBill,
-  UpdateBillData,
+  // UpdateBillData,
   UpdateBillRequest,
 } from '../../models/models'
 
