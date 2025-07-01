@@ -12,7 +12,7 @@ export async function seed(knex) {
       name: 'Kevin',
       email: 'icebirbbb@gmail.com',
       avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kevin',
-      account_type: 'flattie',
+      account_type: 'flat_financer',
       credit: 100.5,
       bio: 'hi',
     },

@@ -1,4 +1,5 @@
 import { useAddExpense } from '../../hooks/useExpense'
+import { useAddNewBill } from '../../hooks/useBills'
 import { useState } from 'react'
 import { X } from 'lucide-react'
 
@@ -17,6 +18,8 @@ export default function AddExpense({
   const [calcMethod, setCalcMethod] = useState<'split' | 'manual'>('split')
   const [notes, setNotes] = useState('')
   const mutation = useAddExpense()
+  const billMutation = useAddNewBill()
+
   const frequencyOptions = [
     { label: 'Weekly', value: 'weekly' },
     { label: 'Monthly', value: 'monthly' },
@@ -27,30 +30,91 @@ export default function AddExpense({
     { label: 'Manual', value: 'manual' },
   ]
 
-  function handleSubmit(e: React.FormEvent) {
+  function generateDueDates(
+    start: string,
+    end: string,
+    frequency: 'weekly' | 'monthly',
+  ): string[] {
+    const dates: string[] = []
+    const current = new Date(start)
+    const last = new Date(end)
+
+    while (current <= last) {
+      dates.push(current.toISOString().split('T')[0])
+
+      if (frequency === 'weekly') {
+        current.setDate(current.getDate() + 7)
+      } else if (frequency === 'monthly') {
+        current.setMonth(current.getMonth() + 1)
+      }
+    }
+
+    return dates
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!category || !defaultAmount) {
       alert('Please fill in required fields')
       return
     }
 
-    mutation.mutate({
-      category,
-      frequency,
-      start_date: startDate,
-      end_date: endDate,
-      default_amount: Number(defaultAmount),
-      calc_method: calcMethod,
-      notes,
-    })
-    onAddExpense()
-    setCategory('')
-    setFrequency('one_off')
-    setStartDate('')
-    setEndDate('')
-    setDefaultAmount('')
-    setCalcMethod('split')
-    setNotes('')
+    try {
+      await mutation.mutateAsync({
+        category,
+        frequency,
+        start_date: startDate,
+        end_date: endDate,
+        default_amount: Number(defaultAmount),
+        calc_method: calcMethod,
+        notes,
+      })
+
+      if (frequency !== 'one_off') {
+        const dueDates = generateDueDates(startDate, endDate, frequency)
+
+        for (const dueDate of dueDates) {
+          const parsedDate = new Date(dueDate)
+
+          if (frequency === 'weekly') {
+            const weekLabel = parsedDate.toLocaleDateString('en-NZ', {
+              day: 'numeric',
+              month: 'long',
+            })
+
+            await billMutation.mutateAsync({
+              title: `Week of ${weekLabel} ${category} Bill`,
+              expense_category: category,
+              due_date: dueDate,
+              total_amount: Number(defaultAmount),
+            })
+          } else {
+            const monthYear = parsedDate.toLocaleDateString('en-NZ', {
+              month: 'long',
+              year: 'numeric',
+            })
+
+            await billMutation.mutateAsync({
+              title: `${monthYear} ${category} Bill`,
+              expense_category: category,
+              due_date: dueDate,
+              total_amount: Number(defaultAmount),
+            })
+          }
+        }
+      }
+
+      onAddExpense()
+      setCategory('')
+      setFrequency('one_off')
+      setStartDate('')
+      setEndDate('')
+      setDefaultAmount('')
+      setCalcMethod('split')
+      setNotes('')
+    } catch (error) {
+      console.error('Error submitting expense and/or bill:', error)
+    }
   }
 
   return (
