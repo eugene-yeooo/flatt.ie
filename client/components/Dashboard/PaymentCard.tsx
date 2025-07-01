@@ -3,6 +3,7 @@ import '../../styles/main.css'
 import { useDeletePayment } from '../../hooks/usePayment'
 import confetti from 'canvas-confetti'
 import { animate } from 'animejs'
+import useCanEdit from '../../hooks/useCanEdit'
 
 function fireConfettiFromElement(element: HTMLElement) {
   const rect = element.getBoundingClientRect()
@@ -84,6 +85,7 @@ export default function PaymentCard({
     .filter((payment) => payment.paid)
     .reduce((sum, payment) => sum + payment.amount, 0)
   const deleteMutation = useDeletePayment()
+  const canEdit = useCanEdit()
 
   const getDaysOverdue = (dueDate: string | Date): number => {
     const due =
@@ -151,58 +153,46 @@ export default function PaymentCard({
               </span>
             </div>
             {/* MARK UNPAID/PAID */}
-            <div className="ml-auto flex items-center gap-2">
-              {!payment.paid && isOverdue(billDueDate, payment.paid) && (
-                <span className="ml-2 rounded-lg bg-red-300 px-3 py-1.5 text-xs font-semibold text-white shadow-sm">
-                  {getDaysOverdue(billDueDate)} day
-                  {getDaysOverdue(billDueDate) !== 1 ? 's' : ''} overdue
-                </span>
-              )}
+            {canEdit && (
               <div className="ml-auto flex items-center gap-2">
-                {!payment.paid && !isOverdue(billDueDate, payment.paid) && (
-                  <span className="rounded-lg bg-green-300 px-3 py-1.5 text-xs font-semibold text-green-900 shadow-sm">
-                    Due in {getDaysUntilDue(billDueDate)} day
-                    {getDaysUntilDue(billDueDate) !== 1 ? 's' : ''}
+                {!payment.paid && isOverdue(billDueDate, payment.paid) && (
+                  <span className="ml-2 rounded-lg bg-red-300 px-3 py-1.5 text-xs font-semibold text-white shadow-sm">
+                    {getDaysOverdue(billDueDate)} day
+                    {getDaysOverdue(billDueDate) !== 1 ? 's' : ''} overdue
                   </span>
                 )}
-                {/* Other buttons like Mark Paid/Unpaid, Delete */}
+                <div className="ml-auto flex items-center gap-2">
+                  {!payment.paid && !isOverdue(billDueDate, payment.paid) && (
+                    <span className="rounded-lg bg-green-300 px-3 py-1.5 text-xs font-semibold text-green-900 shadow-sm">
+                      Due in {getDaysUntilDue(billDueDate)} day
+                      {getDaysUntilDue(billDueDate) !== 1 ? 's' : ''}
+                    </span>
+                  )}
+                  {/* Other buttons like Mark Paid/Unpaid, Delete */}
+                </div>
+                <button
+                  disabled={isUpdating}
+                  onClick={() => onTogglePaid(payment.id, !payment.paid)}
+                  className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
+                    payment.paid
+                      ? 'bg-green-500 text-white hover:bg-green-600'
+                      : 'bg-red-500 text-white hover:bg-red-600'
+                  } disabled:cursor-not-allowed disabled:opacity-50`}
+                >
+                  {payment.paid ? 'Mark Unpaid' : 'Mark Paid'}
+                </button>
+                {/* Delete X */}
+                <button
+                  disabled={isUpdating || deleteMutation.isPending}
+                  onClick={() => handleDelete(payment.id)}
+                  aria-label="Delete payment"
+                  className="rounded-full px-2 py-1.5 text-sm font-bold transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
+                  style={{ color: 'var(--primary)' }}
+                >
+                  x
+                </button>
               </div>
-              <button
-                disabled={isUpdating}
-                onClick={(e) => {
-                  onTogglePaid(payment.id, !payment.paid)
-                  if (payment.paid) {
-                    fireSadRain()
-                  } else {
-                    fireConfettiFromElement(e.currentTarget)
-                    fireMoney()
-                  }
-                }}
-                className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
-                  payment.paid
-                    ? 'bg-green-500 text-white hover:bg-green-600'
-                    : 'bg-red-500 text-white hover:bg-red-600'
-                } disabled:cursor-not-allowed disabled:opacity-50`}
-              >
-                {payment.paid ? 'Mark Unpaid' : 'Mark Paid'}
-              </button>
-              <span
-                id={`sad-label-${payment.id}`}
-                className="absolute right-4 text-2xl opacity-0"
-              >
-                😢
-              </span>
-              {/* Delete X */}
-              <button
-                disabled={isUpdating || deleteMutation.isPending}
-                onClick={() => handleDelete(payment.id)}
-                aria-label="Delete payment"
-                className="rounded-full px-2 py-1.5 text-sm font-bold transition hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-50"
-                style={{ color: 'var(--primary)' }}
-              >
-                x
-              </button>
-            </div>
+            )}
           </li>
         ))}
       </ul>
