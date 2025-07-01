@@ -9,7 +9,7 @@ export default function Dashboard() {
 
   if (isLoading) return <p>Loading payments...</p>
   if (isError) return <p>Error loading payments.</p>
-
+  // Group payments by bill title
   const paymentsByBill = payments.reduce(
     (acc, payment) => {
       const key = payment.billTitle || 'Unknown Bill'
