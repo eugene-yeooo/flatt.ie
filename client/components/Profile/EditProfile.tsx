@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useEditProfile, useUser } from '../../hooks/useUser'
+import { ChangeEvent } from 'react'
 
 export default function EditProfile() {
   const { data: user } = useUser()
