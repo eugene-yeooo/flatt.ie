@@ -26,6 +26,7 @@ export default function FlattieCard({
   const [unpaidExpenses, setUnpaidExpenses] = useState<Payment[]>([])
   const [overdueAmount, setOverdueAmount] = useState(0)
   const [pendingPaymentId, setPendingPaymentId] = useState<number | null>(null)
+
   const canEdit = useCanEdit()
   const { mutate: payFromCredit, isPending } = usePayFromCredit()
   const { getAccessTokenSilently } = useAuth0()
@@ -82,6 +83,7 @@ export default function FlattieCard({
       const updated = await updateCredit(editedCredit, token)
 
       if (updated) {
+        setEditedCredit(updated.credit)
         setIsEditing(false)
         setShowActions(false)
       } else {
@@ -130,7 +132,7 @@ export default function FlattieCard({
             {name}
           </h3>
           <p className="text-center text-sm text-gray-500">
-            Credit: ${credit.toFixed(2)}
+            Credit: ${editedCredit.toFixed(2)}
           </p>
         </>
       )}
