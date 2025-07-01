@@ -53,6 +53,12 @@ export default function EditProfile() {
 
   if (!user) return <p>Loading user data...</p>
 
+  const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      setNewPhoto(e.target.files[0])
+    }
+  }
+
   return (
     <form className="mx-auto max-w-lg space-y-6 rounded bg-white p-4 shadow">
       {error && <p className="text-red-600">{error}</p>}

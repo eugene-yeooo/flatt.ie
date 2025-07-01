@@ -8,12 +8,17 @@ export default function Profile() {
   const { logout } = useAuth0()
   const user = useUser()
   const [isEditing, setIsEditing] = useState(false)
+  const [newPhoto, setNewPhoto] = useState<File | null>(null)
 
   if (!user?.data)
     return <p className="py-8 text-center">Loading user data...</p>
 
   const toggleEdit = () => setIsEditing((prev) => !prev)
-
+  function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files[0]) {
+      setNewPhoto(e.target.files[0])
+    }
+  }
   return (
     <div>
       {/* Logout button top-right */}
