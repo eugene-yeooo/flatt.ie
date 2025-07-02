@@ -13,6 +13,7 @@ import { useUser } from '../../client/hooks/useUser'
 import { useLocation } from 'react-router-dom'
 import Profile from './Profile/Profile'
 import ReportsPage from './Reports/ReportsPage'
+import { Progress } from '@/components/components/ui/progress'
 
 export default function App() {
   const { isAuthenticated } = useAuth0()
@@ -45,7 +46,21 @@ export default function App() {
     }
   }, [isAuthenticated, user.isLoading, user.data, location.pathname, navigate])
   if (isAuthenticated && user.isLoading) {
-    return <p>Loading user data...</p>
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: 'var(--background)',
+        }}
+      >
+        <div style={{ width: '300px' }}>
+          <Progress value={33} />
+        </div>
+      </div>
+    )
   }
 
   if (!isAuthenticated) {

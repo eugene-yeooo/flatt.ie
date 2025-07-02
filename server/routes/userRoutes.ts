@@ -2,6 +2,7 @@ import express from 'express'
 import checkJwt, { JwtRequest } from '../auth0.ts'
 import {
   addUser,
+  deleteUserById,
   getAllUsers,
   getUserByAuth0Id,
   updateUser,
@@ -69,6 +70,23 @@ router.patch('/', checkJwt, async (req: JwtRequest, res) => {
   }
 })
 
+// DELETE /users/:id
+router.delete('/:id', checkJwt, async (req, res) => {
+  try {
+    const userId = Number(req.params.id)
+    if (isNaN(userId)) return res.status(400).json({ error: 'Invalid user ID' })
+
+    const deleted = await deleteUserById(userId)
+    if (deleted === 0) {
+      return res.status(404).json({ error: 'User not found' })
+    }
+
+    res.status(204).end() // No content
+  } catch (err) {
+    console.error('Error deleting user:', err)
+    res.status(500).json({ error: 'Failed to delete user' })
+  }
+})
 // ---------- /users/me ----------
 
 //get users/me route for current authenticated user

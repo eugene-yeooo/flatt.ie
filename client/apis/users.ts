@@ -40,6 +40,12 @@ export async function updateCredit(credit: number, token: string) {
     return null
   }
 }
+// DELETE Users
+export async function deleteUser(userId: number, token: string): Promise<void> {
+  await request
+    .delete(`/api/v1/users/${userId}`)
+    .set('Authorization', `Bearer ${token}`)
+}
 
 // Get current user
 export async function getCurrentUser(token: string): Promise<User | null> {
