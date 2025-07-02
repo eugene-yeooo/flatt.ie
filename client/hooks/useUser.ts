@@ -76,7 +76,7 @@ export function useAllUsers() {
 
 // Delete user
 
-import type { UseMutationResult } from '@tanstack/react-query'
+// import type { UseMutationResult } from '@tanstack/react-query'
 
 export function useDeleteUser(): UseMutationResult<
   void,
@@ -92,6 +92,6 @@ export function useDeleteUser(): UseMutationResult<
       const token = await getAccessTokenSilently()
       return API.deleteUser(userId, token)
     },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user'] }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['users'] }),
   })
 }
