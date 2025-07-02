@@ -105,25 +105,34 @@ router.get('/me', checkJwt, async (req: JwtRequest, res) => {
   }
 })
 
-router.patch('/me', checkJwt, async (req: JwtRequest, res) => {
-  try {
-    const auth0_id = req.auth?.sub
-    const updates = req.body
+router.patch(
+  '/me',
+  checkJwt,
+  upload.single('avatar'),
+  async (req: JwtRequest, res) => {
+    try {
+      const auth0_id = req.auth?.sub
+      const updates = req.body
+      const avatar_url: string | undefined = req.file
+        ? `/uploads/${req.file.filename}`
+        : undefined
 
-    if (!auth0_id) {
-      return res.status(401).json({ error: 'Unauthorized' })
+      if (!auth0_id) {
+        return res.status(401).json({ error: 'Unauthorized' })
+      }
+
+      const updatedUser = await updateUser({
+        ...updates,
+        auth0_id,
+        avatar_url,
+      })
+
+      res.json(updatedUser)
+    } catch (err) {
+      console.error('Error updating user:', err)
+      res.status(500).json({ error: 'Internal server error' })
     }
-
-    const updatedUser = await updateUser({
-      ...updates,
-      auth0_id,
-    })
-
-    res.json(updatedUser)
-  } catch (err) {
-    console.error('Error updating user:', err)
-    res.status(500).json({ error: 'Internal server error' })
-  }
-})
+  },
+)
 
 export default router

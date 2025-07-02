@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useEditProfile, useUser } from '../../hooks/useUser'
 import UploadPhoto from './PhotoUpload'
-import { ChangeEvent } from 'react'
 
 export default function EditProfile() {
   const { data: user } = useUser()
@@ -16,7 +15,7 @@ export default function EditProfile() {
     avatar_url: '',
   })
   const [loading, setLoading] = useState(false)
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(true)
 
   const [error, setError] = useState('')
 
@@ -65,14 +64,6 @@ export default function EditProfile() {
           Profile Photo
         </label>
 
-        {isEditing && (
-          <UploadPhoto
-            newPhoto={newPhoto}
-            onChange={setNewPhoto}
-            fileInputRef={fileInputRef}
-          />
-        )}
-
         <input
           id="avatar_url"
           name="avatar_url"
@@ -82,6 +73,14 @@ export default function EditProfile() {
           className="w-full rounded border px-3 py-2"
           placeholder="https://example.com/avatar.png"
         />
+
+        {isEditing && (
+          <UploadPhoto
+            newPhoto={newPhoto}
+            onChange={setNewPhoto}
+            fileInputRef={fileInputRef}
+          />
+        )}
       </div>
 
       <div>
