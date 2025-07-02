@@ -133,3 +133,17 @@ export async function updateUser(
     throw error
   }
 }
+
+// DELETE USER
+
+export async function deleteUserById(
+  userId: number,
+  db = connection,
+): Promise<number> {
+  try {
+    return await db('users').where('id', userId).del()
+  } catch (err) {
+    console.error('Error deleting user:', err)
+    throw err
+  }
+}

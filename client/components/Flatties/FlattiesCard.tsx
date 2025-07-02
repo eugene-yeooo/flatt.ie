@@ -6,6 +6,7 @@ import { usePayFromCredit } from '../../hooks/usePayment'
 import useCanEdit from '../../hooks/useCanEdit'
 import { Pencil } from 'lucide-react'
 import { useAuth0 } from '@auth0/auth0-react'
+import { useDeleteUser } from '../../hooks/useUser'
 
 export type FlattieCardProps = {
   id: number
@@ -26,6 +27,7 @@ export default function FlattieCard({
   const [unpaidExpenses, setUnpaidExpenses] = useState<Payment[]>([])
   const [overdueAmount, setOverdueAmount] = useState(0)
   const [pendingPaymentId, setPendingPaymentId] = useState<number | null>(null)
+  const deleteUserMutation = useDeleteUser()
 
   const canEdit = useCanEdit()
   const { mutate: payFromCredit, isPending } = usePayFromCredit()
@@ -79,6 +81,27 @@ export default function FlattieCard({
     setIsEditing(false)
     setShowActions(false)
     setEditedCredit(credit)
+  }
+  async function handleDelete() {
+    if (
+      !window.confirm(
+        `Are you sure you want to delete ${name}? This action cannot be undone.`,
+      )
+    ) {
+      return
+    }
+
+    deleteUserMutation.mutate(id, {
+      onSuccess: () => {
+        alert(`${name} was deleted successfully.`)
+      },
+      onError: (error) => {
+        alert(
+          'Failed to delete user: ' +
+            (error instanceof Error ? error.message : 'Unknown error'),
+        )
+      },
+    })
   }
 
   async function handleSaveCredit() {
@@ -164,6 +187,13 @@ export default function FlattieCard({
               className="rounded-md border border-orange-500 bg-orange-50 px-3 py-1 text-sm font-medium text-orange-600 hover:bg-orange-100"
             >
               Edit
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={deleteUserMutation.isLoading}
+              className="rounded-md border border-red-500 bg-red-50 px-3 py-1 text-sm font-medium text-red-600 hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              Delete
             </button>
           </div>
         )

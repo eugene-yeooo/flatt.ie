@@ -1,5 +1,4 @@
 import FlattieCard from './FlattiesCard'
-// import { Dialog } from '@headlessui/react'
 import { useAllUsers } from '../../hooks/useUser'
 import useCanEdit from '../../hooks/useCanEdit'
 
@@ -11,13 +10,7 @@ export default function Flatties() {
   return (
     <div className="mx-auto max-w-3xl px-4">
       <h1 className="mb-6 text-center text-3xl font-bold">Flatmates</h1>
-      {canEdit && (
-        <div className="mb-4 text-center">
-          <button className="rounded bg-orange-400 px-4 py-2 font-semibold text-white hover:bg-orange-500">
-            + Add Flatmate
-          </button>
-        </div>
-      )}
+      {canEdit && <div className="mb-4 text-center"></div>}
       {isLoading && (
         <p className="text-center text-gray-500">Loading flatmates...</p>
       )}
