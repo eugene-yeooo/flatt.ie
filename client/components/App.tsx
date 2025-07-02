@@ -13,6 +13,7 @@ import { useUser } from '../../client/hooks/useUser'
 import { useLocation } from 'react-router-dom'
 import Profile from './Profile/Profile'
 import ReportsPage from './Reports/ReportsPage'
+
 export default function App() {
   const { isAuthenticated, getAccessTokenSilently } = useAuth0()
   const navigate = useNavigate()
@@ -31,8 +32,14 @@ export default function App() {
       getToken()
     }
 
-    if (!user.data && isAuthenticated) navigate('/register')
-  }, [user.data, navigate, isAuthenticated])
+    if (isAuthenticated && !user.isLoading && !user.data) {
+      navigate('/register')
+    }
+  }, [user.data, user.isLoading, navigate, isAuthenticated])
+
+  if (isAuthenticated && user.isLoading) {
+    return <p>Loading user data...</p>
+  }
 
   if (!isAuthenticated) {
     return <Front />
