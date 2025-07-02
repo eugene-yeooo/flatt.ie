@@ -74,7 +74,7 @@ export default function BillForm({
 
       const formattedShares = payments.map((p) => ({
         userId: p.userId,
-        split: Number(p.amount).toFixed(2),
+        split: Number(p.amount),
         paid: Boolean(p.paid),
       }))
 
@@ -86,7 +86,7 @@ export default function BillForm({
       setSplitType('even')
       setCustomSplitMode('percent')
 
-      const evenSplit = (100 / allIds.length).toFixed(2)
+      const evenSplit = 100 / allIds.length
       const initialShares = allIds.map((id) => ({
         userId: id,
         split: evenSplit,
@@ -497,7 +497,7 @@ export default function BillForm({
                           ? '% e.g. 25'
                           : '$ e.g. 45.50'
                       }
-                      value={share.split}
+                      value={parseFloat(share.split) || ''}
                       onChange={(e) =>
                         handleSplitChange(userId, e.target.value)
                       }

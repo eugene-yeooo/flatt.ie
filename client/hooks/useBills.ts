@@ -70,6 +70,7 @@ export function useUpdateBillAndPayments() {
     mutationFn: (data: UpdateBillRequest) => updateBillAndPayments(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['bills'] })
+      qc.invalidateQueries({ queryKey: ['bill'] })
     },
     onError: (err) => {
       console.error('Failed to update bill', err)

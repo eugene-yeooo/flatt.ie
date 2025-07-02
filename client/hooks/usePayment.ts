@@ -22,6 +22,7 @@ export function useUpdatePaymentStatus() {
       updatePaymentStatus(params.id, params.paid),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] })
+      queryClient.invalidateQueries({ queryKey: ['bills'] })
     },
   })
 }
@@ -64,12 +65,10 @@ export function usePayFromCredit() {
     mutationFn: (paymentId: number) => payFromCredit(paymentId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] })
-      queryClient.invalidateQueries({ queryKey: ['flatties'] }) 
+      queryClient.invalidateQueries({ queryKey: ['flatties'] })
     },
     onError: (err) => {
       console.error('Failed to pay from credit:', err)
     },
   })
 }
-
-

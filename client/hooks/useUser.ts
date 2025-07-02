@@ -69,7 +69,7 @@ export function useAllUsers() {
       const token = await getAccessTokenSilently()
       return API.getAllUsers(token)
     },
-    enabled: isAuthenticated,
+    // enabled: isAuthenticated,
     retry: false,
   })
 }

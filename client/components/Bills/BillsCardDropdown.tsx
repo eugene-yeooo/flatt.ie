@@ -13,10 +13,10 @@ export default function BillsCardDropdown({
   setSelectedBill,
 }: {
   id: number
-  title: string
-  dueDate: Date
-  totalAmount: number
-  expenseCategory?: string
+  // title: string
+  // dueDate: Date
+  // totalAmount: number
+  // expenseCategory?: string
   setShowUpdateBill: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedBill: React.Dispatch<React.SetStateAction<UpdateBillData | null>>
 }) {
