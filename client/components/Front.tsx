@@ -1,4 +1,3 @@
-import { Progress } from '@/components/components/ui/progress'
 import { useAuth0 } from '@auth0/auth0-react'
 
 const buttonStyle = {
@@ -28,9 +27,7 @@ export default function Front() {
           fontWeight: 'bold',
         }}
       >
-        <div style={{ width: '50%' }}>
-          <Progress value={33} />
-        </div>{' '}
+        <div style={{ width: '50%' }}>...</div>{' '}
       </div>
     )
   }
