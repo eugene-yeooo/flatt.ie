@@ -38,18 +38,26 @@ export default function Dashboard() {
 
   return (
     <div className="grid grid-cols-2 gap-6 ">
-      {Object.entries(paymentsByBill).map(([billTitle, billPayments]) => (
-        <PaymentCard
-          key={billTitle}
-          billTitle={billTitle}
-          billPayments={billPayments}
-          isUpdating={isUpdating}
-          onTogglePaid={handlePaymentStatus}
-          billAmount={billPayments[0]?.billTotal ?? 0}
-          billDueDate={billPayments[0]?.dueDate}
-          flatmates={users}
-        />
-      ))}
+      {Object.entries(paymentsByBill)
+        .filter(([, billPayments]) => {
+          const dueDate = new Date(billPayments[0]?.dueDate)
+          const now = new Date()
+          const diffTime = dueDate.getTime() - now.getTime()
+          const diffDays = diffTime / (1000 * 60 * 60 * 24)
+          return diffDays >= -30 && diffDays <= 30
+        })
+        .map(([billTitle, billPayments]) => (
+          <PaymentCard
+            key={billTitle}
+            billTitle={billTitle}
+            billPayments={billPayments}
+            isUpdating={isUpdating}
+            onTogglePaid={handlePaymentStatus}
+            billAmount={billPayments[0]?.billTotal ?? 0}
+            billDueDate={billPayments[0]?.dueDate}
+            flatmates={users}
+          />
+        ))}
     </div>
   )
 }
