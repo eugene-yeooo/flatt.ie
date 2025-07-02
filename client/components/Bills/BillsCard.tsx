@@ -60,7 +60,15 @@ export default function BillCard({
       {/* Category and unpaid badge */}
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-[var(--primary)]">{title}</h3>
-        <div className={clsx('flex gap-4', canEdit ? 'pr-12' : '')}>
+        <div className={clsx('flex gap-1', canEdit ? 'pr-12' : '')}>
+          {!paid && (
+            <Badge
+              variant="outline"
+              className="w-fit rounded border border-red-500 bg-red-100 px-3 py-1.5 text-xs font-semibold uppercase text-red-500"
+            >
+              UNPAID
+            </Badge>
+          )}
           {expenseCategory && (
             <Badge
               variant="outline"
@@ -70,14 +78,6 @@ export default function BillCard({
               )}
             >
               {expenseCategory}
-            </Badge>
-          )}
-          {!paid && (
-            <Badge
-              variant="outline"
-              className="w-fit rounded border border-red-500 bg-red-100 px-3 py-1.5 text-xs font-semibold uppercase text-red-500"
-            >
-              UNPAID
             </Badge>
           )}
         </div>
