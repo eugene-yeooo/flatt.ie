@@ -45,17 +45,14 @@ export default function BillForm({
   const { data: expense, isPending } = useAllExpense()
   const categories = expense?.map((e) => e.category)
 
-  console.log(expense)
   const [title, setTitle] = useState(initialData.title || '')
-  const [dueDate, setDueDate] = useState(initialData.due_date || '')
+  const [dueDate, setDueDate] = useState(initialData.dueDate || '')
   const [totalAmount, setTotalAmount] = useState(
-    typeof initialData.total_amount === 'number'
-      ? initialData.total_amount
-      : '',
+    typeof initialData.totalAmount === 'number' ? initialData.totalAmount : '',
   )
 
   const [expenseCategory, setExpenseCategory] = useState(
-    initialData.expense_category || 'Power',
+    initialData.expenseCategory || 'Power',
   )
   const [splitType, setSplitType] = useState<'even' | 'custom'>('even')
   const [customSplitMode, setCustomSplitMode] = useState<'percent' | 'amount'>(
@@ -66,7 +63,7 @@ export default function BillForm({
 
   const [isInitialLoad, setIsInitialLoad] = useState(true)
 
-  console.log(expense)
+  console.log(initialData)
 
   // Initialization useEffect: only once
   useEffect(() => {
