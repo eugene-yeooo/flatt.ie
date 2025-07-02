@@ -28,7 +28,7 @@ export function useGetBillById(id: number | string) {
   return useQuery({
     queryKey: ['bill', id],
     queryFn: () => getBillById(id),
-    enabled: !!id, // only run if id is truthy
+    enabled: false,
   })
 }
 

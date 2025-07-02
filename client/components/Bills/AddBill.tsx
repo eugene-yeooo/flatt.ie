@@ -50,7 +50,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
           createPayments.mutate({
             billId: newBillId,
             payments: shares.map((s) => {
-              const percent = parseFloat(s.split) // percent, e.g. 25
+              const percent = parseFloat(s.split)
               const amount = (percent / 100) * bill.total_amount
               const split = percent / 100
 

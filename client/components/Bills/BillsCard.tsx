@@ -46,10 +46,6 @@ export default function BillCard({
       <div className="absolute right-2 top-1">
         <BillsCardDropdown
           id={id}
-          // title={title}
-          // dueDate={dueDate}
-          // totalAmount={totalAmount}
-          // expenseCategory={expenseCategory}
           setShowUpdateBill={setShowUpdateBill}
           setSelectedBill={setSelectedBill}
         />

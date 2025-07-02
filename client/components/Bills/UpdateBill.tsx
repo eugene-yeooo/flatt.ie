@@ -2,6 +2,7 @@ import { Share } from 'models/models'
 import { useGetBillById, useUpdateBillAndPayments } from '../../hooks/useBills'
 import BillForm from './BillForm'
 import { useAllUsers } from '../../hooks/useUser'
+import { useEffect } from 'react'
 
 export default function UpdateBill({
   billId,
@@ -11,10 +12,14 @@ export default function UpdateBill({
   onClose: () => void
 }) {
   const mutation = useUpdateBillAndPayments()
-  const { data: bill, isPending, error } = useGetBillById(billId)
+  const { data: bill, isPending, error, refetch } = useGetBillById(billId)
   const { data: users } = useAllUsers()
   // console.log('Users:', users)
   // console.log('Bill:', bill)
+
+  useEffect(() => {
+    refetch()
+  }, [refetch])
 
   if (!users) return <p>Loading users...</p>
   if (isPending || !bill) return null
