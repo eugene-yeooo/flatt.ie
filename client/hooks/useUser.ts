@@ -24,6 +24,32 @@ export function useUser() {
   }
 }
 
+export function useUsersReport() {
+  const { data: users = [], ...rest } = useGetAllUsers()
+
+  const data = React.useMemo(() => {
+    // Map: userName -> [12 months totals]
+    const result: Record<string, number[]> = {}
+
+    users.forEach((user) => {
+      if (!result[user.name]) {
+        result[user.name] = Array(12).fill(0)
+      }
+
+      user.expenses.forEach((expense) => {
+        const monthIndex = new Date(expense.date).getMonth()
+        result[user.name][monthIndex] += expense.amount
+      })
+    })
+
+    return Object.entries(result).map(([category, monthlyAmounts]) => ({
+      category,
+      monthlyAmounts,
+    }))
+  }, [users])
+
+  return { data, ...rest }
+}
 // Generic mutation hook with cache invalidation
 export function useUserMutation<TData = unknown, TVariables = unknown>(
   mutationFn: MutationFunction<TData, TVariables>,

@@ -30,6 +30,7 @@ type ExpenseCategoryData = {
 
 type ReportsProps = {
   data: ExpenseCategoryData[]
+  title?: string // New optional prop for chart title
 }
 
 const monthLabels = [
@@ -47,10 +48,8 @@ const monthLabels = [
   'Dec',
 ]
 
-export default function Report({ data }: ReportsProps) {
-  // Generate datasets for Chart.js line chart
+export default function Report({ data, title }: ReportsProps) {
   const datasets = useMemo(() => {
-    // Some nice distinct colors for categories
     const colors = [
       'rgba(75,192,192,1)', // teal
       'rgba(255,99,132,1)', // red
@@ -83,7 +82,16 @@ export default function Report({ data }: ReportsProps) {
       },
       title: {
         display: true,
-        text: 'Monthly Expenses by Category',
+        text: title ?? 'Monthly Expenses by Category',
+      },
+      tooltip: {
+        callbacks: {
+          label: function (context: any) {
+            // Format the value nicely as currency
+            const value = context.parsed.y ?? 0
+            return `${context.dataset.label}: $${value.toFixed(2)}`
+          },
+        },
       },
     },
     scales: {
@@ -105,7 +113,7 @@ export default function Report({ data }: ReportsProps) {
 
   return (
     <div>
-      <Line data={chartData} options={options} /> <p>HARD CODED DATA</p>
+      <Line data={chartData} options={options} />
     </div>
   )
 }
