@@ -4,6 +4,16 @@ import { useDeletePayment } from '../../hooks/usePayment'
 import confetti from 'canvas-confetti'
 import { animate } from 'animejs'
 import useCanEdit from '../../hooks/useCanEdit'
+import useSound from 'use-sound'
+import cashRegisterSfx from '../../../src/audio/cash-resgister.mp3'
+
+const useCashSound = () => {
+  const [play] = useSound(cashRegisterSfx, {
+    volume: 1,
+    interrupt: true,
+  })
+  return play
+}
 
 function fireConfettiFromElement(element: HTMLElement) {
   const rect = element.getBoundingClientRect()
@@ -88,6 +98,7 @@ export default function PaymentCard({
     .reduce((sum, payment) => sum + payment.amount, 0)
   const deleteMutation = useDeletePayment()
   const canEdit = useCanEdit()
+  const playCashSound = useCashSound()
 
   const getDaysOverdue = (dueDate: string | Date): number => {
     const due =
@@ -181,6 +192,7 @@ export default function PaymentCard({
                     } else {
                       fireConfettiFromElement(e.currentTarget)
                       fireMoney()
+                      playCashSound()
                     }
                   }}
                   className={`rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm transition ${
