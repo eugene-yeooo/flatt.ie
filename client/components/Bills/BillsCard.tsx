@@ -41,9 +41,12 @@ export default function BillCard({
     'bg-gray-100 text-gray-800'
 
   return (
-    <div className="relative rounded-lg border border-gray-200 p-4 shadow-sm transition hover:shadow-md" style={{ backgroundColor: '#f8f3ee' }}>
+    <div
+      className="relative rounded-lg border border-gray-200 p-6 shadow-sm transition hover:shadow-md"
+      style={{ backgroundColor: '#f8f3ee' }}
+    >
       {/* Dropdown Menu */}
-      <div className="absolute right-2 top-1">
+      <div className="absolute right-3 top-3">
         <BillsCardDropdown
           id={id}
           setShowUpdateBill={setShowUpdateBill}
@@ -52,40 +55,47 @@ export default function BillCard({
       </div>
 
       {/* Category and unpaid badge */}
-      <div className="flex gap-2">
-        {expenseCategory && (
-          <Badge
-            variant="outline"
-            className={clsx(
-              'mb-1 w-fit rounded border px-2 py-0.5 text-xs font-semibold uppercase',
-              badgeClass,
-            )}
-          >
-            {expenseCategory}
-          </Badge>
-        )}
-        {!paid && (
-          <Badge
-            variant="outline"
-            className="mb-1 w-fit rounded border border-red-500 bg-red-100 px-2 py-0.5 text-xs font-semibold uppercase text-red-500"
-          >
-            UNPAID
-          </Badge>
-        )}
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="text-lg font-semibold text-[var(--primary)]">{title}</h3>
+        <div className="flex gap-3">
+          {expenseCategory && (
+            <Badge
+              variant="outline"
+              className={clsx(
+                'w-fit rounded border px-3 py-1.5 text-xs font-semibold uppercase',
+                badgeClass,
+              )}
+            >
+              {expenseCategory}
+            </Badge>
+          )}
+          {!paid && (
+            <Badge
+              variant="outline"
+              className="w-fit rounded border border-red-500 bg-red-100 px-3 py-1.5 text-xs font-semibold uppercase text-red-500"
+            >
+              UNPAID
+            </Badge>
+          )}
+        </div>
       </div>
 
       {/* Bill content */}
-      <h3 className="mb-0.5 text-base font-semibold" style={{ color: '#774136' }}>{title}</h3>
-      <p className="text-sm text-gray-500">
-        Due: {dueDate.toLocaleDateString()}
+      <p className="mb-1 text-sm tracking-wide text-[var(--muted-foreground)]">
+        <span className="font-semibold">Due:</span>{' '}
+        {dueDate.toLocaleDateString()}
       </p>
-      <p className="mt-0.5 text-sm font-medium text-gray-700">
-        Total: ${(totalAmount ?? 0).toFixed(2)}
+      <p className="mb-4 text-sm font-semibold tracking-wide text-[var(--foreground)]">
+        Total:{' '}
+        <span className="text-[var(--primary)]">
+          ${(totalAmount ?? 0).toFixed(2)}
+        </span>
       </p>
 
       {unpaidFlatties.length > 0 && (
-        <p className="mt-1 text-sm font-semibold text-red-500">
-          Unpaid by: {unpaidFlatties.join(', ')}
+        <p className="text-sm font-semibold tracking-wide text-red-600">
+          Unpaid by:{' '}
+          <span className="font-normal">{unpaidFlatties.join(', ')}</span>
         </p>
       )}
     </div>
