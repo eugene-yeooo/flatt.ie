@@ -20,14 +20,15 @@ export default function BillsCardDropdown({
   const deletePayments = useDeletePaymentsByBillId()
   const canEdit = useCanEdit()
   function handleDelete() {
-    deletePayments.mutate(id, {
-      onSuccess: () => {
-        deleteBill.mutate(id)
-      },
-      onError: (err) => {
-        console.error('Failed to delete payments:', err)
-      },
-    })
+    deleteBill.mutate(id)
+    // deletePayments.mutate(id, {
+    //   onSuccess: () => {
+    //     deleteBill.mutate(id)
+    //   },
+    //   onError: (err) => {
+    //     console.error('Failed to delete payments:', err)
+    //   },
+    // })
   }
 
   return (

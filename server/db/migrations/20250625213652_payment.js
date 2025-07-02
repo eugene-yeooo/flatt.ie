@@ -6,7 +6,12 @@ export async function up(knex) {
   return knex.schema.createTable('payment', (table) => {
     table.increments('id').primary()
     table.integer('user_id')
-    table.string('bill_id')
+    table
+      .integer('bill_id')
+      .unsigned()
+      .references('id')
+      .inTable('bill')
+      .onDelete('CASCADE')
     table.decimal('amount')
     table.decimal('split').notNullable()
     table.boolean('paid')
