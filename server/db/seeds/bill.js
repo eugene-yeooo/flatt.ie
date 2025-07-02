@@ -45,7 +45,7 @@ export async function seed(knex) {
       title: `${month.name} ${year} Power Bill`,
       expense_category: 'Power',
       due_date: `${year}-${monthNumber}-${month.power}`,
-      total_amount: 150 + Math.random() * 20,
+      total_amount: 150 + Math.floor(Math.random() * 2000 + 100) / 100,
     })
 
     // Internet
