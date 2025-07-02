@@ -225,17 +225,18 @@ export default function FlattieCard({
                     <div className="flex items-center justify-between">
                       <span>
                         {p.billTitle} (
-                        {new Date(p.dueDate).toLocaleDateString()}
-                        ): ${p.amount.toFixed(2)}
+                        {new Date(p.dueDate).toLocaleDateString()}): $
+                        {p.amount.toFixed(2)}
                       </span>
 
                       {pendingPaymentId !== p.id && canEdit && (
                         <button
                           onClick={() => setPendingPaymentId(p.id)}
                           disabled={isPending}
+                          title="Pay With Credit"
                           className="ml-2 rounded bg-green-100 px-2 py-1 text-xs text-green-700 hover:bg-green-200"
                         >
-                          {isPending ? '...' : 'Pay with Credit'}
+                          {isPending ? '...' : '💸'}
                         </button>
                       )}
                     </div>
