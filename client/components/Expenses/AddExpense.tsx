@@ -2,6 +2,8 @@ import { useAddExpense } from '../../hooks/useExpense'
 import { useAddNewBill } from '../../hooks/useBills'
 import { useState } from 'react'
 import { X } from 'lucide-react'
+import { useAddPayments } from '../../hooks/usePayment'
+import { useAllUsers } from '../../hooks/useUser'
 
 export default function AddExpense({
   onAddExpense,
@@ -28,6 +30,11 @@ export default function AddExpense({
     { label: 'Split', value: 'split' },
     { label: 'Manual', value: 'manual' },
   ]
+  const createPayments = useAddPayments()
+  const { data: users, isPending, error } = useAllUsers()
+
+  if (isPending) return <p>Loading...</p>
+  if (error) return <p>Error loading users</p>
 
   function generateDueDates(
     start: string,
@@ -53,12 +60,14 @@ export default function AddExpense({
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+
     if (!category || !defaultAmount) {
       alert('Please fill in required fields')
       return
     }
 
     try {
+      // Step 1: Create the expense
       await mutation.mutateAsync({
         category,
         frequency,
@@ -69,40 +78,49 @@ export default function AddExpense({
         notes,
       })
 
+      // Step 2: Generate bills if recurring
       if (frequency !== 'one_off') {
         const dueDates = generateDueDates(startDate, endDate, frequency)
 
         for (const dueDate of dueDates) {
           const parsedDate = new Date(dueDate)
 
-          if (frequency === 'weekly') {
-            const weekLabel = parsedDate.toLocaleDateString('en-NZ', {
-              day: 'numeric',
-              month: 'long',
-            })
+          const title =
+            frequency === 'weekly'
+              ? `Week of ${parsedDate.toLocaleDateString('en-NZ', {
+                  day: 'numeric',
+                  month: 'long',
+                })} ${category} Bill`
+              : `${parsedDate.toLocaleDateString('en-NZ', {
+                  month: 'long',
+                  year: 'numeric',
+                })} ${category} Bill`
 
-            await billMutation.mutateAsync({
-              title: `Week of ${weekLabel} ${category} Bill`,
-              expense_category: category,
-              due_date: dueDate,
-              total_amount: Number(defaultAmount),
-            })
-          } else {
-            const monthYear = parsedDate.toLocaleDateString('en-NZ', {
-              month: 'long',
-              year: 'numeric',
-            })
+          const totalAmount = Number(defaultAmount)
 
-            await billMutation.mutateAsync({
-              title: `${monthYear} ${category} Bill`,
-              expense_category: category,
-              due_date: dueDate,
-              total_amount: Number(defaultAmount),
-            })
-          }
+          const billId = await billMutation.mutateAsync({
+            title,
+            expense_category: category,
+            due_date: dueDate,
+            total_amount: totalAmount,
+          })
+
+          // Step 3: Generate payment splits
+          const userIds = users?.map((u) => u.user_id)
+          const percent = 100 / userIds.length
+
+          const payments = userIds.map((userId) => ({
+            user_id: userId,
+            split: percent / 100,
+            amount: (percent / 100) * totalAmount,
+            paid: false,
+          }))
+
+          await createPayments.mutateAsync({ billId, payments })
         }
       }
 
+      // Step 3: Cleanup and close
       onAddExpense()
       setCategory('')
       setFrequency('one_off')
@@ -112,7 +130,8 @@ export default function AddExpense({
       setCalcMethod('split')
       setNotes('')
     } catch (error) {
-      console.error('Error submitting expense and/or bill:', error)
+      console.error('Error submitting expense or bills:', error)
+      alert('Something went wrong while saving the expense.')
     }
   }
 
@@ -120,10 +139,13 @@ export default function AddExpense({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit}
-        className="flex w-[600px] flex-col justify-center rounded-xl p-6 shadow transition-colors" style={{ backgroundColor: 'var(--primary-foreground)' }}
+        className="flex w-[600px] flex-col justify-center rounded-xl p-6 shadow transition-colors"
+        style={{ backgroundColor: 'var(--primary-foreground)' }}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-[#7b3f35]">Add New Expense</h2>
+          <h2 className="text-xl font-semibold text-[#7b3f35]">
+            Add New Expense
+          </h2>
           <button
             type="button"
             onClick={onAddExpense}
@@ -241,7 +263,7 @@ export default function AddExpense({
           type="submit"
           className="mt-2 rounded-lg border border-gray-300 bg-[var(--card)] px-6 py-2 font-semibold text-[var(--primary)] shadow transition duration-200 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
-         Add Expense
+          Add Expense
         </button>
       </form>
     </div>
