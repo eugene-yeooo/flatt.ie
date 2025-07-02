@@ -34,6 +34,16 @@ export default function App() {
     }
   }, [isAuthenticated, user.isLoading, user.data, location.pathname, navigate])
 
+  useEffect(() => {
+    if (
+      isAuthenticated &&
+      !user.isLoading &&
+      user.data &&
+      (location.pathname === '/' || location.pathname === '')
+    ) {
+      navigate('/flattie')
+    }
+  }, [isAuthenticated, user.isLoading, user.data, location.pathname, navigate])
   if (isAuthenticated && user.isLoading) {
     return <p>Loading user data...</p>
   }
