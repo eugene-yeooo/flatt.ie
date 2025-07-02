@@ -6,6 +6,7 @@ import { animate } from 'animejs'
 import useCanEdit from '../../hooks/useCanEdit'
 import useSound from 'use-sound'
 import cashRegisterSfx from '../../../src/audio/cash-resgister.mp3'
+import { useState } from 'react'
 
 const useCashSound = () => {
   const [play] = useSound(cashRegisterSfx, {
@@ -99,6 +100,8 @@ export default function PaymentCard({
   const deleteMutation = useDeletePayment()
   const canEdit = useCanEdit()
   const playCashSound = useCashSound()
+  const [visible, setVisible] = useState(true)
+  if (!visible) return null
 
   const getDaysOverdue = (dueDate: string | Date): number => {
     const due =
@@ -135,11 +138,20 @@ export default function PaymentCard({
 
   return (
     <section
-      className="mb-10 rounded-xl p-4 shadow transition-colors"
+      className="relative mb-10 rounded-xl p-4 shadow transition-colors"
       style={{
         backgroundColor: isBillPaid ? '#f0fdf4 ' : 'var(--primary-foreground)', // '#dcfce7' is Tailwind's green-50 hex
       }}
     >
+      {isBillPaid && (
+        <button
+          onClick={() => setVisible(false)}
+          aria-label="Hide card"
+          className="absolute right-4 top-4 text-gray-400 hover:text-gray-600"
+        >
+          ✕
+        </button>
+      )}
       <div className="px-6 py-4">
         <h2
           className="text-2xl font-bold"
@@ -148,6 +160,7 @@ export default function PaymentCard({
           {billTitle}
         </h2>
       </div>
+
       <ul>
         {billPayments.map((payment) => (
           <li
