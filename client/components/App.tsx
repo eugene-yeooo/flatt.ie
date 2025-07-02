@@ -13,8 +13,9 @@ import { useUser } from '../../client/hooks/useUser'
 import { useLocation } from 'react-router-dom'
 import Profile from './Profile/Profile'
 import ReportsPage from './Reports/ReportsPage'
+
 export default function App() {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0()
+  const { isAuthenticated } = useAuth0()
   const navigate = useNavigate()
   const user = useUser()
   const location = useLocation()
@@ -23,16 +24,19 @@ export default function App() {
   //useUser hook in compoents to know roles
 
   useEffect(() => {
-    if (isAuthenticated) {
-      const getToken = async () => {
-        const token = await getAccessTokenSilently()
-        console.log(token)
-      }
-      getToken()
+    if (
+      isAuthenticated &&
+      !user.isLoading &&
+      !user.data &&
+      location.pathname !== '/register'
+    ) {
+      navigate('/register')
     }
+  }, [isAuthenticated, user.isLoading, user.data, location.pathname, navigate])
 
-    if (!user.data && isAuthenticated) navigate('/register')
-  }, [user.data, navigate, isAuthenticated])
+  if (isAuthenticated && user.isLoading) {
+    return <p>Loading user data...</p>
+  }
 
   if (!isAuthenticated) {
     return <Front />
@@ -69,19 +73,26 @@ export default function App() {
         )}
       </header>
 
-      <main className="mx-auto max-w-6xl rounded-xl bg-white p-6 shadow">
+      {hideNav ? (
+        // Render the Register component full width, no padding or shadow wrapper
         <Routes>
-          <Route path="/" element={<Front />} />
-          <Route path="/flattie" element={<Home />} />
-          <Route path="/payments" element={<Dashboard />} />
-          <Route path="/flatmates" element={<Flatties />} />
-          <Route path="/bills" element={<Bills />} />
-          <Route path="/expense" element={<Expenses />} />
-          <Route path="/report" element={<ReportsPage />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
         </Routes>
-      </main>
+      ) : (
+        // Your usual main container for all other pages
+        <main className="mx-auto max-w-6xl rounded-xl bg-white p-6 shadow">
+          <Routes>
+            <Route path="/" element={<Front />} />
+            <Route path="/flattie" element={<Home />} />
+            <Route path="/payments" element={<Dashboard />} />
+            <Route path="/flatmates" element={<Flatties />} />
+            <Route path="/bills" element={<Bills />} />
+            <Route path="/expense" element={<Expenses />} />
+            <Route path="/report" element={<ReportsPage />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </main>
+      )}
     </div>
   )
 }

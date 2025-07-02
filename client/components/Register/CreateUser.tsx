@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useUser } from '../../hooks/useUser'
+import { useAddUser, useUser } from '../../hooks/useUser'
 import { IfAuthenticated, IfNotAuthenticated } from '../Authenticated'
 import Profile from '../Profile/Profile'
 
@@ -10,7 +10,7 @@ function Register() {
   const { getAccessTokenSilently, user: auth0User } = useAuth0()
   const user = useUser()
   const navigate = useNavigate()
-
+  const addUser = useAddUser()
   // Form state for user input
   const [form, setForm] = useState({
     name: '',
@@ -51,9 +51,10 @@ function Register() {
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
     try {
+      console.log('Register form submitted')
+
       const token = await getAccessTokenSilently()
-      await user.add.mutateAsync({ newUser: form, token }, mutationOptions)
-      // navigate('/') will happen via useEffect once user.data is updated
+      await addUser.mutateAsync({ newUser: form, token }, mutationOptions)
     } catch (err) {
       handleError(err)
     }
@@ -133,7 +134,9 @@ function Register() {
             <button
               type="submit"
               disabled={!form.username || !form.email}
-              className="w-full rounded-md bg-[var(--primary)] px-4 py-2 text-white transition hover:bg-[var(--primary-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="/* bg changes on hover */ w-full
+  rounded-md bg-[var(--primary)]     px-4 py-2 text-white transition  hover:bg-[var(--background-hover)]
+  hover:text-[var(--primary)]"
             >
               Register
             </button>
