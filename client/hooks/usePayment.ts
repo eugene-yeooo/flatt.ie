@@ -52,6 +52,7 @@ export function useUpdatePaymentStatus() {
       updatePaymentStatus(params.id, params.paid),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['payments'] })
+      queryClient.invalidateQueries({ queryKey: ['bills'] })
     },
   })
 }

@@ -35,8 +35,6 @@ export default function BillCard({
   setShowUpdateBill,
   setSelectedBill,
 }: BillCardProps) {
-  const [showAddPaymentForm, setShowAddPaymentForm] = useState(false)
-
   const badgeClass =
     (expenseCategory &&
       badgeColors[expenseCategory as keyof typeof badgeColors]) ||
@@ -48,10 +46,6 @@ export default function BillCard({
       <div className="absolute right-2 top-1">
         <BillsCardDropdown
           id={id}
-          title={title}
-          dueDate={dueDate}
-          totalAmount={totalAmount}
-          expenseCategory={expenseCategory}
           setShowUpdateBill={setShowUpdateBill}
           setSelectedBill={setSelectedBill}
         />
@@ -86,33 +80,14 @@ export default function BillCard({
         Due: {dueDate.toLocaleDateString()}
       </p>
       <p className="mt-0.5 text-sm font-medium text-gray-700">
-        Total: ${totalAmount.toFixed(2)}
+        Total: ${(totalAmount ?? 0).toFixed(2)}
       </p>
+
       {unpaidFlatties.length > 0 && (
         <p className="mt-1 text-sm font-semibold text-red-500">
           Unpaid by: {unpaidFlatties.join(', ')}
         </p>
       )}
-
-      {/* Actions */}
-      {/* <div className="mt-3 flex justify-end">
-        <button
-          onClick={() => setShowAddPaymentForm(true)}
-          className="rounded-md border border-orange-500 bg-orange-50 px-3 py-1 text-sm font-medium text-orange-600 transition hover:bg-orange-100"
-        >
-          Add Payment
-        </button>
-      </div> */}
-
-      {/* Payment form
-      {showAddPaymentForm && (
-        <AddPayment
-          billId={id}
-          onClose={() => setShowAddPaymentForm(false)}
-          flatmates={{ id: 0, name: '' }}
-          totalAmount={totalAmount}
-        />
-      )}*/}
     </div>
   )
 }

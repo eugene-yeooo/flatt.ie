@@ -28,7 +28,7 @@ export function useGetBillById(id: number | string) {
   return useQuery({
     queryKey: ['bill', id],
     queryFn: () => getBillById(id),
-    enabled: !!id, // only run if id is truthy
+    enabled: false,
   })
 }
 
@@ -98,6 +98,7 @@ export function useUpdateBillAndPayments() {
     mutationFn: (data: UpdateBillRequest) => updateBillAndPayments(data),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['bills'] })
+      qc.invalidateQueries({ queryKey: ['bill'] })
     },
     onError: (err) => {
       console.error('Failed to update bill', err)

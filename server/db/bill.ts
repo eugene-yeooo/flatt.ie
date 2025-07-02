@@ -112,11 +112,11 @@ export async function updateBillAndPayments(
     .update({
       title: billData.title,
       due_date:
-        typeof billData.dueDate === 'string'
-          ? billData.dueDate
-          : formatDate(billData.dueDate),
-      total_amount: billData.totalAmount,
-      expense_category: billData.expenseCategory,
+        typeof billData.due_date === 'string'
+          ? billData.due_date
+          : formatDate(billData.due_date),
+      total_amount: billData.total_amount,
+      expense_category: billData.expense_category,
     })
 
   const existingPayments = await connection('payment').where('bill_id', billId)

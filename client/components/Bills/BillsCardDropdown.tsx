@@ -5,18 +5,12 @@ import { UpdateBillData } from 'models/models'
 
 export default function BillsCardDropdown({
   id,
-  // title,
-  // dueDate,
-  // totalAmount,
-  // expenseCategory,
+
   setShowUpdateBill,
   setSelectedBill,
 }: {
   id: number
-  title: string
-  dueDate: Date
-  totalAmount: number
-  expenseCategory?: string
+
   setShowUpdateBill: React.Dispatch<React.SetStateAction<boolean>>
   setSelectedBill: React.Dispatch<React.SetStateAction<UpdateBillData | null>>
 }) {
@@ -46,12 +40,6 @@ export default function BillsCardDropdown({
           <DropdownMenu.Item
             onSelect={() => {
               setSelectedBill(id)
-              //   id,
-              //   title,
-              //   due_date: dueDate.toISOString().split('T')[0],
-              //   total_amount: totalAmount,
-              //   expense_category: expenseCategory,
-              // })
               setShowUpdateBill(true)
             }}
             className="flex cursor-pointer items-center px-4 py-2 text-sm hover:bg-gray-100"

@@ -1,5 +1,5 @@
 import { useAllPayment, useUpdatePaymentStatus } from '../../hooks/usePayment'
-import { useAllUsers } from '../../hooks/useUser' // import your users hook
+import { useAllUsers } from '../../hooks/useUser'
 
 import PaymentCard from './PaymentCard'
 

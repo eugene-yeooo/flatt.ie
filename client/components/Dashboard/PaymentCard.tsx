@@ -23,8 +23,8 @@ export function fireSadRain() {
     emoji.textContent = '🙃'
     emoji.style.position = 'fixed'
     emoji.style.left = `${Math.random() * 100}vw`
-    emoji.style.top = `-50px`
-    emoji.style.fontSize = `${24 + Math.random() * 16}px`
+    emoji.style.top = `-80px`
+    emoji.style.fontSize = `${24 + Math.random() * 40}px`
     emoji.style.pointerEvents = 'none'
     emoji.style.zIndex = '9999'
     emoji.style.opacity = '0'
@@ -33,7 +33,7 @@ export function fireSadRain() {
 
     animate(emoji, {
       top: '100vh',
-      opacity: [0.3, 1],
+      opacity: [0.5, 1],
       duration: 3000,
       delay: i * 100,
       easing: 'easeOutQuad',
@@ -47,8 +47,8 @@ export function fireMoney() {
     emoji.textContent = '💸'
     emoji.style.position = 'fixed'
     emoji.style.left = `${Math.random() * 100}vw`
-    emoji.style.top = `-50px`
-    emoji.style.fontSize = `${24 + Math.random() * 20}px`
+    emoji.style.top = `-80px`
+    emoji.style.fontSize = `${24 + Math.random() * 40}px`
     emoji.style.pointerEvents = 'none'
     emoji.style.zIndex = '9999'
     emoji.style.opacity = '0'
@@ -57,7 +57,7 @@ export function fireMoney() {
 
     animate(emoji, {
       top: '100vh',
-      opacity: [0.3, 1],
+      opacity: [0.5, 1],
       duration: 3000,
       delay: i * 100,
       easing: 'easeOutQuad',
