@@ -6,6 +6,7 @@ import { Button } from '@/components/components/ui/button'
 import { Expense } from 'models/models'
 import UpdateExpense from './UpdateExpense'
 import useCanEdit from '../../hooks/useCanEdit'
+import { Plus } from 'lucide-react'
 
 export default function Expenses() {
   const { data: expenses, isPending, error } = useAllExpense()
@@ -23,8 +24,12 @@ export default function Expenses() {
   if (!expenses || expenses.length === 0)
     return (
       <div className="p-4">
-        <div className="btn flex justify-end bg-primary">
-          <Button onClick={toggleAddExpense}>
+        <div className="flex justify-end">
+          <Button
+            onClick={toggleAddExpense}
+            className="flex min-w-fit items-center gap-1 border border-gray-300 bg-white px-3 py-2 transition-colors hover:bg-[var(--primary)] hover:text-white"
+          >
+            <Plus size={16} />
             {showAddExpense ? 'Cancel' : 'Add Expense'}
           </Button>
         </div>
@@ -43,7 +48,11 @@ export default function Expenses() {
     <div className="mx-auto max-w-4xl p-4">
       {canEdit && (
         <div className="flex justify-end">
-          <Button onClick={toggleAddExpense} className="border border-gray-300 bg-white px-4 py-2 font-semibold text-black shadow transition duration-200 hover:bg-[#78350f] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#78350f] focus:ring-offset-2">
+          <Button
+            onClick={toggleAddExpense}
+            className="flex min-w-fit items-center gap-1 border border-gray-300 bg-white px-3 py-2 transition-colors hover:bg-[var(--primary)] hover:text-white"
+          >
+            <Plus size={16} />
             Add Expense
           </Button>
         </div>

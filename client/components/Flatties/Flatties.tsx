@@ -9,7 +9,6 @@ export default function Flatties() {
   const canEdit = useCanEdit()
   return (
     <div className="mx-auto max-w-3xl px-4">
-      <h1 className="mb-6 text-center text-3xl font-bold">Flatmates</h1>
       {canEdit && <div className="mb-4 text-center"></div>}
       {isLoading && (
         <p className="text-center text-gray-500">Loading flatmates...</p>
