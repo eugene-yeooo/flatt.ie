@@ -99,7 +99,7 @@ export default function FlattieCard({
     }
   }
   return (
-    <div className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
+    <div className="relative rounded-lg border border-gray-200 p-4 shadow-sm transition hover:shadow-md" style={{ backgroundColor: '#F4EFE9' }}>
       {/* Edit menu */}
       {canEdit && (
         <div className="absolute right-2 top-1">
@@ -132,7 +132,7 @@ export default function FlattieCard({
         </div>
       ) : (
         <>
-          <h3 className="text-center text-base font-semibold text-gray-900">
+          <h3 className="text-center text-base font-semibold" style={{ color: '#7C4A3A' }}>
             {name}
           </h3>
           <p className="text-center text-sm text-gray-500">
@@ -178,7 +178,7 @@ export default function FlattieCard({
           </button>
 
           {showOverdueList && (
-            <ul className="mt-2 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow">
+            <ul className="mt-2 list-none rounded border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow">
               {unpaidExpenses.length === 0 ? (
                 <li>No unpaid payments</li>
               ) : (
@@ -188,7 +188,7 @@ export default function FlattieCard({
                     className="mb-2 flex items-center justify-between"
                   >
                     <span>
-                      • {p.billTitle} (
+                      {p.billTitle} (
                       {new Date(p.dueDate).toLocaleDateString()}): $
                       {p.amount.toFixed(2)}
                     </span>
@@ -217,9 +217,10 @@ export default function FlattieCard({
                         <button
                           onClick={() => setPendingPaymentId(p.id)}
                           disabled={isPending}
-                          className="ml-2 rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 hover:bg-blue-200"
+                          title='Pay with credit'
+                          className="ml-2 rounded bg-blue-100 px-2 py-1 text-base hover:bg-blue-200"
                         >
-                          {isPending ? '...' : 'Pay with Credit'}
+                          {isPending ? '...' : '💸'}
                         </button>
                       )
                     )}

@@ -43,7 +43,7 @@ export default function BillCard({
     'bg-gray-100 text-gray-800'
 
   return (
-    <div className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
+    <div className="relative rounded-lg border border-gray-200 p-4 shadow-sm transition hover:shadow-md" style={{ backgroundColor: '#f8f3ee' }}>
       {/* Dropdown Menu */}
       <div className="absolute right-2 top-1">
         <BillsCardDropdown
@@ -81,7 +81,7 @@ export default function BillCard({
       </div>
 
       {/* Bill content */}
-      <h3 className="mb-0.5 text-base font-semibold text-gray-900">{title}</h3>
+      <h3 className="mb-0.5 text-base font-semibold" style={{ color: '#774136' }}>{title}</h3>
       <p className="text-sm text-gray-500">
         Due: {dueDate.toLocaleDateString()}
       </p>
