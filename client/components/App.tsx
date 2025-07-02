@@ -8,7 +8,7 @@ import Front from './Front'
 import { useAuth0 } from '@auth0/auth0-react'
 import Home from './Home/Home'
 import Register from './Register/CreateUser'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useUser } from '../../client/hooks/useUser'
 import { useLocation } from 'react-router-dom'
 import Profile from './Profile/Profile'
@@ -21,8 +21,6 @@ export default function App() {
   const user = useUser()
   const location = useLocation()
   const hideNav = location.pathname === '/register'
-
-  const isDashboard = location.pathname === '/payments'
 
   //useUser hook in compoents to know roles
 

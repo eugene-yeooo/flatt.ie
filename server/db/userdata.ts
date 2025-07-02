@@ -4,7 +4,7 @@ interface User {
   auth0_id: string
   username: string
   email: string
-  id: string
+  user_id: number
   name: string
   account_type: 'flat_financer' | 'flattie' | 'guest'
   credit?: number
@@ -38,12 +38,14 @@ export async function getAllUsers(): Promise<User[]> {
   )
 }
 
-export async function updateUserCredit(auth0_id: string, credit: number) {
-  return await connection('users')
-    .where({ auth0_id })
-    .update({ credit })
-    .returning(['id', 'username', 'email', 'credit', 'avatar_url'])
-    .then((rows) => rows[0])
+export async function updateUserCredit(id: number, credit: number) {
+  await connection('users').where({ id }).update({ credit })
+
+  const updatedUser = await connection('users')
+    .where({ id })
+    .first('id', 'username', 'email', 'credit', 'avatar_url')
+
+  return updatedUser
 }
 
 export async function getUserByAuth0Id(auth0_id: string): Promise<User | null> {

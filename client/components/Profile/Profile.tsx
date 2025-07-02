@@ -43,7 +43,7 @@ export default function Profile() {
             className="rounded border border-[var(--primary)] px-4 py-2 text-[var(--primary)] transition hover:bg-[var(--primary)] hover:text-white"
             aria-label={isEditing ? 'Cancel Edit' : 'Edit Profile'}
           >
-            {isEditing ? 'Cancel Edit' : <PencilIcon />}
+            {isEditing ? 'Close Edit' : <PencilIcon />}
           </button>
         </div>
 
