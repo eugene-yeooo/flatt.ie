@@ -101,24 +101,27 @@ export default function BillForm({
 
   // When splitType or customSplitMode changes, recalc splits if 'even'
   useEffect(() => {
-    if (splitType === 'even' && selectedUserIds.length > 0) {
-      const newShares: Share[] = selectedUserIds.map((id) => {
-        const split =
-          customSplitMode === 'percent'
-            ? (100 / selectedUserIds.length).toFixed(2)
-            : ((parseFloat(totalAmount) || 0) / selectedUserIds.length).toFixed(
-                2,
-              )
+    if (splitType !== 'even' || selectedUserIds.length === 0) return
 
-        return {
-          userId: id,
-          split,
-          paid: false,
-        }
-      })
+    const parsedAmount = parseFloat(String(totalAmount))
+    const isAmountValid = !isNaN(parsedAmount)
 
-      setShares(newShares)
-    }
+    const newShares: Share[] = selectedUserIds.map((id) => {
+      const split =
+        customSplitMode === 'percent'
+          ? 100 / selectedUserIds.length
+          : isAmountValid
+            ? parsedAmount / selectedUserIds.length
+            : 0
+
+      return {
+        userId: id,
+        split: Number(split.toFixed(2)), // ensures `split` is a number
+        paid: false,
+      }
+    })
+
+    setShares(newShares)
   }, [splitType, customSplitMode, selectedUserIds, totalAmount])
 
   // Handlers
@@ -143,7 +146,10 @@ export default function BillForm({
               : ((parseFloat(totalAmount) || 0) / newIds.length).toFixed(2)
             : '0'
 
-        return [...prevShares, { userId: id, split: defaultSplit, paid: false }]
+        return [
+          ...prevShares,
+          { userId: id, split: Number(defaultSplit), paid: false },
+        ]
       })
 
       return newIds
@@ -189,6 +195,32 @@ export default function BillForm({
       }
     }
 
+    console.log(
+      'Submitting shares:',
+      shares.map((s) => {
+        const splitValue =
+          typeof s.split === 'string' ? parseFloat(s.split) : s.split
+        const total = Number(totalAmount)
+
+        const amount =
+          customSplitMode === 'percent'
+            ? (splitValue / 100) * total
+            : splitValue
+
+        const percent =
+          customSplitMode === 'percent'
+            ? splitValue
+            : (splitValue / total) * 100
+
+        return {
+          userId: s.userId,
+          amount: Number(amount.toFixed(2)),
+          split: Number(percent.toFixed(2)),
+          paid: s.paid,
+        }
+      }),
+    )
+
     onSubmit({
       bill: {
         id: initialData.id,
@@ -201,32 +233,28 @@ export default function BillForm({
         expense_category: expenseCategory,
       },
       shares: shares.map((s) => {
-        const splitValue = Number.parseFloat(s.split)
-        const isValid = !Number.isNaN(splitValue)
-        const total = totalAmount || 0
+        const split =
+          typeof s.split === 'string' ? parseFloat(s.split) : s.split
+        const total =
+          typeof totalAmount === 'string'
+            ? parseFloat(totalAmount)
+            : totalAmount
 
-        const amount =
-          customSplitMode === 'percent'
-            ? isValid
-              ? ((splitValue / 100) * total).toFixed(2)
-              : '0.00'
-            : isValid
-              ? splitValue.toFixed(2)
-              : '0.00'
+        let amount = 0
+        let percent = 0
 
-        const percent =
-          customSplitMode === 'percent'
-            ? isValid
-              ? splitValue.toFixed(2)
-              : '0.00'
-            : isValid
-              ? ((splitValue / total) * 100).toFixed(2)
-              : '0.00'
+        if (customSplitMode === 'percent') {
+          percent = split
+          amount = (split / 100) * total
+        } else {
+          amount = split
+          percent = (split / total) * 100
+        }
 
         return {
           userId: s.userId,
-          amount: Number(amount),
-          split: Number(percent),
+          amount: parseFloat(amount.toFixed(2)),
+          split: parseFloat(percent.toFixed(2)),
           paid: s.paid,
         }
       }),

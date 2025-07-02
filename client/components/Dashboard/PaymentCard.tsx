@@ -3,6 +3,7 @@ import '../../styles/main.css'
 import { useDeletePayment } from '../../hooks/usePayment'
 import confetti from 'canvas-confetti'
 import { animate } from 'animejs'
+import useCanEdit from '../../hooks/useCanEdit'
 
 function fireConfettiFromElement(element: HTMLElement) {
   const rect = element.getBoundingClientRect()
@@ -86,6 +87,7 @@ export default function PaymentCard({
     .filter((payment) => payment.paid)
     .reduce((sum, payment) => sum + payment.amount, 0)
   const deleteMutation = useDeletePayment()
+  const canEdit = useCanEdit()
 
   const getDaysOverdue = (dueDate: string | Date): number => {
     const due =
@@ -108,9 +110,10 @@ export default function PaymentCard({
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
     return diffDays > 0 ? diffDays : 0
   }
-  const isOverdue = (dueDate: string | undefined, paid: boolean) => {
+  const isOverdue = (dueDate: string | Date | undefined, paid: boolean) => {
     if (!dueDate || paid) return false
-    return new Date(dueDate) < new Date()
+    const due = dueDate instanceof Date ? dueDate : new Date(dueDate)
+    return due < new Date()
   }
   const handleDelete = (id: number) => {
     if (confirm('Are you sure you want to delete this payment?')) {
