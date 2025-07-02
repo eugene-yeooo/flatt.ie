@@ -73,7 +73,6 @@ export default function EditProfile() {
           className="w-full rounded border px-3 py-2"
           placeholder="https://example.com/avatar.png"
         />
-
         {isEditing && (
           <UploadPhoto
             newPhoto={newPhoto}
