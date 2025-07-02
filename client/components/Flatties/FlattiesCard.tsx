@@ -192,7 +192,7 @@ export default function FlattieCard({
               onClick={() => setIsEditing(true)}
               className="rounded-md border border-orange-500 bg-orange-50 px-3 py-1 text-sm font-medium text-orange-600 hover:bg-orange-100"
             >
-              Edit
+              Add Credit
             </button>
             <button
               onClick={handleDelete}
