@@ -65,29 +65,18 @@ export default function EditProfile() {
   if (!user) return <p>Loading user data...</p>
 
   return (
-    <form className="mx-auto max-w-lg space-y-6 rounded bg-white p-4 shadow">
+    <form className="mx-auto max-w-lg space-y-6 rounded border-4 border-[var(--primary)] bg-white p-4 shadow-xl">
       {error && <p className="text-red-600">{error}</p>}
 
       <div>
-        <label htmlFor="avatar_url" className="mb-1 block font-medium">
-          Profile Photo
-        </label>
-
-        <input
-          id="avatar_url"
-          name="avatar_url"
-          type="url"
-          value={form.avatar_url}
-          onChange={handleChange}
-          className="w-full rounded border px-3 py-2"
-          placeholder="https://example.com/avatar.png"
-        />
         {isEditing && (
-          <UploadPhoto
-            newPhoto={newPhoto}
-            onChange={setNewPhoto}
-            fileInputRef={fileInputRef}
-          />
+          <div className="flex justify-center">
+            <UploadPhoto
+              newPhoto={newPhoto}
+              onChange={setNewPhoto}
+              fileInputRef={fileInputRef}
+            />
+          </div>
         )}
       </div>
 

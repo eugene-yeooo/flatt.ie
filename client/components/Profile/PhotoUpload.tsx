@@ -38,9 +38,9 @@ export default function UploadPhoto({
       <button
         type="button"
         onClick={() => fileInputRef.current?.click()}
-        className="mb-2 mt-4 rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+        className="mb-2 mt-4 justify-center rounded bg-[var(--primary)] px-4 py-2 text-[var(--primary-foreground)] transition duration-200 hover:bg-[var(--accent)]"
       >
-        Choose Photo
+        Upload New Profile Photo
       </button>
 
       <input

@@ -40,7 +40,10 @@ export default function ExpensesCard({
     calcOptions.find((opt) => opt.value === calc_method)?.label || calc_method
 
   return (
-    <div className="relative rounded-xl p-4 shadow transition-colors"  style={{backgroundColor: 'var(--primary-foreground)',}}>
+    <div
+      className="relative rounded-xl p-4 shadow transition-colors"
+      style={{ backgroundColor: 'var(--primary-foreground)' }}
+    >
       <div className="absolute right-2 top-1">
         <ExpenseCardDropdown
           id={id}
@@ -55,24 +58,60 @@ export default function ExpensesCard({
           setSelectedExpense={setSelectedExpense}
         />
       </div>
-      <div>
-        <h2 className="text-2xl font-bold text-[var(--primary)]">{category}</h2>
-        <p className="text-sm text-gray-600">Frequency: {frequencyLabel}</p>
-        {['weekly', 'monthly'].includes(frequency) && (
-          <>
-            <p className="text-sm text-gray-600">
-              Start Date: {start_date.toLocaleDateString()}
-            </p>
-            <p className="text-sm text-gray-600">
-              End Date: {end_date.toLocaleDateString()}
-            </p>
-          </>
-        )}
-        <p className="text-sm text-gray-700">
-          Amount: ${default_amount?.toFixed(2)}
-        </p>
-        <p className="text-sm text-gray-600">Payment method: {calcLabel}</p>
-        <p className="text-sm text-gray-600">notes: {notes}</p>
+      <div className="rounded-xl p-6 px-3 py-3">
+        <h2 className="mb-6 text-2xl font-extrabold tracking-tight text-[var(--primary)]">
+          {category}
+        </h2>
+        <table className="w-full max-w-lg rounded-xl  bg-white  p-4 ">
+          <tbody className=" text-sm text-[var(--muted-foreground)]">
+            <tr>
+              <td className="rounded px-3 py-3 font-medium text-[var(--foreground)]">
+                Frequency
+              </td>
+              <td className="px-3 py-3">{frequencyLabel}</td>
+            </tr>
+
+            {['weekly', 'monthly'].includes(frequency) && (
+              <>
+                <tr>
+                  <td className="px-3 py-3 font-medium text-[var(--foreground)]">
+                    Start Date
+                  </td>
+                  <td className="px-3 py-3">
+                    {start_date.toLocaleDateString()}
+                  </td>
+                </tr>
+                <tr>
+                  <td className="px-3 py-3 font-medium text-[var(--foreground)]">
+                    End Date
+                  </td>
+                  <td className="px-3 py-3">{end_date.toLocaleDateString()}</td>
+                </tr>
+              </>
+            )}
+
+            <tr>
+              <td className="px-3 py-3 font-medium text-[var(--foreground)]">
+                Amount
+              </td>
+              <td className="px-3 py-3">${default_amount?.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td className="px-3 py-3 font-medium text-[var(--foreground)]">
+                Payment Method
+              </td>
+              <td className="px-3 py-3">{calcLabel}</td>
+            </tr>
+            {notes && (
+              <tr>
+                <td className="px-3 py-3 font-medium text-[var(--foreground)]">
+                  Notes
+                </td>
+                <td className="px-3 py-3">{notes}</td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </div>
   )

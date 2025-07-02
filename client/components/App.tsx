@@ -8,7 +8,7 @@ import Front from './Front'
 import { useAuth0 } from '@auth0/auth0-react'
 import Home from './Home/Home'
 import Register from './Register/CreateUser'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useUser } from '../../client/hooks/useUser'
 import { useLocation } from 'react-router-dom'
 import Profile from './Profile/Profile'
@@ -21,7 +21,11 @@ export default function App() {
   const user = useUser()
   const location = useLocation()
   const hideNav = location.pathname === '/register'
+
   const isDashboard = location.pathname === '/payments'
+
+  const [selected, setSelected] = useState(false)
+
 
   //useUser hook in compoents to know roles
 
@@ -87,9 +91,29 @@ export default function App() {
               flatt.ie
             </Link>
 
-            <nav className="flex-1">
+            <nav className="flex">
               <Navigation />
             </nav>
+            {/* User avatar/profile */}
+            <div className="rounded-xl bg-white px-3 py-2 shadow backdrop-blur-sm ">
+              {user?.data?.avatar_url ? (
+                <Link to="/profile" aria-label="Go to your profile">
+                  <img
+                    src={user.data.avatar_url}
+                    alt={`${user.data.username || 'User'} avatar`}
+                    className="h-12 w-12 rounded-full object-cover ring-2 ring-[var(--primary)] transition duration-200 hover:ring-[var(--accent)]"
+                  />
+                </Link>
+              ) : (
+                <Link
+                  to="/profile"
+                  className="ring-3 flex h-12 w-12 items-center justify-center rounded-full bg-white text-lg font-semibold ring-[var(--primary)] transition duration-200 hover:ring-white"
+                  aria-label="Go to your profile"
+                >
+                  {user?.data?.username?.[0]?.toUpperCase() || 'U'}
+                </Link>
+              )}
+            </div>
           </div>
         )}
       </header>

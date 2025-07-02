@@ -298,7 +298,7 @@ export default function BillForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
+            className="focus:ring-[var(--primary)] mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring"
           />
         </label>
 
@@ -310,7 +310,7 @@ export default function BillForm({
             value={dueDate as string}
             onChange={(e) => setDueDate(e.target.value)}
             required
-            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
+            className="focus:ring-[var(--primary)] mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring"
           />
         </label>
 
@@ -324,7 +324,7 @@ export default function BillForm({
             value={totalAmount ?? ''}
             onChange={(e) => setTotalAmount(parseFloat(e.target.value))}
             required
-            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
+            className="focus:ring-[var(--primary)] mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring"
           />
         </label>
 
@@ -335,7 +335,7 @@ export default function BillForm({
             value={expenseCategory}
             onChange={(e) => setExpenseCategory(e.target.value)}
             required
-            className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
+            className="focus:ring-[var(--primary)] mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring"
           >
             <option value="" disabled>
               Select a category
@@ -361,8 +361,8 @@ export default function BillForm({
                   onClick={() => setSplitType('even')}
                   className={`rounded px-4 py-2 text-sm font-medium ${
                     splitType === 'even'
-                      ? 'bg-orange-500 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'bg-[var(--primary)] text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-[var(--primary)] hover:text-white'
                   }`}
                 >
                   Split Evenly
@@ -372,8 +372,8 @@ export default function BillForm({
                   onClick={() => setSplitType('custom')}
                   className={`rounded px-4 py-2 text-sm font-medium ${
                     splitType === 'custom'
-                      ? 'bg-orange-500 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      ? 'bg-[var(--primary)] text-white'
+                      : 'bg-gray-200 text-gray-700 hover:bg-[var(--primary)] hover:text-white'
                   }`}
                 >
                   Custom Split
@@ -392,8 +392,8 @@ export default function BillForm({
                     onClick={() => setCustomSplitMode('percent')}
                     className={`rounded px-4 py-2 text-sm font-medium ${
                       customSplitMode === 'percent'
-                        ? 'bg-orange-500 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        ? 'bg-[var(--primary)] text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-[var(--primary)] hover:text-white'
                     }`}
                   >
                     Split by %
@@ -403,8 +403,8 @@ export default function BillForm({
                     onClick={() => setCustomSplitMode('amount')}
                     className={`rounded px-4 py-2 text-sm font-medium ${
                       customSplitMode === 'amount'
-                        ? 'bg-orange-500 text-white'
-                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                        ? 'bg-[var(--primary)] text-white'
+                        : 'bg-gray-200 text-gray-700 hover:bg-[var(--primary)] hover:text-white'
                     }`}
                   >
                     Split by $
@@ -432,7 +432,7 @@ export default function BillForm({
                       <button
                         type="button"
                         disabled
-                        className="cursor-not-allowed rounded border bg-orange-500 px-4 py-1 text-sm text-white"
+                        className="cursor-not-allowed rounded border bg-[var(--primary)] px-4 py-1 text-sm text-white"
                       >
                         {u.name}
                       </button>
@@ -448,8 +448,8 @@ export default function BillForm({
                   onClick={() => handleUserToggle(u.user_id)}
                   className={`rounded border px-4 py-1 text-sm ${
                     isSelected
-                      ? 'bg-orange-500 text-white'
-                      : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                      ? 'bg-[var(--primary)] text-white'
+                      : 'bg-gray-100 text-gray-800 hover:bg-[var(--primary)] hover:text-white'
                   }`}
                 >
                   {u.name}
@@ -547,7 +547,7 @@ export default function BillForm({
                       className={`w-20 rounded border px-2 py-1 text-sm focus:ring ${
                         share.paid
                           ? 'cursor-not-allowed border-gray-300 bg-gray-100 text-gray-500'
-                          : 'border-gray-300 focus:border-orange-500 focus:ring-orange-300'
+                          : 'border-gray-300 focus:border-[var(--primary)] focus:ring-[var(--primary)]'
                       }`}
                     />
                     {share.paid && (
@@ -570,7 +570,7 @@ export default function BillForm({
 
         <button
           type="submit"
-          className="mx-auto mt-8 w-40 rounded-lg border border-gray-300 bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-400 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="mx-auto mt-8 w-40 rounded-lg border border-gray-300 bg-[var(--primary)] px-6 py-2 font-semibold shadow transition duration-200 hover:bg-[var(--primary)] text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2"
         >
           {submitLabel}
         </button>
