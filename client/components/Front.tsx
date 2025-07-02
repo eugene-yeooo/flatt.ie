@@ -1,6 +1,8 @@
 import { useAuth0 } from '@auth0/auth0-react'
 
 import VantaFogBackground from './VantaNetBackground'
+import { Progress } from '@radix-ui/react-progress'
+import { useEffect, useState } from 'react'
 
 const buttonStyle = {
   borderRadius: '0.5rem',
@@ -14,6 +16,21 @@ const buttonStyle = {
 
 export default function Front() {
   const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0()
+  const [progress, setProgress] = useState(0)
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setProgress((oldProgress) => {
+        if (oldProgress >= 100) {
+          clearInterval(interval) // stop when 100%
+          return 100
+        }
+        return oldProgress + 1 // increase by 1% every 50ms (adjust speed here)
+      })
+    }, 50)
+
+    return () => clearInterval(interval) // cleanup on unmount
+  }, [])
 
   if (isLoading) {
     return (
@@ -29,7 +46,9 @@ export default function Front() {
           fontWeight: 'bold',
         }}
       >
-        <div style={{ width: '50%' }}>...</div>{' '}
+        <div style={{ width: '50%' }}>
+          <Progress value={progress} />
+        </div>
       </div>
     )
   }
@@ -47,7 +66,6 @@ export default function Front() {
           padding: '2rem',
         }}
       >
-
         <VantaFogBackground />
         <div
           style={{
@@ -72,11 +90,9 @@ export default function Front() {
                 },
               })
             }}
-            style={{
-              ...buttonStyle,
-            }}
           >
             Register
+            <Progress value={33} />
           </button>
         </div>
       </div>
