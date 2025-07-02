@@ -11,7 +11,7 @@ export async function seed(knex) {
       username: 'keviiiin',
       name: 'Kevin',
       email: 'icebirbbb@gmail.com',
-      avatar_url: '/public/images/1751434047736.gif',
+      avatar_url: '/images/1751434047736.gif',
       account_type: 'flat_financer',
       credit: 100.5,
       bio: 'hi',
