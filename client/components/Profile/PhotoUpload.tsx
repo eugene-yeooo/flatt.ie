@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useState, useEffect } from 'react'
 
 type PhotoProps = {
   newPhoto: File | null
@@ -11,6 +11,24 @@ export default function UploadPhoto({
   onChange,
   fileInputRef,
 }: PhotoProps) {
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null)
+
+  // Create a preview URL whenever newPhoto changes
+  useEffect(() => {
+    if (!newPhoto) {
+      setPreviewUrl(null)
+      return
+    }
+
+    const url = URL.createObjectURL(newPhoto)
+    setPreviewUrl(url)
+
+    // Clean up the object URL to avoid memory leaks
+    return () => {
+      URL.revokeObjectURL(url)
+    }
+  }, [newPhoto])
+
   function handlePhotoChange(e: ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null
     onChange(file)
@@ -34,7 +52,7 @@ export default function UploadPhoto({
         className="hidden"
       />
 
-      {newPhoto && (
+      {newPhoto && !previewUrl && (
         <p className="mt-1 text-sm text-gray-600">Selected: {newPhoto.name}</p>
       )}
     </div>
