@@ -72,7 +72,7 @@ export default function FlattieCard({
         setPendingPaymentId(null)
       },
       onError: (err) => {
-        console.error('Pay from credit failed:', err)
+        console.error('Pay in credit failed:', err)
       },
     })
   }
@@ -122,6 +122,7 @@ export default function FlattieCard({
     }
   }
   return (
+
     <div className="relative rounded-lg border border-gray-200 p-4 shadow-sm transition hover:shadow-md" style={{ backgroundColor: '#F4EFE9' }}>
       {/* Edit menu */}
       {canEdit && (
@@ -134,21 +135,23 @@ export default function FlattieCard({
           </button>
         </div>
       )}
+
       {/* Profile Photo */}
       <div className="mb-3 flex justify-center">
         <img
-          src={avatar_url ? avatar_url : '/images/profilePhoto.png'}
+          src={avatar_url || '/images/profilePhoto.png'}
           alt={avatar_url ? `${name}'s profile` : 'Default avatar'}
           className="mb-2 h-20 w-20 rounded-full object-cover"
         />
       </div>
+
       {/* Info */}
       {isEditing ? (
         <div className="flex flex-col gap-2 text-sm text-gray-700">
           <label className="text-gray-600">Credit:</label>
           <input
             type="number"
-            className="rounded border p-1"
+            className="rounded border px-2 py-1"
             value={editedCredit}
             onChange={(e) => setEditedCredit(Number(e.target.value))}
           />
@@ -163,7 +166,8 @@ export default function FlattieCard({
           </p>
         </>
       )}
-      {/* Buttons */}
+
+      {/* Edit / Save Buttons */}
       {isEditing ? (
         <div className="mt-3 flex justify-center gap-2">
           <button
@@ -198,8 +202,10 @@ export default function FlattieCard({
           </div>
         )
       )}
+
+      {/* Overdue Payments */}
       {overdueAmount > 0 && (
-        <div className="mt-3">
+        <div className="mt-4">
           <button
             onClick={handleOverdueClick}
             className="w-full rounded-md border border-orange-500 bg-orange-50 px-3 py-1 text-sm font-medium text-orange-600 hover:bg-orange-100"
@@ -208,51 +214,53 @@ export default function FlattieCard({
           </button>
 
           {showOverdueList && (
-            <ul className="mt-2 list-none rounded border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow">
+            <ul className="mt-3 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm">
+
               {unpaidExpenses.length === 0 ? (
                 <li>No unpaid payments</li>
               ) : (
                 unpaidExpenses.map((p) => (
-                  <li
-                    key={p.id}
-                    className="mb-2 flex items-center justify-between"
-                  >
-                    <span>
-                      {p.billTitle} (
-                      {new Date(p.dueDate).toLocaleDateString()}): $
-                      {p.amount.toFixed(2)}
-                    </span>
-                    {pendingPaymentId === p.id ? (
-                      <div className="mt-1 flex w-full flex-col items-start gap-2 rounded border bg-gray-50 p-2">
-                        <p className="text-xs text-gray-600">
-                          Credit will be reduced by ${p.amount.toFixed(2)}
+
+                  <li key={p.id} className="mb-3">
+                    <div className="flex items-center justify-between">
+                      <span>
+                        {p.billTitle} (
+                        {new Date(p.dueDate).toLocaleDateString()}
+                        ): ${p.amount.toFixed(2)}
+                      </span>
+
+                      {pendingPaymentId !== p.id && canEdit && (
+                        <button
+                          onClick={() => setPendingPaymentId(p.id)}
+                          disabled={isPending}
+                          className="ml-2 rounded bg-green-100 px-2 py-1 text-xs text-green-700 hover:bg-green-200"
+                        >
+                          {isPending ? '...' : 'Pay with Credit'}
+                        </button>
+                      )}
+                    </div>
+
+                    {pendingPaymentId === p.id && (
+                      <div className="mt-2 rounded-lg border border-green-200 bg-green-50 p-3 shadow-sm">
+                        <p className="mb-3 text-sm font-medium text-green-800">
+                          Pay ${p.amount.toFixed(2)} in Credit
+
                         </p>
-                        <div className="flex gap-2 self-end">
+                        <div className="flex justify-center gap-3">
                           <button
                             onClick={() => handleConfirmPay(p.id)}
-                            className="rounded bg-green-100 px-2 py-1 text-xs text-green-700 hover:bg-green-200"
+                            className="rounded-md bg-green-600 px-3 py-1.5 text-sm text-white hover:bg-green-700"
                           >
                             Confirm
                           </button>
                           <button
                             onClick={() => setPendingPaymentId(null)}
-                            className="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600 hover:bg-gray-300"
+                            className="rounded-md border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-100"
                           >
                             Cancel
                           </button>
                         </div>
                       </div>
-                    ) : (
-                      canEdit && (
-                        <button
-                          onClick={() => setPendingPaymentId(p.id)}
-                          disabled={isPending}
-                          title='Pay with credit'
-                          className="ml-2 rounded bg-blue-100 px-2 py-1 text-base hover:bg-blue-200"
-                        >
-                          {isPending ? '...' : '💸'}
-                        </button>
-                      )
                     )}
                   </li>
                 ))
