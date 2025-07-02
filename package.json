@@ -54,7 +54,9 @@
     "sqlite3": "^5.1.6",
     "superagent": "^8.1.2",
     "tailwind-merge": "^3.3.1",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.178.0",
+    "vanta": "^0.5.24"
   },
   "devDependencies": {
     "@devacademy/eslint-config": "^1.10.1",
