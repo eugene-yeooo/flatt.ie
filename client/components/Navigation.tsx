@@ -1,7 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { Card } from '@/components/components/ui/card'
 import { Home, Users, Clipboard, Receipt } from 'lucide-react'
-import { useUser } from '../hooks/useUser'
 const navTabs = [
   { id: '/payments', label: 'Payments', icon: Home },
   { id: '/flatmates', label: 'Flatties', icon: Users },
@@ -9,11 +8,10 @@ const navTabs = [
   { id: '/expense', label: 'Expenses', icon: Receipt },
   { id: '/report', label: 'Reports', icon: Clipboard },
 ]
-
 export default function Navigation() {
   const location = useLocation()
   const activeTab = location.pathname
-  const user = useUser()
+
   return (
     <Card
       className="m-4 p-2 backdrop-blur-sm"
@@ -22,9 +20,9 @@ export default function Navigation() {
         borderColor: 'var(--border)',
       }}
     >
-      <div className="flex items-center justify-between space-x-4">
+      <div className="flex items-center justify-center">
         {/* Tabs container */}
-        <div className="flex flex-1 space-x-1">
+        <div className="flex space-x-3">
           {navTabs.map((tab) => {
             const Icon = tab.icon
             const isActive = activeTab === tab.id
@@ -33,7 +31,7 @@ export default function Navigation() {
               <Link
                 key={tab.id}
                 to={tab.id}
-                className={`flex items-center justify-center gap-2 rounded-xl px-4 py-3 font-medium shadow transition-all duration-200 hover:shadow-md`}
+                className={`flex items-center justify-center gap-2 rounded-xl px-5 py-4 font-medium shadow transition-all duration-200 hover:shadow-md`}
                 style={{
                   backgroundColor: isActive
                     ? 'var(--primary)'
@@ -55,27 +53,6 @@ export default function Navigation() {
               </Link>
             )
           })}
-        </div>
-
-        {/* User avatar/profile */}
-        <div className="flex items-center justify-end px-2 py-2">
-          {user?.data?.avatar_url ? (
-            <Link to="/profile" aria-label="Go to your profile">
-              <img
-                src={user.data.avatar_url}
-                alt={`${user.data.username || 'User'} avatar`}
-                className="h-10 w-10 cursor-pointer rounded-full object-cover"
-              />
-            </Link>
-          ) : (
-            <Link
-              to="/profile"
-              className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-gray-300 text-gray-600"
-              aria-label="Go to your profile"
-            >
-              {user?.data?.username?.[0]?.toUpperCase() || 'U'}
-            </Link>
-          )}
         </div>
       </div>
     </Card>
