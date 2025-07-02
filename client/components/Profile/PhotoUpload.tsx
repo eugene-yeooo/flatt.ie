@@ -13,7 +13,6 @@ export default function UploadPhoto({
 }: PhotoProps) {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
 
-  // Create a preview URL whenever newPhoto changes
   useEffect(() => {
     if (!newPhoto) {
       setPreviewUrl(null)
@@ -23,7 +22,6 @@ export default function UploadPhoto({
     const url = URL.createObjectURL(newPhoto)
     setPreviewUrl(url)
 
-    // Clean up the object URL to avoid memory leaks
     return () => {
       URL.revokeObjectURL(url)
     }
@@ -52,8 +50,15 @@ export default function UploadPhoto({
         className="hidden"
       />
 
-      {newPhoto && !previewUrl && (
-        <p className="mt-1 text-sm text-gray-600">Selected: {newPhoto.name}</p>
+      {previewUrl && (
+        <div className="mt-2">
+          <img
+            src={previewUrl}
+            alt="Preview"
+            className="max-h-48 rounded border border-gray-300"
+          />
+          <p className="mt-1 text-sm text-gray-600">{newPhoto?.name}</p>
+        </div>
       )}
     </div>
   )
