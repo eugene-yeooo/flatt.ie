@@ -3,6 +3,7 @@ import { addPayments, deletePayment, getAllPayments } from '../apis/payments.ts'
 import { updatePaymentStatus } from '../apis/payments.ts'
 import { Payment } from 'models/models.ts'
 import { payFromCredit } from '../apis/payments'
+import React from 'react'
 
 export function useAllPayment() {
   const query = useQuery({
@@ -12,6 +13,35 @@ export function useAllPayment() {
   return {
     ...query,
   }
+}
+export function useUserReports() {
+  const { data: payments = [], ...rest } = useAllPayment()
+
+  const data = React.useMemo(() => {
+    const result: Record<string, number[]> = {}
+
+    payments.forEach((payment: Payment) => {
+      const date =
+        payment.dueDate instanceof Date
+          ? payment.dueDate
+          : new Date(payment.dueDate)
+      const monthIndex = date.getMonth()
+      const userName = payment.userName
+
+      if (!result[userName]) {
+        result[userName] = Array(12).fill(0)
+      }
+
+      result[userName][monthIndex] += payment.amount
+    })
+
+    return Object.entries(result).map(([category, monthlyAmounts]) => ({
+      category,
+      monthlyAmounts,
+    }))
+  }, [payments])
+
+  return { data, ...rest }
 }
 
 export function useUpdatePaymentStatus() {

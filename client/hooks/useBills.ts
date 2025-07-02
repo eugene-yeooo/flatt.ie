@@ -8,6 +8,7 @@ import {
   updateBillAndPayments,
 } from '../apis/bills'
 import { NewBill, UpdateBillData, UpdateBillRequest } from 'models/models'
+import React from 'react'
 
 // ---------- GET BILLS ---------- //
 
@@ -29,6 +30,33 @@ export function useGetBillById(id: number | string) {
     queryFn: () => getBillById(id),
     enabled: !!id, // only run if id is truthy
   })
+}
+
+// -------- BILLS FOR REPORTS ----- //
+export function useBillsReport() {
+  const { data: bills = [], ...rest } = useGetAllBills()
+
+  // Transform bills to the chart format
+  const data = React.useMemo(() => {
+    const result: Record<string, number[]> = {}
+
+    bills.forEach((bill) => {
+      const monthIndex = new Date(bill.dueDate).getMonth()
+      const category = bill.expenseCategory
+
+      if (!result[category]) {
+        result[category] = Array(12).fill(0)
+      }
+      result[category][monthIndex] += Number(bill.totalAmount)
+    })
+
+    return Object.entries(result).map(([category, monthlyAmounts]) => ({
+      category,
+      monthlyAmounts,
+    }))
+  }, [bills])
+
+  return { data, ...rest }
 }
 
 // ---------- ADD BILL ---------- //
