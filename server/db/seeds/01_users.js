@@ -39,7 +39,7 @@ export async function seed(knex) {
       bio: 'hi',
     },
     {
-      id: 5,
+      id: 4,
       auth0_id: 'auth0|685e6690e92c77c43ee7f07b',
       username: 'hannaaaah',
       name: 'Hannah',
