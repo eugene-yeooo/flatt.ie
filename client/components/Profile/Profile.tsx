@@ -73,7 +73,7 @@ export default function Profile() {
 
         {/* Edit Form */}
         {isEditing && (
-          <div className="mt-8 border-t border-gray-200 pt-6">
+          <div className="mt-8  border-gray-200 pt-6">
             <EditProfile />
           </div>
         )}
