@@ -14,6 +14,7 @@ import { useLocation } from 'react-router-dom'
 import Profile from './Profile/Profile'
 import ReportsPage from './Reports/ReportsPage'
 import VantaBackground from './VantaNetBackground'
+import { Progress } from '../../src/components/components/ui/progress'
 
 export default function App() {
   const { isAuthenticated } = useAuth0()
@@ -56,7 +57,9 @@ export default function App() {
           backgroundColor: 'var(--background)',
         }}
       >
-        <div style={{ width: '300px' }}>...</div>
+        <div style={{ width: '300px' }}>
+          <Progress value={33} />
+        </div>
       </div>
     )
   }
