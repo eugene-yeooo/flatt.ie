@@ -141,7 +141,7 @@ export default function BillForm({
       const isSelected = prevIds.includes(id)
       const newIds = isSelected
         ? prevIds.filter((fId) => fId !== id)
-        : [...prevIds, id]
+        : Array.from(new Set([...prevIds, id]))
 
       setShares((prevShares) => {
         // If deselecting, remove the share
@@ -233,6 +233,7 @@ export default function BillForm({
     //     }
     //   }),
     // )
+    console.log('shares', shares)
 
     onSubmit({
       bill: {
