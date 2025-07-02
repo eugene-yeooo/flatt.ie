@@ -269,7 +269,9 @@ export default function BillForm({
         className="flex max-h-[90vh] w-[600px] flex-col overflow-y-auto rounded-md bg-[#f9f3ee] p-8 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-[#78350f]">{submitLabel}</h2>
+          <h2 className="text-xl font-semibold text-[#78350f]">
+            {submitLabel}
+          </h2>
           <button
             type="button"
             onClick={onCancel}
@@ -342,7 +344,9 @@ export default function BillForm({
         <div className="mb-4 mt-0">
           <div className="flex gap-10">
             <div className="flex flex-col">
-              <h4 className="text-md mb-2 font-medium text-[#78350f]">Split Type</h4>
+              <h4 className="text-md mb-2 font-medium text-[#78350f]">
+                Split Type
+              </h4>
               <div className="flex gap-2">
                 <button
                   type="button"
@@ -371,7 +375,9 @@ export default function BillForm({
 
             {splitType === 'custom' && (
               <div className="flex flex-col">
-                <h4 className="text-md mb-2 font-medium text-[#78350f]">Custom Split Mode</h4>
+                <h4 className="text-md mb-2 font-medium text-[#78350f]">
+                  Custom Split Mode
+                </h4>
                 <div className="flex gap-2">
                   <button
                     type="button"
