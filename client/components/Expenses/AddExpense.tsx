@@ -2,6 +2,7 @@ import { useAddExpense } from '../../hooks/useExpense'
 import { useAddNewBill } from '../../hooks/useBills'
 import { useState } from 'react'
 import { X } from 'lucide-react'
+import useCanEdit from '../../hooks/useCanEdit'
 
 export default function AddExpense({
   onAddExpense,
@@ -19,7 +20,7 @@ export default function AddExpense({
   const [notes, setNotes] = useState('')
   const mutation = useAddExpense()
   const billMutation = useAddNewBill()
-
+  const canEdit = useCanEdit()
   const frequencyOptions = [
     { label: 'Weekly', value: 'weekly' },
     { label: 'Monthly', value: 'monthly' },
