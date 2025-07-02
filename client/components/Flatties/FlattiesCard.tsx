@@ -122,8 +122,9 @@ export default function FlattieCard({
     }
   }
   return (
-    <div className="relative rounded-lg border border-gray-200 bg-white p-4 shadow-sm transition hover:shadow-md">
-      {/* Edit Icon */}
+
+    <div className="relative rounded-lg border border-gray-200 p-4 shadow-sm transition hover:shadow-md" style={{ backgroundColor: '#F4EFE9' }}>
+      {/* Edit menu */}
       {canEdit && (
         <div className="absolute right-2 top-1">
           <button
@@ -157,7 +158,7 @@ export default function FlattieCard({
         </div>
       ) : (
         <>
-          <h3 className="text-center text-base font-semibold text-gray-900">
+          <h3 className="text-center text-base font-semibold" style={{ color: '#7C4A3A' }}>
             {name}
           </h3>
           <p className="text-center text-sm text-gray-500">
@@ -214,10 +215,12 @@ export default function FlattieCard({
 
           {showOverdueList && (
             <ul className="mt-3 rounded border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 shadow-sm">
+
               {unpaidExpenses.length === 0 ? (
                 <li>No unpaid payments</li>
               ) : (
                 unpaidExpenses.map((p) => (
+
                   <li key={p.id} className="mb-3">
                     <div className="flex items-center justify-between">
                       <span>
@@ -241,6 +244,7 @@ export default function FlattieCard({
                       <div className="mt-2 rounded-lg border border-green-200 bg-green-50 p-3 shadow-sm">
                         <p className="mb-3 text-sm font-medium text-green-800">
                           Pay ${p.amount.toFixed(2)} in Credit
+
                         </p>
                         <div className="flex justify-center gap-3">
                           <button
