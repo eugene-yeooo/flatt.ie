@@ -137,7 +137,7 @@ export default function Bills() {
           {canEdit && (
             <Button
               onClick={toggleAddBill}
-              className="flex min-w-fit items-center gap-1 border border-gray-300 bg-white px-3 py-2 hover:bg-[var(--primary)] hover:text-white transition-colors"
+              className="flex min-w-fit items-center gap-1 border border-gray-300 bg-white px-3 py-2 transition-colors hover:bg-[var(--primary)] hover:text-white"
             >
               <Plus size={16} />
               Add Bill

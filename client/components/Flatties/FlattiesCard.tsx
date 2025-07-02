@@ -5,7 +5,6 @@ import { Payment } from 'models/models'
 import { usePayFromCredit } from '../../hooks/usePayment'
 import useCanEdit from '../../hooks/useCanEdit'
 import { Pencil } from 'lucide-react'
-import { useAuth0 } from '@auth0/auth0-react'
 import { useDeleteUser } from '../../hooks/useUser'
 
 export type FlattieCardProps = {
@@ -31,7 +30,6 @@ export default function FlattieCard({
 
   const canEdit = useCanEdit()
   const { mutate: payFromCredit, isPending } = usePayFromCredit()
-  const { getAccessTokenSilently } = useAuth0()
   async function fetchUnpaidExpenses() {
     const allPayments = await getAllPayments()
     const today = new Date()
@@ -106,9 +104,7 @@ export default function FlattieCard({
 
   async function handleSaveCredit() {
     try {
-      const token = await getAccessTokenSilently()
-      const updated = await updateCredit(editedCredit, token)
-
+      const updated = await updateCredit(editedCredit, id)
       if (updated) {
         setEditedCredit(updated.credit)
         setIsEditing(false)
@@ -121,6 +117,7 @@ export default function FlattieCard({
       alert('Something went wrong while saving credit.')
     }
   }
+
   return (
     <div
       className="relative rounded-lg border border-gray-200 p-4 shadow-sm transition hover:shadow-md"

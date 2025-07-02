@@ -47,13 +47,15 @@ export default function BillForm({
 
   console.log(expense)
   const [title, setTitle] = useState(initialData.title || '')
-  const [dueDate, setDueDate] = useState(initialData.dueDate || '')
+  const [dueDate, setDueDate] = useState(initialData.due_date || '')
   const [totalAmount, setTotalAmount] = useState(
-    typeof initialData.totalAmount === 'number' ? initialData.totalAmount : '',
+    typeof initialData.total_amount === 'number'
+      ? initialData.total_amount
+      : '',
   )
 
   const [expenseCategory, setExpenseCategory] = useState(
-    initialData.expenseCategory || 'Power',
+    initialData.expense_category || 'Power',
   )
   const [splitType, setSplitType] = useState<'even' | 'custom'>('even')
   const [customSplitMode, setCustomSplitMode] = useState<'percent' | 'amount'>(

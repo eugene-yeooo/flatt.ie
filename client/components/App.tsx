@@ -8,12 +8,13 @@ import Front from './Front'
 import { useAuth0 } from '@auth0/auth0-react'
 import Home from './Home/Home'
 import Register from './Register/CreateUser'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useUser } from '../../client/hooks/useUser'
 import { useLocation } from 'react-router-dom'
 import Profile from './Profile/Profile'
 import ReportsPage from './Reports/ReportsPage'
 import VantaBackground from './VantaNetBackground'
+import { Progress } from '../../src/components/components/ui/progress'
 
 export default function App() {
   const { isAuthenticated } = useAuth0()
@@ -21,8 +22,6 @@ export default function App() {
   const user = useUser()
   const location = useLocation()
   const hideNav = location.pathname === '/register'
-
-  const isDashboard = location.pathname === '/payments'
 
   //useUser hook in compoents to know roles
 
@@ -58,7 +57,9 @@ export default function App() {
           backgroundColor: 'var(--background)',
         }}
       >
-        <div style={{ width: '300px' }}>...</div>
+        <div style={{ width: '300px' }}>
+          <Progress value={33} />
+        </div>
       </div>
     )
   }
