@@ -9,7 +9,24 @@ import {
   updateUserCredit,
 } from 'server/db/userdata.ts'
 
+import multer from 'multer'
+import path from 'path'
+
 const router = express.Router()
+
+const storage = multer.diskStorage({
+  destination: 'public/images',
+  filename: (
+    req,
+    file,
+    cb: (error: Error | null, filename: string) => void,
+  ) => {
+    const ext = path.extname(file.originalname)
+    cb(null, `${Date.now()}${ext}`)
+  },
+})
+
+const upload = multer({ storage })
 
 // ---------- /users ----------
 
@@ -106,25 +123,36 @@ router.get('/me', checkJwt, async (req: JwtRequest, res) => {
   }
 })
 
-router.patch('/me', checkJwt, async (req: JwtRequest, res) => {
-  try {
-    const auth0_id = req.auth?.sub
-    const updates = req.body
+router.patch(
+  '/me',
+  checkJwt,
+  upload.single('avatar_url'),
+  async (req: JwtRequest, res) => {
+    try {
+      const auth0_id = req.auth?.sub
+      const updates = req.body
+      const avatar_url: string | undefined = req.file
+        ? `/public/images/${req.file.filename}`
+        : undefined
 
-    if (!auth0_id) {
-      return res.status(401).json({ error: 'Unauthorized' })
+      if (!auth0_id) {
+        return res.status(401).json({ error: 'Unauthorized' })
+      }
+
+      const updatedUser = await updateUser({
+        ...updates,
+        auth0_id,
+        avatar_url,
+      })
+      console.log('req.file:', req.file)
+      console.log('req.body:', req.body)
+
+      res.json(updatedUser)
+    } catch (err) {
+      console.error('Error updating user:', err)
+      res.status(500).json({ error: 'Internal server error' })
     }
-
-    const updatedUser = await updateUser({
-      ...updates,
-      auth0_id,
-    })
-
-    res.json(updatedUser)
-  } catch (err) {
-    console.error('Error updating user:', err)
-    res.status(500).json({ error: 'Internal server error' })
-  }
-})
+  },
+)
 
 export default router

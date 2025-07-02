@@ -48,12 +48,12 @@ export function useEditProfile() {
   const { getAccessTokenSilently } = useAuth0()
   const queryClient = useQueryClient()
 
-  const mutationFn = async (updates: Partial<User>): Promise<User | null> => {
+  const mutationFn = async (formData: FormData): Promise<User | null> => {
     const token = await getAccessTokenSilently()
-    return API.editProfile(updates, token)
+    return API.editProfile(formData, token)
   }
 
-  return useMutation<User | null, Error, Partial<User>>({
+  return useMutation<User | null, Error, FormData>({
     mutationFn,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['user'] }),
   })
