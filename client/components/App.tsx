@@ -15,7 +15,7 @@ import Profile from './Profile/Profile'
 import ReportsPage from './Reports/ReportsPage'
 
 export default function App() {
-  const { isAuthenticated, getAccessTokenSilently } = useAuth0()
+  const { isAuthenticated } = useAuth0()
   const navigate = useNavigate()
   const user = useUser()
   const location = useLocation()
@@ -24,18 +24,15 @@ export default function App() {
   //useUser hook in compoents to know roles
 
   useEffect(() => {
-    if (isAuthenticated) {
-      const getToken = async () => {
-        const token = await getAccessTokenSilently()
-        console.log(token)
-      }
-      getToken()
-    }
-
-    if (isAuthenticated && !user.isLoading && !user.data) {
+    if (
+      isAuthenticated &&
+      !user.isLoading &&
+      !user.data &&
+      location.pathname !== '/register'
+    ) {
       navigate('/register')
     }
-  }, [user.data, user.isLoading, navigate, isAuthenticated])
+  }, [isAuthenticated, user.isLoading, user.data, location.pathname, navigate])
 
   if (isAuthenticated && user.isLoading) {
     return <p>Loading user data...</p>

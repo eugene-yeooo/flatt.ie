@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 import { useAuth0 } from '@auth0/auth0-react'
-import { useUser } from '../../hooks/useUser'
+import { useAddUser, useUser } from '../../hooks/useUser'
 import { IfAuthenticated, IfNotAuthenticated } from '../Authenticated'
 import Profile from '../Profile/Profile'
 
@@ -10,7 +10,7 @@ function Register() {
   const { getAccessTokenSilently, user: auth0User } = useAuth0()
   const user = useUser()
   const navigate = useNavigate()
-
+  const addUser = useAddUser()
   // Form state for user input
   const [form, setForm] = useState({
     name: '',
@@ -52,8 +52,7 @@ function Register() {
     evt.preventDefault()
     try {
       const token = await getAccessTokenSilently()
-      await user.add.mutateAsync({ newUser: form, token }, mutationOptions)
-      // navigate('/') will happen via useEffect once user.data is updated
+      await addUser.mutateAsync({ newUser: form, token }, mutationOptions)
     } catch (err) {
       handleError(err)
     }

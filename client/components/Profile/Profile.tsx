@@ -9,8 +9,7 @@ export default function Profile() {
   const user = useUser()
   const [isEditing, setIsEditing] = useState(false)
 
-  if (!user?.data)
-    return <p className="py-8 text-center">Loading user data...</p>
+  if (!user?.data) return
 
   const toggleEdit = () => setIsEditing((prev) => !prev)
 

@@ -40,7 +40,9 @@ export function useUserMutation<TData = unknown, TVariables = unknown>(
 
 // Mutation to add/register user
 export function useAddUser() {
-  return useUserMutation(API.addUser)
+  return useMutation({
+    mutationFn: API.addUser,
+  })
 }
 
 //Update profile hook
