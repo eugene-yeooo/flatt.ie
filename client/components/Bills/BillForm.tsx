@@ -7,6 +7,7 @@ import {
   TooltipContent,
   TooltipProvider,
 } from '../../../src/components/components/ui/tooltip'
+import { useAllExpense } from '../../hooks/useExpense'
 
 type BillFormProps = {
   initialData?: Partial<UpdateBillData> & { payments?: Share[] }
@@ -40,8 +41,11 @@ export default function BillForm({
   onCancel,
   submitLabel,
 }: BillFormProps) {
-  const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
+  // const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
+  const { data: expense, isPending } = useAllExpense()
+  const categories = expense?.map((e) => e.category)
 
+  console.log(expense)
   const [title, setTitle] = useState(initialData.title || '')
   const [dueDate, setDueDate] = useState(initialData.dueDate || '')
   const [totalAmount, setTotalAmount] = useState(
@@ -59,6 +63,8 @@ export default function BillForm({
   const [shares, setShares] = useState<Share[]>([])
 
   const [isInitialLoad, setIsInitialLoad] = useState(true)
+
+  console.log(expense)
 
   // Initialization useEffect: only once
   useEffect(() => {
@@ -123,6 +129,8 @@ export default function BillForm({
 
     setShares(newShares)
   }, [splitType, customSplitMode, selectedUserIds, totalAmount])
+
+  if (isPending) return <p>Loading expenses...</p>
 
   // Handlers
   function handleUserToggle(id: number) {
@@ -269,7 +277,9 @@ export default function BillForm({
         className="flex max-h-[90vh] w-[600px] flex-col overflow-y-auto rounded-md bg-[#f9f3ee] p-8 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-[#78350f]">{submitLabel}</h2>
+          <h2 className="text-xl font-semibold text-[#78350f]">
+            {submitLabel}
+          </h2>
           <button
             type="button"
             onClick={onCancel}
@@ -342,7 +352,9 @@ export default function BillForm({
         <div className="mb-4 mt-0">
           <div className="flex gap-10">
             <div className="flex flex-col">
-              <h4 className="text-md mb-2 font-medium text-[#78350f]">Split Type</h4>
+              <h4 className="text-md mb-2 font-medium text-[#78350f]">
+                Split Type
+              </h4>
               <div className="flex gap-2">
                 <button
                   type="button"
@@ -371,7 +383,9 @@ export default function BillForm({
 
             {splitType === 'custom' && (
               <div className="flex flex-col">
-                <h4 className="text-md mb-2 font-medium text-[#78350f]">Custom Split Mode</h4>
+                <h4 className="text-md mb-2 font-medium text-[#78350f]">
+                  Custom Split Mode
+                </h4>
                 <div className="flex gap-2">
                   <button
                     type="button"
