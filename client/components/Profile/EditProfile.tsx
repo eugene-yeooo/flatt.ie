@@ -65,7 +65,7 @@ export default function EditProfile() {
   if (!user) return <p>Loading user data...</p>
 
   return (
-    <form className="mx-auto max-w-lg space-y-6 rounded border-4 border-[var(--primary)] bg-white p-4 shadow-xl">
+    <form className="mx-auto max-w-lg space-y-6 rounded border-4 border-[var(--primary)] bg-[var(--background)] p-4 shadow-xl">
       {error && <p className="text-red-600">{error}</p>}
 
       <div>

@@ -64,6 +64,7 @@ function Register() {
   const hideError = () => setErrorMsg('')
 
   return (
+
     <div className="relative z-0 flex min-h-screen items-center justify-center bg-[var(--background)] px-4 py-12">
       <VantaFogBackground />
       <IfAuthenticated>
