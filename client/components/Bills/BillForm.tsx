@@ -44,7 +44,10 @@ export default function BillForm({
 
   const [title, setTitle] = useState(initialData.title || '')
   const [dueDate, setDueDate] = useState(initialData.dueDate || '')
-  const [totalAmount, setTotalAmount] = useState(initialData.totalAmount)
+  const [totalAmount, setTotalAmount] = useState(
+    typeof initialData.totalAmount === 'number' ? initialData.totalAmount : '',
+  )
+
   const [expenseCategory, setExpenseCategory] = useState(
     initialData.expenseCategory || 'Power',
   )
@@ -69,7 +72,7 @@ export default function BillForm({
       const ids = payments.map((p) => p.userId)
       setSelectedUserIds(ids)
 
-      const formattedShares: Share[] = payments.map((p) => ({
+      const formattedShares = payments.map((p) => ({
         userId: p.userId,
         split: Number(p.amount).toFixed(2),
         paid: Boolean(p.paid),
@@ -95,7 +98,7 @@ export default function BillForm({
 
     setIsInitialLoad(false)
   }, [isInitialLoad, initialData, users])
-  console.log(users)
+
   // When splitType or customSplitMode changes, recalc splits if 'even'
   useEffect(() => {
     if (splitType === 'even' && selectedUserIds.length > 0) {
@@ -280,8 +283,8 @@ export default function BillForm({
             type="number"
             min="0"
             step="0.01"
-            value={totalAmount}
-            onChange={(e) => setTotalAmount(e.target.value)}
+            value={totalAmount ?? ''}
+            onChange={(e) => setTotalAmount(parseFloat(e.target.value))}
             required
             className="focus:ring-primary/50 mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-primary focus:ring"
           />

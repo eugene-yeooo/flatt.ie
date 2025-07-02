@@ -59,7 +59,7 @@ router.post('/', async (req, res) => {
   }
   const paymentsToInsert = payments.map((payment) => ({
     ...payment,
-    user_id: payment.userId,
+    user_id: payment.user_id,
     bill_id: billId,
   }))
 
