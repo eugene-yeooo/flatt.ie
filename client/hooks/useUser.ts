@@ -76,7 +76,7 @@ export function useAllUsers() {
 
 // Delete user
 
-// import type { UseMutationResult } from '@tanstack/react-query'
+import type { UseMutationResult } from '@tanstack/react-query'
 
 export function useDeleteUser(): UseMutationResult<
   void,

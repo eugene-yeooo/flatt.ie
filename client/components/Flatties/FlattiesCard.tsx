@@ -247,7 +247,7 @@ export default function FlattieCard({
                         <button
                           onClick={() => setPendingPaymentId(p.id)}
                           disabled={isPending}
-                          className="ml-2 rounded bg-blue-100 px-2 py-1 text-xs text-blue-700 hover:bg-blue-200"
+                          className="ml-2 rounded bg-green-100 px-2 py-1 text-xs text-green-700 hover:bg-green-200"
                         >
                           {isPending ? '...' : 'Pay with Credit'}
                         </button>
