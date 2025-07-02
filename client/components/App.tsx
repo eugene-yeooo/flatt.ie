@@ -22,8 +22,6 @@ export default function App() {
   const location = useLocation()
   const hideNav = location.pathname === '/register'
 
-  const isDashboard = location.pathname === '/payments'
-
   //useUser hook in compoents to know roles
 
   useEffect(() => {
