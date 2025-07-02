@@ -4,6 +4,7 @@ import { useAuth0 } from '@auth0/auth0-react'
 import { useAddUser, useUser } from '../../hooks/useUser'
 import { IfAuthenticated, IfNotAuthenticated } from '../Authenticated'
 import Profile from '../Profile/Profile'
+import VantaFogBackground from '../VantaNetBackground'
 
 function Register() {
   const [errorMsg, setErrorMsg] = useState('')
@@ -63,7 +64,8 @@ function Register() {
   const hideError = () => setErrorMsg('')
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[var(--background)] px-4 py-12">
+    <div className="relative z-0 flex min-h-screen items-center justify-center bg-[var(--background)] px-4 py-12">
+      <VantaFogBackground />
       <IfAuthenticated>
         <div className="w-full max-w-md rounded-xl bg-white p-8 shadow-lg">
           <h1 className="mb-6 text-center text-3xl font-bold text-[var(--primary)]">
