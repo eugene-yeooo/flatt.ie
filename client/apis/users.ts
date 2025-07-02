@@ -26,14 +26,10 @@ export async function getAllUsers(token: string): Promise<User[] | null> {
     return null
   }
 }
-// Post Credit Users
-export async function updateCredit(credit: number, token: string) {
+// PATCH Credit Users
+export async function updateCredit(credit: number, id: number) {
   try {
-    const res = await request
-      .patch(`${rootURL}/users`)
-      .set('Authorization', `Bearer ${token}`)
-      .send({ credit })
-    console.log('Updated credit:', res.body)
+    const res = await request.patch(`${rootURL}/users`).send({ credit, id })
     return res.body || []
   } catch (err) {
     console.error('Error updating credit', err)

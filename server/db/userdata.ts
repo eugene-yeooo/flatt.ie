@@ -4,7 +4,7 @@ interface User {
   auth0_id: string
   username: string
   email: string
-  id: string
+  user_id: number
   name: string
   account_type: 'flat_financer' | 'flattie' | 'guest'
   credit?: number
@@ -38,7 +38,7 @@ export async function getAllUsers(): Promise<User[]> {
   )
 }
 
-export async function updateUserCredit(id: string, credit: number) {
+export async function updateUserCredit(id: number, credit: number) {
   await connection('users').where({ id }).update({ credit })
 
   const updatedUser = await connection('users')

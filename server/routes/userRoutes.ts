@@ -65,10 +65,9 @@ router.post('/', checkJwt, async (req: JwtRequest, res) => {
 })
 
 //Patch
-router.patch('/', async (req: JwtRequest, res) => {
+router.patch('/', async (req, res) => {
   try {
-    const id = req.auth?.sub
-    const { credit } = req.body
+    const { credit, id } = req.body
 
     if (!id || typeof credit !== 'number') {
       return res.status(400).json({ error: 'Missing or invalid credit value' })
