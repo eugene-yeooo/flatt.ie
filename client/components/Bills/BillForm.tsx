@@ -115,6 +115,7 @@ export default function BillForm({
     const isAmountValid = !isNaN(parsedAmount)
 
     const newShares: Share[] = selectedUserIds.map((id) => {
+      const existing = shares.find((s) => s.userId === id)
       const split =
         customSplitMode === 'percent'
           ? 100 / selectedUserIds.length
@@ -125,7 +126,7 @@ export default function BillForm({
       return {
         userId: id,
         split: Number(split.toFixed(2)), // ensures `split` is a number
-        paid: false,
+        paid: existing?.paid ?? false,
       }
     })
 
@@ -156,9 +157,11 @@ export default function BillForm({
               : ((parseFloat(totalAmount) || 0) / newIds.length).toFixed(2)
             : '0'
 
+        const wasPaid =
+          initialData.payments?.find((p) => p.userId === id)?.paid ?? false
         return [
           ...prevShares,
-          { userId: id, split: Number(defaultSplit), paid: false },
+          { userId: id, split: Number(defaultSplit), paid: wasPaid },
         ]
       })
 
