@@ -432,7 +432,7 @@ export default function BillForm({
               <span className="text-gray-600">
                 {(() => {
                   const totalSplit = shares.reduce(
-                    (sum, s) => sum + (s.split || 0),
+                    (sum, s) => sum + (parseFloat(s.split) || 0),
                     0,
                   )
 
