@@ -40,6 +40,7 @@ export async function updateCredit(credit: number, token: string) {
     return null
   }
 }
+
 // DELETE Users
 export async function deleteUser(userId: number, token: string): Promise<void> {
   await request

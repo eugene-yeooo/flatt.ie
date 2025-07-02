@@ -61,7 +61,7 @@ export function useEditProfile() {
 
 //Get all users
 export function useAllUsers() {
-  const { getAccessTokenSilently, isAuthenticated } = useAuth0()
+  const { getAccessTokenSilently } = useAuth0()
 
   return useQuery<User[] | null, Error>({
     queryKey: ['users'],
