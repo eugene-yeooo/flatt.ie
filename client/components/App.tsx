@@ -22,6 +22,7 @@ export default function App() {
   const user = useUser()
   const location = useLocation()
   const hideNav = location.pathname === '/register'
+  const isWideLayout = location.pathname.startsWith('/payments')
 
   //useUser hook in compoents to know roles
 
@@ -124,8 +125,7 @@ export default function App() {
       ) : (
         // Your usual main container for all other pages
         <main
-          className="mx-auto
-          max-w-5xl rounded-xl bg-white bg-opacity-80 p-6 shadow"
+          className={`mx-auto ${isWideLayout ? 'max-w-6xl' : 'max-w-5xl'} rounded-xl bg-white bg-opacity-80 p-6 shadow`}
         >
           <Routes>
             <Route path="/" element={<Front />} />
