@@ -13,6 +13,7 @@ import { useUser } from '../../client/hooks/useUser'
 import { useLocation } from 'react-router-dom'
 import Profile from './Profile/Profile'
 import ReportsPage from './Reports/ReportsPage'
+import VantaBackground from './VantaNetBackground'
 
 export default function App() {
   const { isAuthenticated } = useAuth0()
@@ -20,7 +21,11 @@ export default function App() {
   const user = useUser()
   const location = useLocation()
   const hideNav = location.pathname === '/register'
+
+  const isDashboard = location.pathname === '/payments'
+
   const [selected, setSelected] = useState(false)
+
 
   //useUser hook in compoents to know roles
 
@@ -67,15 +72,12 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen bg-[var(--background)] text-foreground"
+      className="relative z-0 min-h-screen bg-[var(--background)] text-foreground"
       style={{ color: 'var(--foreground)' }}
     >
+      <VantaBackground />
       <header
-        className=" px-6 py-4"
-        style={{
-          backgroundColor: 'var(--background)',
-          borderColor: 'var(--border)',
-        }}
+        className="relative z-10 border-[var(--border)] px-6 py-4"
         role="banner"
       >
         {!hideNav && (
@@ -123,7 +125,11 @@ export default function App() {
         </Routes>
       ) : (
         // Your usual main container for all other pages
-        <main className="mx-auto max-w-6xl rounded-xl bg-white p-6 shadow">
+        <main
+          className={`mx-auto ${
+            isDashboard ? 'max-w-6xl' : 'max-w-5xl'
+          } rounded-xl bg-white bg-opacity-80 p-6 shadow`}
+        >
           <Routes>
             <Route path="/" element={<Front />} />
             <Route path="/flattie" element={<Home />} />
