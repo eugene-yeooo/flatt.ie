@@ -1,15 +1,27 @@
 import { useAllPayment, useUpdatePaymentStatus } from '../../hooks/usePayment'
+import { useAllUsers } from '../../hooks/useUser' // import your users hook
 
 import PaymentCard from './PaymentCard'
 
 export default function Dashboard() {
-  const { data: payments = [], isLoading, isError } = useAllPayment()
+  const {
+    data: payments = [],
+    isLoading: paymentsLoading,
+    isError: paymentsError,
+  } = useAllPayment()
+  const {
+    data: users = [],
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useAllUsers()
   const { mutate: updateStatus, isPending: isUpdating } =
     useUpdatePaymentStatus()
 
-  if (isLoading) return <p>Loading payments...</p>
-  if (isError) return <p>Error loading payments.</p>
+  if (paymentsLoading || usersLoading) return <p>Loading...</p>
+  if (paymentsError) return <p>Error loading payments.</p>
+  if (usersError) return <p>Error loading users.</p>
 
+  // Group payments by bill title
   const paymentsByBill = payments.reduce(
     (acc, payment) => {
       const key = payment.billTitle || 'Unknown Bill'
@@ -19,9 +31,11 @@ export default function Dashboard() {
     },
     {} as Record<string, typeof payments>,
   )
+
   const handlePaymentStatus = async (id: number, paidStatus: boolean) => {
     updateStatus({ id, paid: paidStatus })
   }
+
   return (
     <div className="grid grid-cols-2 gap-6 ">
       {Object.entries(paymentsByBill).map(([billTitle, billPayments]) => (
@@ -33,6 +47,7 @@ export default function Dashboard() {
           onTogglePaid={handlePaymentStatus}
           billAmount={billPayments[0]?.billTotal ?? 0}
           billDueDate={billPayments[0]?.dueDate}
+          flatmates={users}
         />
       ))}
     </div>

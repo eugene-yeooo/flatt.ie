@@ -1,5 +1,5 @@
 // import express from 'express'
-// import * as db from '../db/flatmates' // example
+// import * as db from '../db/userdata'
 // import multer from 'multer'
 // import path from 'path'
 
@@ -7,10 +7,14 @@
 
 // const storage = multer.diskStorage({
 //   destination: 'server/public/uploads',
-//   filename: (req, file, cb: (error: Error | null, filename: string) => void) => {
+//   filename: (
+//     req,
+//     file,
+//     cb: (error: Error | null, filename: string) => void,
+//   ) => {
 //     const ext = path.extname(file.originalname)
 //     cb(null, `${Date.now()}${ext}`)
-//   }
+//   },
 // })
 
 // const upload = multer({ storage })
@@ -60,10 +64,12 @@
 // router.post('/', upload.single('profilePhoto'), async (req, res) => {
 //   try {
 //     const { name, credit } = req.body
-//     const profilePhoto: string | undefined = req.file ? `/uploads/${req.file.filename}` : undefined
+//     const profilePhoto: string | undefined = req.file
+//       ? `/uploads/${req.file.filename}`
+//       : undefined
 
-//     const newFlatmate = await db.addFlatmate({ name, credit, profilePhoto })
-//     res.status(201).json(newFlatmate[0])
+//     const newUser = await db.updateUser({ name, credit, profilePhoto })
+//     res.status(201).json(newUser[0])
 //   } catch (error) {
 //     console.error('Error adding flatmate:', error)
 //     res.status(500).json({ error: 'Failed to add flatmate' })

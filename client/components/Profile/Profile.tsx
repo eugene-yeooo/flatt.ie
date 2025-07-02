@@ -9,8 +9,7 @@ export default function Profile() {
   const user = useUser()
   const [isEditing, setIsEditing] = useState(false)
 
-  if (!user?.data)
-    return <p className="py-8 text-center">Loading user data...</p>
+  if (!user?.data) return
 
   const toggleEdit = () => setIsEditing((prev) => !prev)
 
@@ -65,9 +64,6 @@ export default function Profile() {
             </p>
             <p className="text-gray-600">@{user.data.username}</p>
             <p className="text-sm text-gray-500">{user.data.email}</p>
-            <p className="text-sm text-gray-500">
-              flat member of *insert flats here*
-            </p>
 
             <p className="mt-2 text-gray-700">
               {user.data.bio || 'No bio set.'}

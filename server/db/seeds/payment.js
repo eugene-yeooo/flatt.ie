@@ -33,7 +33,7 @@ export async function seed(knex) {
     },
     {
       id: 8,
-      user_id: 4,
+      user_id: 5,
       bill_id: 4,
       amount: 44.17,
       split: 0.2725,
@@ -59,7 +59,7 @@ export async function seed(knex) {
     },
     {
       id: 12,
-      user_id: 4,
+      user_id: 5,
       bill_id: 10,
       amount: 21.25,
       split: 1,

@@ -51,7 +51,7 @@ export async function deletePayment(
   id: number,
 ): Promise<{ success: boolean; payment?: Payment }> {
   try {
-    const res = await request.delete(`/payments/${id}`)
+    const res = await request.delete(`api/v1/payment/${id}`)
     return res.body
   } catch (error: any) {
     if (error.response && error.response.body && error.response.body.error) {
