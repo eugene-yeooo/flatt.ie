@@ -233,10 +233,10 @@ export default function BillForm({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit}
-        className="flex max-h-[90vh] w-[600px] flex-col overflow-y-auto rounded-md bg-white p-8 shadow-md"
+        className="flex max-h-[90vh] w-[600px] flex-col overflow-y-auto rounded-md bg-[#f9f3ee] p-8 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">{submitLabel}</h2>
+          <h2 className="text-xl font-semibold text-[#78350f]">{submitLabel}</h2>
           <button
             type="button"
             onClick={onCancel}
@@ -248,7 +248,7 @@ export default function BillForm({
         </div>
 
         {/* Title */}
-        <label className="mb-2 block font-medium">
+        <label className="mb-2 block font-medium text-[#78350f]">
           Title <span className="text-red-500">*</span>
           <input
             type="text"
@@ -260,7 +260,7 @@ export default function BillForm({
         </label>
 
         {/* Due Date */}
-        <label className="mb-2 block font-medium">
+        <label className="mb-2 block font-medium text-[#78350f]">
           Due Date <span className="text-red-500">*</span>
           <input
             type="date"
@@ -272,7 +272,7 @@ export default function BillForm({
         </label>
 
         {/* Total Amount */}
-        <label className="mb-2 block font-medium">
+        <label className="mb-2 block font-medium text-[#78350f]">
           Total Amount $ <span className="text-red-500">*</span>
           <input
             type="number"
@@ -286,7 +286,7 @@ export default function BillForm({
         </label>
 
         {/* Expense Category */}
-        <label className="mb-4 block font-medium">
+        <label className="mb-4 block font-medium text-[#78350f]">
           Expense Category <span className="text-red-500">*</span>
           <select
             value={expenseCategory}
@@ -309,7 +309,7 @@ export default function BillForm({
         <div className="mb-4 mt-0">
           <div className="flex gap-10">
             <div className="flex flex-col">
-              <h4 className="text-md mb-2 font-medium">Split Type</h4>
+              <h4 className="text-md mb-2 font-medium text-[#78350f]">Split Type</h4>
               <div className="flex gap-2">
                 <button
                   type="button"
@@ -338,7 +338,7 @@ export default function BillForm({
 
             {splitType === 'custom' && (
               <div className="flex flex-col">
-                <h4 className="text-md mb-2 font-medium">Custom Split Mode</h4>
+                <h4 className="text-md mb-2 font-medium text-[#78350f]">Custom Split Mode</h4>
                 <div className="flex gap-2">
                   <button
                     type="button"
@@ -370,7 +370,7 @@ export default function BillForm({
 
         {/* SELECT FLATMATES */}
         <div>
-          <h4 className="mb-2 text-sm font-medium">
+          <h4 className="text-md mb-2 font-medium text-[#78350f]">
             Select Flatties to Include
           </h4>
           <div className="flex flex-wrap gap-2">

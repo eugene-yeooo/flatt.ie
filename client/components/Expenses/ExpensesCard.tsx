@@ -40,7 +40,7 @@ export default function ExpensesCard({
     calcOptions.find((opt) => opt.value === calc_method)?.label || calc_method
 
   return (
-    <div className="relative rounded-md bg-white p-4 shadow">
+    <div className="relative rounded-xl p-4 shadow transition-colors"  style={{backgroundColor: 'var(--primary-foreground)',}}>
       <div className="absolute right-2 top-1">
         <ExpenseCardDropdown
           id={id}
@@ -56,14 +56,14 @@ export default function ExpensesCard({
         />
       </div>
       <div>
-        <h2 className="text-lg font-semibold">{category}</h2>
-        <p className="text-sm text-gray-500">Frequency: {frequencyLabel}</p>
+        <h2 className="text-2xl font-bold text-[var(--primary)]">{category}</h2>
+        <p className="text-sm text-gray-600">Frequency: {frequencyLabel}</p>
         {['weekly', 'monthly'].includes(frequency) && (
           <>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-600">
               Start Date: {start_date.toLocaleDateString()}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-600">
               End Date: {end_date.toLocaleDateString()}
             </p>
           </>
@@ -71,8 +71,8 @@ export default function ExpensesCard({
         <p className="text-sm text-gray-700">
           Amount: ${default_amount?.toFixed(2)}
         </p>
-        <p className="text-sm text-gray-500">Payment method: {calcLabel}</p>
-        <p className="text-sm text-gray-500">notes: {notes}</p>
+        <p className="text-sm text-gray-600">Payment method: {calcLabel}</p>
+        <p className="text-sm text-gray-600">notes: {notes}</p>
       </div>
     </div>
   )

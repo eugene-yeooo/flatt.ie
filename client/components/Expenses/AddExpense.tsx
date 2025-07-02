@@ -122,10 +122,10 @@ export default function AddExpense({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit}
-        className="flex w-[600px] flex-col justify-center rounded-md bg-white p-6 shadow-md"
+        className="flex w-[600px] flex-col justify-center rounded-xl p-6 shadow transition-colors" style={{ backgroundColor: 'var(--primary-foreground)' }}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Add New Expense</h2>
+          <h2 className="text-xl font-semibold text-[#7b3f35]">Add New Expense</h2>
           <button
             type="button"
             onClick={onAddExpense}
