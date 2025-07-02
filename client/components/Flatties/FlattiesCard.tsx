@@ -223,7 +223,7 @@ export default function FlattieCard({
                 unpaidExpenses.map((p) => (
                   <li key={p.id} className="mb-3">
                     <div className="flex items-center justify-between">
-                      <span>
+                      <span className="text-xs">
                         {p.billTitle} (
                         {new Date(p.dueDate).toLocaleDateString()}): $
                         {p.amount.toFixed(2)}
