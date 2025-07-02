@@ -1,5 +1,6 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 import { useDeleteBill } from '../../hooks/useBills'
+import { useDeletePaymentsByBillId } from '../../hooks/usePayment'
 import { Pencil, Edit3, Trash2 } from 'lucide-react'
 import { UpdateBillData } from 'models/models'
 import useCanEdit from '../../hooks/useCanEdit'
@@ -16,9 +17,18 @@ export default function BillsCardDropdown({
   setSelectedBill: React.Dispatch<React.SetStateAction<UpdateBillData | null>>
 }) {
   const deleteBill = useDeleteBill()
+  const deletePayments = useDeletePaymentsByBillId()
   const canEdit = useCanEdit()
   function handleDelete() {
     deleteBill.mutate(id)
+    // deletePayments.mutate(id, {
+    //   onSuccess: () => {
+    //     deleteBill.mutate(id)
+    //   },
+    //   onError: (err) => {
+    //     console.error('Failed to delete payments:', err)
+    //   },
+    // })
   }
 
   return (

@@ -84,4 +84,16 @@ router.delete('/:id', async (req, res) => {
   }
 })
 
+// DELTE payment by id
+router.delete('/bill-id/:billId', async (req, res) => {
+  const id = Number(req.params.billId)
+  try {
+    await db.deletePaymentByBillId(id)
+    res.status(204).send()
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ error: 'Failed to delete payment' })
+  }
+})
+
 export default router

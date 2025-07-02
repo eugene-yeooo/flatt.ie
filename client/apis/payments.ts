@@ -76,3 +76,17 @@ export async function payFromCredit(paymentId: number) {
     throw error
   }
 }
+
+export async function deletePaymentsByBillId(
+  billId: number,
+): Promise<{ success: boolean }> {
+  try {
+    await request.delete(`api/v1/payment/bill-id/${billId}`)
+    return { success: true }
+  } catch (error: any) {
+    if (error.response?.body?.error) {
+      throw new Error(error.response.body.error)
+    }
+    throw error
+  }
+}

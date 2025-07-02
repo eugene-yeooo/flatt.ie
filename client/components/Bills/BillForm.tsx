@@ -203,31 +203,31 @@ export default function BillForm({
       }
     }
 
-    console.log(
-      'Submitting shares:',
-      shares.map((s) => {
-        const splitValue =
-          typeof s.split === 'string' ? parseFloat(s.split) : s.split
-        const total = Number(totalAmount)
+    // console.log(
+    //   'Submitting shares:',
+    //   shares.map((s) => {
+    //     const splitValue =
+    //       typeof s.split === 'string' ? parseFloat(s.split) : s.split
+    //     const total = Number(totalAmount)
 
-        const amount =
-          customSplitMode === 'percent'
-            ? (splitValue / 100) * total
-            : splitValue
+    //     const amount =
+    //       customSplitMode === 'percent'
+    //         ? (splitValue / 100) * total
+    //         : splitValue
 
-        const percent =
-          customSplitMode === 'percent'
-            ? splitValue
-            : (splitValue / total) * 100
+    //     const percent =
+    //       customSplitMode === 'percent'
+    //         ? splitValue
+    //         : (splitValue / total) * 100
 
-        return {
-          userId: s.userId,
-          amount: Number(amount.toFixed(2)),
-          split: Number(percent.toFixed(2)),
-          paid: s.paid,
-        }
-      }),
-    )
+    //     return {
+    //       userId: s.userId,
+    //       amount: Number(amount.toFixed(2)),
+    //       split: Number(percent.toFixed(2)),
+    //       paid: s.paid,
+    //     }
+    //   }),
+    // )
 
     onSubmit({
       bill: {
@@ -298,7 +298,7 @@ export default function BillForm({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             required
-            className="focus:ring-[var(--primary)] mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring"
+            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring focus:ring-[var(--primary)]"
           />
         </label>
 
@@ -310,7 +310,7 @@ export default function BillForm({
             value={dueDate as string}
             onChange={(e) => setDueDate(e.target.value)}
             required
-            className="focus:ring-[var(--primary)] mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring"
+            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring focus:ring-[var(--primary)]"
           />
         </label>
 
@@ -324,7 +324,7 @@ export default function BillForm({
             value={totalAmount ?? ''}
             onChange={(e) => setTotalAmount(parseFloat(e.target.value))}
             required
-            className="focus:ring-[var(--primary)] mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring"
+            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring focus:ring-[var(--primary)]"
           />
         </label>
 
@@ -335,7 +335,7 @@ export default function BillForm({
             value={expenseCategory}
             onChange={(e) => setExpenseCategory(e.target.value)}
             required
-            className="focus:ring-[var(--primary)] mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring"
+            className="mt-1 block w-full rounded border border-gray-300 px-3 py-2 focus:border-[var(--primary)] focus:ring focus:ring-[var(--primary)]"
           >
             <option value="" disabled>
               Select a category
@@ -570,7 +570,7 @@ export default function BillForm({
 
         <button
           type="submit"
-          className="mx-auto mt-8 w-40 rounded-lg border border-gray-300 bg-[var(--primary)] px-6 py-2 font-semibold shadow transition duration-200 hover:bg-[var(--primary)] text-white focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2"
+          className="mx-auto mt-8 w-40 rounded-lg border border-gray-300 bg-[var(--primary)] px-6 py-2 font-semibold text-white shadow transition duration-200 hover:bg-[var(--primary)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:ring-offset-2"
         >
           {submitLabel}
         </button>

@@ -28,15 +28,15 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
     >
     shares: Share[]
   }) {
-    console.log(
-      'Mapped payments:',
-      shares.map((s) => ({
-        user_id: Number(s.userId),
-        split: parseFloat(s.split) / bill.total_amount,
-        paid: s.paid,
-        amount: parseFloat(s.split),
-      })),
-    )
+    // console.log(
+    //   'Mapped payments:',
+    //   shares.map((s) => ({
+    //     user_id: Number(s.userId),
+    //     split: parseFloat(s.split) / bill.total_amount,
+    //     paid: s.paid,
+    //     amount: parseFloat(s.split),
+    //   })),
+    // )
 
     createBill.mutate(
       {
