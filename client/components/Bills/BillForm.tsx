@@ -7,6 +7,7 @@ import {
   TooltipContent,
   TooltipProvider,
 } from '../../../src/components/components/ui/tooltip'
+import { useAllExpense } from '../../hooks/useExpense'
 
 type BillFormProps = {
   initialData?: Partial<UpdateBillData> & { payments?: Share[] }
@@ -40,8 +41,11 @@ export default function BillForm({
   onCancel,
   submitLabel,
 }: BillFormProps) {
-  const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
+  // const categories = ['Rent', 'Power', 'Internet', 'Rubbish']
+  const { data: expense, isPending } = useAllExpense()
+  const categories = expense?.map((e) => e.category)
 
+  console.log(expense)
   const [title, setTitle] = useState(initialData.title || '')
   const [dueDate, setDueDate] = useState(initialData.dueDate || '')
   const [totalAmount, setTotalAmount] = useState(
@@ -59,6 +63,8 @@ export default function BillForm({
   const [shares, setShares] = useState<Share[]>([])
 
   const [isInitialLoad, setIsInitialLoad] = useState(true)
+
+  console.log(expense)
 
   // Initialization useEffect: only once
   useEffect(() => {
@@ -123,6 +129,8 @@ export default function BillForm({
 
     setShares(newShares)
   }, [splitType, customSplitMode, selectedUserIds, totalAmount])
+
+  if (isPending) return <p>Loading expenses...</p>
 
   // Handlers
   function handleUserToggle(id: number) {
