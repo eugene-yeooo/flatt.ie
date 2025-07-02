@@ -59,7 +59,7 @@ export default function UpdateExpense({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
       <form
         onSubmit={handleSubmit}
-        className="flex w-[600px] flex-col justify-center rounded-md bg-white p-6 shadow-md"
+        className="flex w-[600px] flex-col justify-center rounded-md bg-[var(--card)] p-6 shadow-md"
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-xl font-semibold">Update Expense</h2>
@@ -178,7 +178,7 @@ export default function UpdateExpense({
 
         <button
           type="submit"
-          className="hover:bg-primary/90 mt-2 rounded-lg bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="mt-2 rounded-lg border border-gray-300 bg-[var(--card)] px-6 py-2 font-semibold text-[var(--primary)] shadow transition duration-200 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
           Add Expense
         </button>
