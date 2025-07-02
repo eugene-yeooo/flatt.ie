@@ -20,6 +20,7 @@ export default function UploadPhoto({
     }
 
     const url = URL.createObjectURL(newPhoto)
+    console.log(url)
     setPreviewUrl(url)
 
     return () => {

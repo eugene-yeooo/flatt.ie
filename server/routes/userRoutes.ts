@@ -14,7 +14,7 @@ import path from 'path'
 const router = express.Router()
 
 const storage = multer.diskStorage({
-  destination: 'server/public/uploads',
+  destination: 'public/images',
   filename: (
     req,
     file,
@@ -108,13 +108,13 @@ router.get('/me', checkJwt, async (req: JwtRequest, res) => {
 router.patch(
   '/me',
   checkJwt,
-  upload.single('avatar'),
+  upload.single('avatar_url'),
   async (req: JwtRequest, res) => {
     try {
       const auth0_id = req.auth?.sub
       const updates = req.body
       const avatar_url: string | undefined = req.file
-        ? `/uploads/${req.file.filename}`
+        ? `/public/images/${req.file.filename}`
         : undefined
 
       if (!auth0_id) {
@@ -126,6 +126,8 @@ router.patch(
         auth0_id,
         avatar_url,
       })
+      console.log('req.file:', req.file)
+      console.log('req.body:', req.body)
 
       res.json(updatedUser)
     } catch (err) {

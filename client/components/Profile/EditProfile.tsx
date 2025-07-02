@@ -43,7 +43,16 @@ export default function EditProfile() {
     setError('')
 
     try {
-      await editProfile.mutateAsync(form)
+      const formData = new FormData()
+      formData.append('name', form.name)
+      formData.append('username', form.username)
+      formData.append('bio', form.bio)
+
+      if (newPhoto) {
+        formData.append('avatar_url', newPhoto)
+      }
+
+      await editProfile.mutateAsync(formData)
       alert('Profile updated successfully!')
       setIsEditing(false) // optional: hide form on success
     } catch (err) {
