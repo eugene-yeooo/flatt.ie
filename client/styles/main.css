@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --radius: 0.65rem;
-    --background: oklch(0.98 0.01 70); /* creamy milk */
+    --background: oklch(89.494% 0.01621 58.429); /* creamy milk */
     --foreground: oklch(0.25 0.03 30); /* rich espresso brown */
     --card: oklch(0.96 0.01 75); /* light cream */
     --card-foreground: oklch(0.28 0.04 35); /* cocoa */

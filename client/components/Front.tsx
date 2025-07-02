@@ -1,5 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react'
 
+import VantaFogBackground from './VantaNetBackground'
+
 const buttonStyle = {
   borderRadius: '0.5rem',
   backgroundColor: 'var(--primary)',
@@ -34,18 +36,19 @@ export default function Front() {
   if (!isAuthenticated) {
     return (
       <div
-        className="front-page"
+        className="front-page relative z-0"
         style={{
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: 'var(--background)',
           color: 'var(--foreground)',
           padding: '2rem',
         }}
       >
+
+        <VantaFogBackground />
         <div
           style={{
             fontSize: '4rem',
@@ -57,7 +60,6 @@ export default function Front() {
         >
           flatt.ie
         </div>
-
         <div style={{ display: 'flex', gap: '1.5rem' }}>
           <button onClick={() => loginWithRedirect()} style={buttonStyle}>
             Login
@@ -72,8 +74,6 @@ export default function Front() {
             }}
             style={{
               ...buttonStyle,
-              backgroundColor: 'var(--secondary)',
-              color: 'var(--secondary-foreground)',
             }}
           >
             Register

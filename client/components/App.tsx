@@ -24,9 +24,6 @@ export default function App() {
 
   const isDashboard = location.pathname === '/payments'
 
-  const [selected, setSelected] = useState(false)
-
-
   //useUser hook in compoents to know roles
 
   useEffect(() => {
@@ -126,9 +123,8 @@ export default function App() {
       ) : (
         // Your usual main container for all other pages
         <main
-          className={`mx-auto ${
-            isDashboard ? 'max-w-6xl' : 'max-w-5xl'
-          } rounded-xl bg-white bg-opacity-80 p-6 shadow`}
+          className="mx-auto
+          max-w-5xl rounded-xl bg-white bg-opacity-80 p-6 shadow"
         >
           <Routes>
             <Route path="/" element={<Front />} />

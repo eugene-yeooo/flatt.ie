@@ -21,7 +21,7 @@ export default function Profile() {
           onClick={() =>
             logout({ logoutParams: { returnTo: window.location.origin } })
           }
-          className="flex items-center gap-2 rounded bg-red-600 px-4 py-2 text-white hover:bg-red-700"
+          className="flex items-center gap-2 rounded bg-[var(--destructive)] px-4 py-2 text-white hover:bg-red-700"
         >
           <LogOut size={18} />
           Logout
@@ -29,7 +29,13 @@ export default function Profile() {
       </div>
 
       {/* Profile Card */}
-      <div className="mx-auto max-w-xl rounded-xl border border-gray-200 bg-white p-8 shadow-lg">
+      <div
+        className="mx-auto max-w-xl rounded-3xl border border-gray-200 p-8 shadow-lg"
+        style={{
+          backgroundColor: 'var(--primary-foreground)',
+          borderColor: 'var(--border)',
+        }}
+      >
         {/* Edit button aligned right */}
         <div className="mb-6 flex justify-end">
           <button
@@ -73,7 +79,7 @@ export default function Profile() {
 
         {/* Edit Form */}
         {isEditing && (
-          <div className="mt-8  border-gray-200 pt-6">
+          <div className="mt-8 pt-6">
             <EditProfile />
           </div>
         )}

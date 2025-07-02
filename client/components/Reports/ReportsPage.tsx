@@ -23,7 +23,7 @@ export default function ReportsPage() {
 
   return (
     <div>
-      <div className="mb-4 flex justify-center gap-x-4">
+      <div className="mb-4 flex justify-center gap-x-4 ">
         <button
           onClick={() => setShowCategoryReport(true)}
           disabled={showCategoryReport}
@@ -57,9 +57,13 @@ export default function ReportsPage() {
       </div>
 
       {showCategoryReport ? (
-        <Report data={billsData} title="Monthly Expenses by Category" />
+        <div className="p7-4 rounded-3xl border-4 border-[var(--background)] px-4">
+          <Report data={billsData} title="Monthly Expenses by Category" />
+        </div>
       ) : (
-        <Report data={usersData} title="Monthly Expenses by Flatmates" />
+        <div className="bg-[var(--background)]">
+          <Report data={usersData} title="Monthly Expenses by Flatmates" />
+        </div>
       )}
     </div>
   )
