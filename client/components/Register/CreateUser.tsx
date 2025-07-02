@@ -51,6 +51,8 @@ function Register() {
   const handleSubmit = async (evt: React.FormEvent<HTMLFormElement>) => {
     evt.preventDefault()
     try {
+      console.log('Register form submitted')
+
       const token = await getAccessTokenSilently()
       await addUser.mutateAsync({ newUser: form, token }, mutationOptions)
     } catch (err) {
@@ -132,7 +134,9 @@ function Register() {
             <button
               type="submit"
               disabled={!form.username || !form.email}
-              className="w-full rounded-md bg-[var(--primary)] px-4 py-2 text-white transition hover:bg-[var(--primary-hover)] disabled:cursor-not-allowed disabled:opacity-50"
+              className="/* bg changes on hover */ w-full
+  rounded-md bg-[var(--primary)]     px-4 py-2 text-white transition  hover:bg-[var(--background-hover)]
+  hover:text-[var(--primary)]"
             >
               Register
             </button>

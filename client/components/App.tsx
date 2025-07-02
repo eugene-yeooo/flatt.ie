@@ -73,19 +73,26 @@ export default function App() {
         )}
       </header>
 
-      <main className="mx-auto max-w-6xl rounded-xl bg-white p-6 shadow">
+      {hideNav ? (
+        // Render the Register component full width, no padding or shadow wrapper
         <Routes>
-          <Route path="/" element={<Front />} />
-          <Route path="/flattie" element={<Home />} />
-          <Route path="/payments" element={<Dashboard />} />
-          <Route path="/flatmates" element={<Flatties />} />
-          <Route path="/bills" element={<Bills />} />
-          <Route path="/expense" element={<Expenses />} />
-          <Route path="/report" element={<ReportsPage />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile />} />
         </Routes>
-      </main>
+      ) : (
+        // Your usual main container for all other pages
+        <main className="mx-auto max-w-6xl rounded-xl bg-white p-6 shadow">
+          <Routes>
+            <Route path="/" element={<Front />} />
+            <Route path="/flattie" element={<Home />} />
+            <Route path="/payments" element={<Dashboard />} />
+            <Route path="/flatmates" element={<Flatties />} />
+            <Route path="/bills" element={<Bills />} />
+            <Route path="/expense" element={<Expenses />} />
+            <Route path="/report" element={<ReportsPage />} />
+            <Route path="/profile" element={<Profile />} />
+          </Routes>
+        </main>
+      )}
     </div>
   )
 }
