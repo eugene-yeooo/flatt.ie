@@ -241,9 +241,9 @@ export default function AddExpense({
 
         <button
           type="submit"
-          className="hover:bg-primary/90 mt-2 rounded-lg bg-primary px-6 py-2 font-semibold shadow transition duration-200 hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+          className="mt-2 rounded-lg border border-gray-300 bg-[var(--card)] px-6 py-2 font-semibold text-[var(--primary)] shadow transition duration-200 hover:bg-[var(--primary)] hover:text-[var(--primary-foreground)] focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
         >
-          Add Expense
+         Add Expense
         </button>
       </form>
     </div>
