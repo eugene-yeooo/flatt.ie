@@ -4,6 +4,7 @@ import BillsCardDropdown from './BillsCardDropdown'
 import { Badge } from '@/components/components/ui/badge'
 import { UpdateBillData } from 'models/models'
 import clsx from 'clsx'
+import useCanEdit from '../../hooks/useCanEdit'
 
 interface BillCardProps {
   id: number
@@ -39,7 +40,7 @@ export default function BillCard({
     (expenseCategory &&
       badgeColors[expenseCategory as keyof typeof badgeColors]) ||
     'bg-gray-100 text-gray-800'
-
+  const canEdit = useCanEdit()
   return (
     <div
       className="relative rounded-lg border border-gray-200 p-6 shadow-sm transition hover:shadow-md"
@@ -47,6 +48,8 @@ export default function BillCard({
     >
       {/* Dropdown Menu */}
       <div className="absolute right-3 top-3">
+        {' '}
+        {/* pushed dropdown down */}
         <BillsCardDropdown
           id={id}
           setShowUpdateBill={setShowUpdateBill}
@@ -57,7 +60,7 @@ export default function BillCard({
       {/* Category and unpaid badge */}
       <div className="mb-4 flex items-center justify-between">
         <h3 className="text-lg font-semibold text-[var(--primary)]">{title}</h3>
-        <div className="flex gap-3">
+        <div className={clsx('flex gap-4', canEdit ? 'pr-12' : '')}>
           {expenseCategory && (
             <Badge
               variant="outline"
