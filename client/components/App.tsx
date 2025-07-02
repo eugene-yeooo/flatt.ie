@@ -24,9 +24,6 @@ export default function App() {
 
   const isDashboard = location.pathname === '/payments'
 
-  const [selected, setSelected] = useState(false)
-
-
   //useUser hook in compoents to know roles
 
   useEffect(() => {
