@@ -71,3 +71,7 @@ export async function generatePayments(
 export async function deletePaymentById(id: number) {
   return connection('payment').where({ id }).del()
 }
+
+export async function deletePaymentByBillId(id: number) {
+  return connection('payment').where('bill_id', id).del()
+}

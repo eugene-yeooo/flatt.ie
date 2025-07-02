@@ -4,7 +4,7 @@
  */
 export async function up(knex) {
   return knex.schema.createTable('bill', (table) => {
-    table.increments('id')
+    table.increments('id').primary()
     table.string('title')
     table.string('expense_category')
     table.date('due_date')
