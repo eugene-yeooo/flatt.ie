@@ -1,4 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react'
+import VantaFogBackground from './VantaNetBackground'
 
 const buttonStyle = {
   borderRadius: '0.5rem',
@@ -34,7 +35,7 @@ export default function Front() {
   if (!isAuthenticated) {
     return (
       <div
-        className="front-page"
+        className="front-page relative z-0"
         style={{
           minHeight: '100vh',
           display: 'flex',
@@ -46,6 +47,7 @@ export default function Front() {
           padding: '2rem',
         }}
       >
+        <VantaFogBackground />
         <div
           style={{
             fontSize: '4rem',
