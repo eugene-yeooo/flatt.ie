@@ -57,7 +57,7 @@ export default function ReportsPage() {
       </div>
 
       {showCategoryReport ? (
-        <div className="bg-[var(--background)]">
+        <div className="p7-4 rounded-3xl border-4 border-[var(--background)] px-4">
           <Report data={billsData} title="Monthly Expenses by Category" />
         </div>
       ) : (
