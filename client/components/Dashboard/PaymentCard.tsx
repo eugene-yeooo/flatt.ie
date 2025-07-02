@@ -1,4 +1,4 @@
-import { Payment } from 'models/models'
+import { Payment, User } from 'models/models'
 import '../../styles/main.css'
 import { useDeletePayment } from '../../hooks/usePayment'
 import confetti from 'canvas-confetti'
@@ -71,6 +71,8 @@ type PaymentCardProps = {
   billPayments: Payment[]
   isUpdating: boolean
   billDueDate: string | Date
+  flatmates: User[]
+
   onTogglePaid: (id: number, paidStatus: boolean) => void
 }
 
