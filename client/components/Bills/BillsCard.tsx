@@ -86,8 +86,9 @@ export default function BillCard({
         Due: {dueDate.toLocaleDateString()}
       </p>
       <p className="mt-0.5 text-sm font-medium text-gray-700">
-        Total: ${totalAmount.toFixed(2)}
+        Total: ${(totalAmount ?? 0).toFixed(2)}
       </p>
+
       {unpaidFlatties.length > 0 && (
         <p className="mt-1 text-sm font-semibold text-red-500">
           Unpaid by: {unpaidFlatties.join(', ')}

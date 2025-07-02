@@ -52,14 +52,15 @@ export async function generatePayments(
     .join('users', 'payment.user_id', 'users.id')
     .select(
       'payment.id',
+      'payment.user_id as userId',
       'payment.split',
       'payment.paid',
       'payment.amount',
       'bill.title as billTitle',
       'bill.due_date as dueDate',
       'bill.total_amount as billTotal',
-      'users.name as usersName',
-      'users.profile_photo as profilePhoto',
+      'users.name as userName',
+      'users.avatar_url as avatarURL',
     )
     .where('payment.bill_id', billId)
 

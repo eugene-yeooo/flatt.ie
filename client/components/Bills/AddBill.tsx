@@ -1,27 +1,16 @@
 import { useAddNewBill } from '../../hooks/useBills'
 import { useAddPayments } from '../../hooks/usePayment'
-import { useEffect, useState } from 'react'
 import BillForm from './BillForm'
-import { Flatmate, Share } from 'models/models'
+import { Share } from 'models/models'
+import { useAllUsers } from '../../hooks/useUser'
 
 export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
-  const [flatmates, setFlatmates] = useState<Flatmate[]>([])
   const createBill = useAddNewBill()
   const createPayments = useAddPayments()
+  const { data: users, isPending, error } = useAllUsers()
 
-  useEffect(() => {
-    async function fetchFlatmates() {
-      try {
-        const res = await fetch('/api/v1/flatties')
-        if (!res.ok) throw new Error('Failed to fetch flatmates')
-        const data = await res.json()
-        setFlatmates(data)
-      } catch (error) {
-        console.error('Failed to fetch flatmates:', error)
-      }
-    }
-    fetchFlatmates()
-  }, [])
+  if (isPending) return <p>Loading...</p>
+  if (error) return <p>Error loading users</p>
 
   function handleSubmit({
     bill,
@@ -56,7 +45,7 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
               const split = amount / bill.total_amount
 
               return {
-                flatmate_id: Number(s.flatmateId),
+                user_id: Number(s.userId),
                 split,
                 paid: s.paid,
                 amount,
@@ -71,9 +60,9 @@ export default function AddBill({ onAddBill }: { onAddBill: () => void }) {
 
   return (
     <>
-      {flatmates.length > 0 && (
+      {users && users.length > 0 && (
         <BillForm
-          flatmates={flatmates}
+          users={users}
           onSubmit={handleSubmit}
           onCancel={onAddBill}
           submitLabel="Add Bill"

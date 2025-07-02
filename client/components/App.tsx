@@ -26,7 +26,7 @@ export default function App() {
     if (isAuthenticated) {
       const getToken = async () => {
         const token = await getAccessTokenSilently()
-        console.log(token)
+        // console.log(token)
       }
       getToken()
     }
