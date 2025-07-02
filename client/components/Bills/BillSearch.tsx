@@ -25,11 +25,11 @@ export default function BillSearch({
         placeholder="Search bills..."
         value={query}
         onChange={handleChange}
-        className="w-full rounded-l-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary"
+        className="w-full rounded-l-md border border-gray-300 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
       />
       <button
         type="submit"
-        className="rounded-r-md border border-l-0 border-gray-300 bg-white px-4 py-2 hover:bg-orange-400"
+        className="rounded-r-md border border-l-0 border-gray-300 bg-white px-4 py-2 hover:bg-[var(--primary)] hover:text-white transition-colors"
       >
         Search
       </button>

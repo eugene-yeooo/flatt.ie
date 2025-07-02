@@ -42,8 +42,8 @@ export default function Expenses() {
   return (
     <div className="mx-auto max-w-4xl p-4">
       {canEdit && (
-        <div className="flex justify-end bg-primary">
-          <Button onClick={toggleAddExpense} className="btn">
+        <div className="flex justify-end">
+          <Button onClick={toggleAddExpense} className="border border-gray-300 bg-white px-4 py-2 font-semibold text-black shadow transition duration-200 hover:bg-[#78350f] hover:text-white focus:outline-none focus:ring-2 focus:ring-[#78350f] focus:ring-offset-2">
             Add Expense
           </Button>
         </div>
