@@ -24,6 +24,7 @@ export default function Flatties() {
             id={mate.user_id}
             name={mate.username}
             credit={mate.credit}
+            bio={mate.bio}
             avatar_url={mate.avatar_url}
           />
         ))}
