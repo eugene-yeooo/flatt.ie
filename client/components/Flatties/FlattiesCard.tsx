@@ -166,7 +166,7 @@ export default function FlattieCard({
             {name}
           </h3>
           <h3
-            className="text-center text-base font-semibold"
+            className="mb-2 text-center text-base italic"
             style={{ color: '#7C4A3A' }}
           >
             {bio}
