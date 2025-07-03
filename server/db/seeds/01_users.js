@@ -11,10 +11,10 @@ export async function seed(knex) {
       username: 'keviiiin',
       name: 'Kevin',
       email: 'icebirbbb@gmail.com',
-      avatar_url: '/images/1751434047736.gif',
+      avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Kevin',
       account_type: 'flat_financer',
       credit: 100.5,
-      bio: 'hi',
+      bio: 'cereal is a soup',
     },
     {
       id: 2,
@@ -25,7 +25,7 @@ export async function seed(knex) {
       avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Ara',
       account_type: 'flat_financer',
       credit: 100.5,
-      bio: 'hi',
+      bio: 'soju is soup',
     },
     {
       id: 3,
@@ -36,7 +36,7 @@ export async function seed(knex) {
       avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Eugene',
       account_type: 'flat_financer',
       credit: 100.5,
-      bio: 'hi',
+      bio: 'look at all these rocks!!! 🪨🪨🪨🪨🪨🪨🪨🪨',
     },
     {
       id: 5,
@@ -47,7 +47,7 @@ export async function seed(knex) {
       avatar_url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=Hannah',
       account_type: 'flat_financer',
       credit: 100.5,
-      bio: 'hi',
+      bio: 'see u in the snowwww',
     },
   ])
 }

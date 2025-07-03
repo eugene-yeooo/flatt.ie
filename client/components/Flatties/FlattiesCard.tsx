@@ -11,12 +11,14 @@ export type FlattieCardProps = {
   id: number
   name: string
   credit: number
+  bio: string
   avatar_url?: string
 }
 export default function FlattieCard({
   id,
   name,
   credit,
+  bio,
   avatar_url,
 }: FlattieCardProps) {
   const [showActions, setShowActions] = useState(false)
@@ -162,6 +164,12 @@ export default function FlattieCard({
             style={{ color: '#7C4A3A' }}
           >
             {name}
+          </h3>
+          <h3
+            className="text-center text-base font-semibold"
+            style={{ color: '#7C4A3A' }}
+          >
+            {bio}
           </h3>
           <p className="text-center text-sm text-gray-500">
             Credit: ${editedCredit.toFixed(2)}
