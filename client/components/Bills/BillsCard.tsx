@@ -64,7 +64,7 @@ export default function BillCard({
           {!paid && (
             <Badge
               variant="outline"
-              className="w-fit rounded border border-red-500 bg-red-100 px-3 py-1.5 text-xs font-semibold uppercase text-red-500"
+              className="flex h-min w-fit items-center rounded border border-red-500 bg-red-100 px-3 py-1.5 text-xs font-semibold uppercase text-red-500"
             >
               UNPAID
             </Badge>
