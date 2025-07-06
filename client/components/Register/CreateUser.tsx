@@ -18,7 +18,7 @@ function Register() {
     username: auth0User?.nickname || auth0User?.name || '',
     email: auth0User?.email || '',
     avatar_url: auth0User?.picture || '',
-    account_type: 'flattie', //default
+    account_type: 'flat_financer', //default
   })
 
   useEffect(() => {
@@ -64,7 +64,6 @@ function Register() {
   const hideError = () => setErrorMsg('')
 
   return (
-
     <div className="relative z-0 flex min-h-screen items-center justify-center bg-[var(--background)] px-4 py-12">
       <VantaFogBackground />
       <IfAuthenticated>
