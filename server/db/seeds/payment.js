@@ -10,7 +10,7 @@ export async function seed(knex) {
     {
       id: 5,
       user_id: 1,
-      bill_id: 4,
+      bill_id: 42,
       amount: 155,
       split: 0.25,
       paid: true,
@@ -18,7 +18,7 @@ export async function seed(knex) {
     {
       id: 6,
       user_id: 2,
-      bill_id: 4,
+      bill_id: 42,
       amount: 155,
       split: 0.25,
       paid: true,
@@ -26,7 +26,7 @@ export async function seed(knex) {
     {
       id: 7,
       user_id: 3,
-      bill_id: 4,
+      bill_id: 42,
       amount: 155,
       split: 0.25,
       paid: false,
@@ -34,17 +34,17 @@ export async function seed(knex) {
     {
       id: 8,
       user_id: 5,
-      bill_id: 4,
+      bill_id: 42,
       amount: 155,
       split: 0.25,
       paid: true,
     },
 
-    { id: 9, user_id: 1, bill_id: 10, amount: 155, split: 0.25, paid: true },
+    { id: 9, user_id: 1, bill_id: 44, amount: 155, split: 0.25, paid: true },
     {
       id: 10,
       user_id: 2,
-      bill_id: 10,
+      bill_id: 44,
       amount: 155,
       split: 0.25,
       paid: true,
@@ -52,7 +52,7 @@ export async function seed(knex) {
     {
       id: 11,
       user_id: 3,
-      bill_id: 10,
+      bill_id: 44,
       amount: 155,
       split: 0.25,
       paid: false,
@@ -60,7 +60,7 @@ export async function seed(knex) {
     {
       id: 12,
       user_id: 5,
-      bill_id: 10,
+      bill_id: 44,
       amount: 155,
       split: 0.25,
       paid: true,
