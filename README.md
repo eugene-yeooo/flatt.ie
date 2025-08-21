@@ -4,7 +4,7 @@
 
 flatt.ie is a flatmate finance management app designed to simplify expense tracking, bill splitting, and financial management for shared living situations. With an intuitive interface and thoughtful features, flatt.ie helps flat finances stay out of the flat chat.
 
-This project was a group project that was completed up until it is now in the course of a week. Myself and 3 other Dev Academy students worked on this project. I was responsible for the Auth0 Integration, "flat financer", "flattie" account types, database structure, and much of the UI. 
+This project was a group project that was completed up until it is now in the course of a week. Myself and 3 other Dev Academy students worked on this project. I was responsible for the Bills listing page, full-stack functionality for adding new bills and editing existing bills, the search feature for bills, and much of the UI. 
 
 ## Features
 
